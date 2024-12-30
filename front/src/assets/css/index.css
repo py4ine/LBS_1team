@@ -1,0 +1,34 @@
+@charset "UTF-8";
+
+@import "./buildingDetail.css";
+@import "./case.css";
+@import "./floorPlan.css";
+@import "./index.css";
+@import "./login.css";
+@import "./logo.css";
+@import "./main.css";
+@import "./menu.css";
+
+/* colors */
+:root {
+  --orange-color: #fe8f1c;
+  --black-color: #141e28;
+  --yellow-color: #cedc00;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+ul,
+li {
+  list-style: none;
+}
+
+a,
+a:link {
+  color: none;
+  text-decoration: none;
+}
