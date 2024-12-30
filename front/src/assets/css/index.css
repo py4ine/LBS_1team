@@ -9,11 +9,135 @@
 @import "./main.css";
 @import "./menu.css";
 
-/* colors */
-:root {
-  --orange-color: #fe8f1c;
-  --black-color: #141e28;
-  --yellow-color: #cedc00;
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap");
+@font-face {
+  font-family: "gmarketSansTTF";
+  font-weight: 700;
+  src: url(../fonts/GmarketSansTTFBold.ttf) format("truetype");
+}
+@font-face {
+  font-family: "gmarketSansTTF";
+  font-weight: 400;
+  src: url(../fonts/GmarketSansTTFMedium.ttf) format("truetype");
+}
+html {
+  font-size: 14px;
+  --mainColor: #cedc00;
+  --textColor: #141e28;
+  --bgColor: #ffffff;
+  font-family: "Noto Sans KR", sans-serif;
+  font-style: normal;
+  -webkit-text-size-adjust: none;
+}
+.txtB {
+  font-weight: 700;
+}
+.txtR {
+  font-weight: 400;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+img,
+video,
+iframe {
+  border: none;
+  max-width: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  display: inline-block;
+}
+
+ul {
+  list-style: none;
+}
+
+span {
+  display: inline-block;
+}
+
+i {
+  font-style: normal;
+  display: inline-block;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.blind {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+/* form태그 초기화 */
+button,
+input,
+optgroup,
+select,
+textarea,
+fieldset {
+  font-family: inherit; /* 1 */
+  font-size: 100%; /* 1 */
+  line-height: 1.15; /* 1 */
+  margin: 0; /* 2 */
+  border: 0;
+  outline: 0;
+  background: transparent;
+  vertical-align: middle;
+  border-radius: 0;
+}
+
+button,
+input {
+  overflow: visible;
+}
+
+button,
+select {
+  text-transform: none;
+}
+
+button {
+  color: inherit;
+}
+
+legend {
+  box-sizing: border-box; /* 1 */
+  color: inherit; /* 2 */
+  display: table; /* 1 */
+  max-width: 100%; /* 1 */
+  padding: 0; /* 3 */
+  white-space: normal; /* 1 */
+}
+
+textarea {
+  overflow: auto;
+}
+
+progress {
+  vertical-align: baseline;
 }
 
 * {
@@ -22,13 +146,22 @@
   box-sizing: border-box;
 }
 
-ul,
-li {
-  list-style: none;
+/* 전체 화면 */
+body {
+  margin: 0;
+  background-color: #f1f1f1; /* 화면 바깥 배경색 */
+  display: flex;
+  justify-content: center; /* 가로 중앙 정렬 */
+  align-items: center; /* 세로 중앙 정렬 (선택 사항) */
+  height: 100vh; /* 높이 설정 */
 }
 
-a,
-a:link {
-  color: none;
-  text-decoration: none;
+:root {
+  width: 100%;
+  max-width: 375px; /* 모바일 화면 기준*/
+  min-height: 100vh; /* 화면 전체 높이 */
+  background-color: white; /* 앱 화면 배경색 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 살짝 그림자 추가 (선택 사항) */
+  overflow: hidden; /* 내부 요소가 넘치지 않도록 */
+  border-radius: 10px; /* 앱처럼 모서리를 둥글게 (선택 사항) */
 }
