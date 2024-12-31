@@ -9,17 +9,24 @@
 @import "./main.css";
 @import "./menu.css";
 
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap");
+/* @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap"); */
+/* 폰트 설정 */
 @font-face {
-  font-family: "gmarketSansTTF";
+  font-family: "Giants_Bold";
   font-weight: 700;
-  src: url(../fonts/GmarketSansTTFBold.ttf) format("truetype");
+  src: url(../fonts/giants/title_ttf/Giants-Bold.ttf) format("truetype");
 }
 @font-face {
-  font-family: "gmarketSansTTF";
+  font-family: "Giants_Regular";
   font-weight: 400;
-  src: url(../fonts/GmarketSansTTFMedium.ttf) format("truetype");
+  src: url(../fonts/giants/title_ttf/Giants-Regular.ttf) format("truetype");
 }
+@font-face {
+  font-family: "Giants_Inline";
+  font-weight: 100;
+  src: url(../fonts/giants/title_ttf/Giants-Inline.ttf) format("truetype");
+}
+
 html {
   font-size: 14px;
   --mainColor: #cedc00;
