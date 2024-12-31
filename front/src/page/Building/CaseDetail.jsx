@@ -1,13 +1,13 @@
 import React from "react";
 import Header from "../../components/Layout/Header";
 
-function FloorPlan() {
+function CaseDetail() {
   return (
     <>
       <Header />
-      <div className="main_container">FloorPlan</div>;
+      <div className="main_container">CaseDetail</div>
     </>
   );
 }
 
-export default FloorPlan;
+export default CaseDetail;

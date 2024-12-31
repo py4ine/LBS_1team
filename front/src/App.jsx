@@ -1,14 +1,14 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Main from "./page/Main.jsx";
-import Style from "./Style.jsx";
-import BuildingDetail from "./page/Building/BuildingDetail.jsx";
-import Menu from "./page/Menu/Menu.jsx";
-import CaseList from "./page/Menu/CaseList.jsx";
-import FloorPlan from "./page/Building/FloorPlan.jsx";
 
 import "./assets/css/index.css";
+
+// import Style from "./Style.jsx";
 import Login from "./page/Login.jsx";
+import Main from "./page/Main.jsx";
+import Map from "./page/Map.jsx";
+import CaseDetail from "./page/Building/CaseDetail.jsx";
+import FloorPlan from "./page/Building/FloorPlan.jsx";
 import Cctv from "./page/Building/Cctv.jsx";
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
     <>
       <Routes>
         {/* 스타일 가이드 */}
-        <Route path="/style" element={<Style />}></Route>
+        {/* <Route path="/style" element={<Style />}></Route> */}
 
         {/* 로그인 페이지 */}
         <Route path="/login" element={<Login />}></Route>
@@ -24,16 +24,15 @@ function App() {
         {/* 메인 페이지 */}
         <Route path="/" element={<Main />}></Route>
 
-        {/* 메뉴 페이지 */}
-        <Route path="/menu" element={<Menu />}></Route>
+        {/* 지도 페이지 */}
+        <Route path="/map" element={<Map />}></Route>
 
-        {/* 사건관련 페이지 */}
-        <Route path="/case" element={<CaseList />}></Route>
-        <Route path="/case/:caseId" element={<BuildingDetail />}></Route>
-        <Route path="/case/:caseId/:flplanId" element={<FloorPlan />}></Route>
+        {/* 상세 페이지 */}
+        <Route path="/map/:caseId" element={<CaseDetail />}></Route>
+        <Route path="/map/:caseId/:flplanId" element={<FloorPlan />}></Route>
 
         {/* CCTV 페이지 */}
-        <Route path="/case/:caseId/:flplanId/cctv" element={<Cctv />}></Route>
+        <Route path="/cctv" element={<Cctv />}></Route>
       </Routes>
     </>
   );

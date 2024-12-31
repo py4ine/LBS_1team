@@ -1,15 +1,6 @@
 @charset "UTF-8";
 
-@import "./buildingDetail.css";
-@import "./case.css";
-@import "./floorPlan.css";
-@import "./index.css";
-@import "./login.css";
-@import "./logo.css";
-@import "./main.css";
-@import "./menu.css";
-
-/* @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap"); */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap");
 /* 폰트 설정 */
 @font-face {
   font-family: "Giants_Bold";
@@ -27,26 +18,13 @@
   src: url(../fonts/giants/title_ttf/Giants-Inline.ttf) format("truetype");
 }
 
-html {
-  font-size: 14px;
-  --mainColor: #cedc00;
-  --textColor: #141e28;
-  --bgColor: #ffffff;
-  font-family: "Noto Sans KR", sans-serif;
-  font-style: normal;
-  -webkit-text-size-adjust: none;
-}
-.txtB {
-  font-weight: 700;
-}
-.txtR {
-  font-weight: 400;
-}
+/* 초기화 */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
 *,
 *::after,
 *::before {
@@ -147,12 +125,6 @@ progress {
   vertical-align: baseline;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 /* 전체 화면 */
 body {
   margin: 0;
@@ -162,8 +134,7 @@ body {
   align-items: center; /* 세로 중앙 정렬 (선택 사항) */
   height: 100vh; /* 높이 설정 */
 }
-
-:root {
+#root {
   width: 100%;
   max-width: 375px; /* 모바일 화면 기준*/
   min-height: 100vh; /* 화면 전체 높이 */
@@ -171,4 +142,25 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 살짝 그림자 추가 (선택 사항) */
   overflow: hidden; /* 내부 요소가 넘치지 않도록 */
   border-radius: 10px; /* 앱처럼 모서리를 둥글게 (선택 사항) */
+}
+
+html {
+  font-size: 14px;
+  --mainColor: #cedc00;
+  --textColor: #141e28;
+  --bgColor: #ffffff;
+  font-family: "Noto Sans KR", sans-serif;
+  font-style: normal;
+  -webkit-text-size-adjust: none;
+}
+
+.txtB {
+  font-weight: 700;
+}
+.txtR {
+  font-weight: 400;
+}
+
+.main_container {
+  margin: 0px 10px;
 }
