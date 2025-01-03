@@ -5,9 +5,9 @@
   padding: 14px 12px;
   width: 375px;
   height: 60px;
-  /* position: fixed; */
+  position: fixed;
   /* position: absolute; */
-  position: relative;
+  /* position: relative; */
   top: 0;
   z-index: 1000;
 }
