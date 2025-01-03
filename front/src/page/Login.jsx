@@ -39,7 +39,7 @@ function Login() {
 
       if (result.success === true) {
         alert("로그인에 성공하였습니다.");
-        
+
       } else {
         alert("소방서 코드와 비밀번호가 일치하지 않습니다.");
       }
@@ -62,7 +62,7 @@ function Login() {
           <div>
             <form onSubmit={handleSubmit}>
               <input type='text' name='firestationCode' placeholder="소방서 코드" value={loginInfo.firestationCode} onChange={onChangeHandler} />
-              <input type='text' name='password' placeholder="비밀번호"value={loginInfo.password} onChange={onChangeHandler} />
+              <input type='password' name='password' placeholder="비밀번호"value={loginInfo.password} onChange={onChangeHandler} />
               <button type='submit'>로그인</button>
             </form>
           </div>
