@@ -59,7 +59,7 @@ function Login() {
       ) : (
         <div className='login'>
           <div className='logo_image' />
-          <div>
+          <div className='login_wrap'>
             <form onSubmit={handleSubmit}>
               <input type='text' name='firestationCode' placeholder="소방서 코드" value={loginInfo.firestationCode} onChange={onChangeHandler} />
               <input type='password' name='password' placeholder="비밀번호"value={loginInfo.password} onChange={onChangeHandler} />
