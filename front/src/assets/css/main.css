@@ -43,6 +43,7 @@
 .caseItemBtn {
   /* background-color: teal !important; */
   /* width: 100%; */
+  box-sizing: border-box;
   background: none;
   border: none;
   padding: 0;
@@ -54,8 +55,8 @@
 
 .caseItemWrap {
   display: flex;
-  justify-content: center;
-  align-items: end;
+  justify-content: space-between;
+  align-items: center;
   box-sizing: border-box;
   border-bottom: 1px solid var(--mainColor);
   width: 247px;
