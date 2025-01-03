@@ -3,8 +3,15 @@ import "../assets/css/main.css";
 import Header from "../components/Layout/Header";
 import main_img from "../assets/images/img/main.png";
 import arrow_G from "../assets/images/button_icons/icon_leftarrow_G.png";
+import { useNavigate } from "react-router-dom";
 
 function Main() {
+  const navigate = useNavigate();
+
+  const handleCaseClick = (data) => {
+    navigate("/map" /*, { state: { caseData: data } }*/);
+  };
+
   // 출동 현장 데이터
   const caseData = [
     {
@@ -33,7 +40,7 @@ function Main() {
   ];
 
   const CaseItem = ({ data }) => (
-    <button className="caseItemBtn">
+    <button className="caseItemBtn" onClick={() => handleCaseClick(/*data*/)}>
       <div className="caseItemWrap">
         <div className="caseItemContent">
           <p>사건 분류 : {data.type}</p>
