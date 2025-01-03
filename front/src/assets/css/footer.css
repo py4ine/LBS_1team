@@ -208,17 +208,74 @@ body {
   bottom: 80px; /* footer 위에 위치하도록 조정 */
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1000;
+  z-index: 990;
 }
 
 .search-button {
   font-size: 16px;
   font-weight: 700;
-  padding: 15px 110px;
+  width: 350px;
+  height: 50px;
   margin-bottom: 20px;
   background-color: var(--mainColor);
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  /* z-index: 980; */
+}
+
+.search-form-container {
+  position: fixed;
+  top: 80px; /* 헤더 높이 + 20px를 직접 계산한 값으로 변경 */
+  right: 50%;
+  transform: translateX(67%);
+  width: 375px; /* root와 동일한 너비 */
+  z-index: 996;
+  box-sizing: border-box;
+}
+
+.search-form {
+  display: flex;
+  gap: 8px;
+  width: 80%;
+  background: var(--textColor);
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search-input {
+  color: var(--bgColor);
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 14px;
+}
+.search-input:focus::placeholder {
+  color: transparent;
+}
+.search-submit {
+  padding: 0px 5px;
+  border: none;
+  cursor: pointer;
+}
+
+.water-icons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 10px;
+}
+
+.water-icon-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.water-icon-item img {
+  width: 24px;
+  height: 24px;
+}
+
+.water-icon-item span {
+  font-size: 14px;
 }
