@@ -21,10 +21,32 @@ function Login() {
     setLoginInfo({ ...loginInfo, [name]: value});
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Submit info:', loginInfo);
-  };
+    const userInfo = {
+      fsc: e.target.firestationCode.value,
+      pass: e.target.password.value
+    };
+
+    try {
+      const response = await fetch ('http://localhost:8080/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userInfo)
+      });
+      const result = await response.json()
+      console.log(result);
+
+      if (result.success === true) {
+        alert("로그인에 성공하였습니다.");
+
+      } else {
+        alert("소방서 코드와 비밀번호가 일치하지 않습니다.");
+      }
+    } catch(error) {
+      console.error('Fetch error:', error);
+    }
+  }
 
   return (
     <>
@@ -37,10 +59,10 @@ function Login() {
       ) : (
         <div className='login'>
           <div className='logo_image' />
-          <div>
+          <div className='login_wrap'>
             <form onSubmit={handleSubmit}>
               <input type='text' name='firestationCode' placeholder="소방서 코드" value={loginInfo.firestationCode} onChange={onChangeHandler} />
-              <input type='text' name='password' placeholder="비밀번호"value={loginInfo.password} onChange={onChangeHandler} />
+              <input type='password' name='password' placeholder="비밀번호"value={loginInfo.password} onChange={onChangeHandler} />
               <button type='submit'>로그인</button>
             </form>
           </div>
