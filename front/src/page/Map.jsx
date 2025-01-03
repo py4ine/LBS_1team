@@ -26,6 +26,15 @@ function Map() {
 
   // 핀 위치 표시를 위한 함수
   const handlePinClick = (pinType) => {
+    if (pinType === "pin2") {
+      // pin2 (내위치 핀) 클릭시 geoLocate 컨트롤 트리거
+      const geolocateControl = document.querySelector(
+        ".mapboxgl-ctrl-geolocate"
+      );
+      if (geolocateControl) {
+        geolocateControl.click();
+      }
+    }
     // 나중에 실제 데이터와 연동하여 핀 위치 표시 로직 구현
     console.log(`${pinType} 핀이 클릭되었습니다`);
   };
