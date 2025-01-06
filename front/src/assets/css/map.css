@@ -1,0 +1,52 @@
+@charset "UTF-8";
+
+.backArea {
+    position: absolute;
+    top: 70px;
+    left: 10px;
+    z-index: 10;
+  }
+  
+  .back-icon {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+  }
+  
+  .pinArea {
+    position: absolute;
+    bottom: 100px;
+    right: 10px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .pinArea.search-active {
+    transform: translateY(-60px);
+  }
+  
+  .pinArea.water-modal-active {
+    transform: translateY(-285px);
+  }
+  
+  .pinArea.harmfulness-modal-active {
+    transform: translateY(-130px);
+  }
+  
+  .pinArea.weather-modal-active {
+    transform: translateY(-70px);
+  }
+  
+  .pin-icon {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  
+  .pin-icon:hover {
+    transform: scale(1.1);
+  }
