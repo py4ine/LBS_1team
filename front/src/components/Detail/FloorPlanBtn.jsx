@@ -11,7 +11,7 @@ function FloorPlanBtn() {
     fetchBldgData = async () => {
       try {
         // API 호출
-        const res = await fetch(`/api 호출 주소`);
+        const res = await fetch(`/localhost:8080/detail/1`);
         const data = await res.json();
 
         // 지하 층수 배열
