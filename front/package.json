@@ -12,7 +12,10 @@
   "dependencies": {
     "@mapbox/mapbox-gl-language": "^1.0.1",
     "axios": "^1.7.9",
+    "buffer": "^6.0.3",
+    "hls.js": "^1.5.18",
     "mapbox-gl": "^3.9.1",
+    "mjpeg-consumer": "^2.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-modal": "^3.16.3",
@@ -23,6 +26,7 @@
     "@eslint/js": "^9.15.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "eslint": "^9.15.0",
     "eslint-plugin-react": "^7.37.2",

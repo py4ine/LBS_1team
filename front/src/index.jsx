@@ -14,7 +14,9 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
 import 'mapbox-gl/dist/mapbox-gl.css'
+import { Buffer } from "buffer";
 
+window.Buffer = Buffer;
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
