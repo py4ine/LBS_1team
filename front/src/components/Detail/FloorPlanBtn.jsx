@@ -36,9 +36,10 @@ function FloorPlanBtn() {
     fetchBldgData();
   }, [caseId]);
 
+  //    층수 표시 포맷팅
   const formatFloorLabel = (floor) => {
-    if (floor < 0) return `B${Math.abs(floor)}F`;
-    return `${floor}F`;
+    if (floor < 0) return `B${Math.abs(floor)}F`; // 지하층
+    return `${floor}F`; // 지상층
   };
 
   // 층수 선택 핸들러
@@ -47,7 +48,26 @@ function FloorPlanBtn() {
     setBtnOpen(false);
   };
 
-  return <>{btnOpen && <div>floors.map</div>}</>;
+  return (
+    <>
+      {btnOpen && (
+        // 층별 설계도 버튼 Wrap
+        <div className="floorBtnWrap">
+          {floors.map((floor) => (
+            <button
+              key={floor}
+              onClick={() => handleFloorSelect(floor)}
+              className="floorBtn"
+            >
+              {formatFloorLabel(floor)}
+              {floor === 1 && <div>지상</div>}
+              {floor === -1 && <div>지하</div>}
+            </button>
+          ))}
+        </div>
+      )}
+    </>
+  );
 }
 
 export default FloorPlanBtn;
