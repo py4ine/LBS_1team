@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 import "./assets/css/index.css";
 
@@ -18,11 +18,14 @@ function App() {
         {/* 스타일 가이드 */}
         {/* <Route path="/style" element={<Style />}></Route> */}
 
+        {/* 초기 경로 로그인으로 연결 */}
+        <Route path="/" element={<Navigate to="/login" />} />
+
         {/* 로그인 페이지 */}
         <Route path="/login" element={<Login />}></Route>
 
         {/* 메인 페이지 */}
-        <Route path="/" element={<Main />}></Route>
+        <Route path="/main" element={<Main />}></Route>
 
         {/* 지도 페이지 */}
         <Route path="/map" element={<Map />}></Route>
