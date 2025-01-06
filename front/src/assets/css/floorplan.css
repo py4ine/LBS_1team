@@ -25,6 +25,8 @@
     border-radius: 5px;
     cursor: pointer;
   }
+
+ 
   
   /* 설계도 이미지 */
   .floorplan-image-container {
@@ -38,6 +40,19 @@
     overflow: hidden;
   }
   
+.floorplan-image-container.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: white;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
   .floorplan-image {
     max-width: 100%;
     height: auto;
@@ -103,3 +118,6 @@
   .css-x-button:hover::after {
     background-color: #cedc00; /* 호버 시 색상 변경 */
   }
+
+
+  

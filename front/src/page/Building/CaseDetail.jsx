@@ -60,7 +60,7 @@ function CaseDetail() {
       <Header />
       <div className="main_container">
         <div className="case_detail_container">
-          <div class="css-x-button" onClick={handleClick2}></div>
+          <div className="css-x-button" onClick={handleClick2}></div>
           <h2><strong>출동 정보</strong></h2>
           <div className="case_detail_container2">
             
