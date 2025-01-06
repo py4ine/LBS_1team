@@ -10,6 +10,9 @@ function Header() {
   // 사이드 메뉴 핸들러
   const handleMenu = () => {
     setIsOpen(!isOpen);
+
+    // 사이드메뉴가 열릴 때 body에 overflow: hidden 추가
+    // document.body.style.overflow = isOpen ? "auto" : "hidden";
   };
 
   return (

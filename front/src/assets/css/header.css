@@ -38,7 +38,7 @@
   display: block;
   position: absolute;
   width: 35px;
-  height: 5px;
+  height: 4px;
   background: var(--mainColor);
   transition: all 0.3s;
 }
