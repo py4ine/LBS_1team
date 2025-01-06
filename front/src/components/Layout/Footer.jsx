@@ -8,13 +8,15 @@ import waterIcon4 from "../../assets/images/map_icons/water/icon_water4.png";
 import waterIcon5 from "../../assets/images/map_icons/water/icon_water5.png";
 import waterIcon6 from "../../assets/images/map_icons/water/icon_water6.png";
 import harmfulnessIcon from "../../assets/images/map_icons/footer/icon_harmfulness.png";
+import harmfulnessIcon1 from "../../assets/images/map_icons/harmfulness/icon_harmfulness1.png";
+import harmfulnessIcon2 from "../../assets/images/map_icons/harmfulness/icon_harmfulness2.png";
 import homeIcon from "../../assets/images/map_icons/footer/icon_home.png";
 import weatherIcon from "../../assets/images/map_icons/footer/icon_weather.png";
 import searchIcon from "../../assets/images/map_icons/footer/icon_search.png";
 import "../../assets/css/footer.css";
 
 
-function Footer() {
+function Footer({ onStateChange }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeModal, setActiveModal] = useState(null);
   const [touchStart, setTouchStart] = useState(0);
@@ -37,6 +39,11 @@ function Footer() {
     { id: 4, src: waterIcon4, alt: "4", title: ": 저수조" },
     { id: 5, src: waterIcon5, alt: "5", title: ": 승하강식" },
     { id: 6, src: waterIcon6, alt: "5", title: ": 비상소화장치" },
+  ];
+  const harmfulnessArea = [
+    { id: 1, src: harmfulnessIcon1, alt: "1", title:": 지상식 소화전" },
+    { id: 2, src: harmfulnessIcon2, alt: "2", title: ": 지하식 소화전" },
+    
   ];
 
   const handleTouchStart = (e) => {
@@ -61,6 +68,19 @@ function Footer() {
     }
   };
 
+  const getModalType = (modalId) => {
+    switch(modalId) {
+      case 1:
+        return 'water';
+      case 2:
+        return 'harmfulness';
+      case 4:
+        return 'weather';
+      default:
+        return null;
+    }
+  };
+
   const openModal = (modalId) => {
     if (modalId === activeModal) {
       closeModal();
@@ -71,11 +91,13 @@ function Footer() {
           setIsModalOpen(true);
           setActiveModal(modalId);
           setModalPosition(0);
+          onStateChange(true, getModalType(modalId));
         }, 100);
       } else {
         setIsModalOpen(true);
         setActiveModal(modalId);
         setModalPosition(0);
+        onStateChange(true, getModalType(modalId));
       }
     }
   };
@@ -84,24 +106,42 @@ function Footer() {
     setIsModalOpen(false);
     setActiveModal(null);
     setModalPosition(0);
+    onStateChange(isSearchVisible, null);
   };
 
   const toggleSearch = () => {
-    if (isModalOpen) {
-      closeModal();
+    const newSearchState = !isSearchVisible;
+    setIsSearchVisible(newSearchState);
+    if (!isModalOpen) {
+      onStateChange(newSearchState, null);
     }
-    setIsSearchVisible(!isSearchVisible);
   };
 
   const handleChange = (e) => {
     setText(e.target.value);
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Escape') {
+      closeModal();
+    }
+  };
+
   return (
     <div className="footer_mainWrap">
       {isModalOpen && activeModal !== 3 && (
-        <div className="modal_container">
-          <div className="modal_overlay" onClick={closeModal} />
+        <div 
+          className="modal_container"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={`modal-title-${activeModal}`}
+          onKeyDown={handleKeyDown}
+        >
+          <div 
+            className="modal_overlay" 
+            onClick={closeModal}
+            aria-label="Close modal"
+          />
           <div 
             className={`modal_content active ${modalPosition > 0 ? 'dragging' : ''}`}
             onTouchStart={handleTouchStart}
@@ -110,23 +150,41 @@ function Footer() {
             style={{
               transform: `translateX(-50%) translateY(${modalPosition}px)`
             }}
+            tabIndex="-1"
           >
             <div className="modal_handle">
               <div className="handle_bar" />
             </div>
             <div className="modal_inner">
-              <h2>{icons.find(icon => icon.id === activeModal)?.title}</h2>
               {activeModal === 1 ? (
                 <div className="water-icons-container">
+                  <h2 id={`modal-title-${activeModal}`} className="sr-only">용수시설 정보</h2>
                   {waterArea.map((water) => (
                     <div key={water.id} className="water-icon-item">
-                      <img src={water.src} alt={water.alt} />
-                      <span>{water.title}</span>
+                      <img src={water.src} alt="" aria-hidden="true" />
+                      <span role="text">{water.title}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : activeModal === 2 ? (
+                <div className="harmfulness-icons-container">
+                  <h2 id={`modal-title-${activeModal}`} className="sr-only">유해시설 정보</h2>
+                  {harmfulnessArea.map((harmfulness) => (
+                    <div key={harmfulness.id} className="harmfulness-icon-item">
+                      <img src={harmfulness.src} alt="" aria-hidden="true" />
+                      <span role="text">{harmfulness.title}</span>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p>{icons.find(icon => icon.id === activeModal)?.title} 모달 내용입니다!</p>
+                <>
+                  <h2 id={`modal-title-${activeModal}`} className="sr-only">
+                    {icons.find(icon => icon.id === activeModal)?.title}
+                  </h2>
+                  <p role="text">
+                    {icons.find(icon => icon.id === activeModal)?.title} 모달 내용입니다!
+                  </p>
+                </>
               )}
             </div>
           </div>
