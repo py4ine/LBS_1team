@@ -1,0 +1,105 @@
+.floorplan_main_container{
+    margin-top: 60px;
+}
+  /* 상단 제목과 선택 */
+  .floorplan-header {
+    border-bottom: 2px solid #cedc00;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .floorplan-header h1 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+  }
+  
+  .floor-select {
+    margin-bottom: 5px;
+    padding: 5px 10px;
+    font-size: 14px;
+    /* border: 1px solid #ddd; */
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  /* 설계도 이미지 */
+  .floorplan-image-container {
+    display: flex;
+    
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    /* border: 1px solid #ddd; */
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .floorplan-image {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  /* 아이콘 버튼들 */
+  .icon-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+  
+  .icon-buttons button {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #cedc00;
+    background-color: #000000;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .icon-buttons button:hover {
+    background-color: #000000;
+  }
+  
+
+  
+  .css-x-button {
+    position: relative;
+    left: 93%;
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+    cursor: pointer;
+  }
+  
+  .css-x-button::before,
+  .css-x-button::after {
+    content: '';
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    width: 20px;
+    height: 2.5px;
+    background-color: #000000;
+    transform-origin: center;
+  }
+  
+  .css-x-button::before {
+    transform: translate(-50%, -50%) rotate(45deg); /* 대각선 1 */
+  }
+  
+  .css-x-button::after {
+    transform: translate(-50%, -50%) rotate(-45deg); /* 대각선 2 */
+  }
+  
+  .css-x-button:hover::before,
+  .css-x-button:hover::after {
+    background-color: #cedc00; /* 호버 시 색상 변경 */
+  }
