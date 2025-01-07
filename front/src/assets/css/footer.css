@@ -15,7 +15,7 @@ body {
 /* Modal Styles */
 .modal_container {
   position: fixed;
-  bottom: 80px;
+  bottom: 60px;
   left: 50%;
   width: 375px;
   transform: translateX(-50%);
@@ -91,7 +91,7 @@ body {
   bottom: 0;
   left: 50%;
   width: 375px;
-  height: 80px;
+  height: 60px;
   transform: translateX(-50%);
   z-index: 1000;
   background:#141e28;
@@ -140,8 +140,8 @@ body {
 }
 
 .footer_icon img {
-  width: 30px;
-  height: 30px;
+  width: 26px;
+  height: 26px;
   object-fit: contain;
 }
 
@@ -211,7 +211,7 @@ body {
 }
 .search-button-container {
   position: fixed;
-  bottom: 80px; /* footer 위에 위치하도록 조정 */
+  bottom: 60px; /* footer 위에 위치하도록 조정 */
   left: 50%;
   transform: translateX(-50%);
   z-index: 990;
@@ -264,6 +264,7 @@ body {
   padding: 0px 5px;
   border: none;
   cursor: pointer;
+  z-index: 999;
 }
 
 .water-icons-container,.harmfulness-icons-container{
@@ -293,5 +294,37 @@ body {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+.search-results {
+  position: absolute;
+  top: 130%;
+  left: 0;
+  /* right: 10px; */
+  width: 260px;
+  background: var(--textColor);
+  border-radius: 10px;
+  z-index: 1000;
+}
+
+.search-result-item {
+  padding: 10px 15px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--bgColor);
+}
+
+.search-result-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.search-result-item:last-child {
+  border-bottom: none;
+}
+
+.marker {
+  cursor: pointer;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 

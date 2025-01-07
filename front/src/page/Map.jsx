@@ -1,4 +1,5 @@
-import React, {useRef, useState} from "react";
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"></meta> 
+import React, {useRef, useState, useEffect} from "react";
 import { Link } from "react-router-dom";
 import Header from "../components/Layout/Header";
 import Footer from "../components/Layout/Footer";
@@ -21,9 +22,27 @@ const MapBox =() => {
 }
 
 function Map() {
+  const mapContainerRef = useRef(null);
+  const [mapInstance, setMapInstance] = useState(null);
   const [isElementsShifted, setIsElementsShifted] = useState(false);
   const [activeModalType, setActiveModalType] = useState(null);
   const [activePin, setActivePin] = useState(null);
+
+  // useMap hook 사용
+  const map = useMap(mapContainerRef, mapConfig.defaultStyle, mapConfig);
+
+  useEffect(() => {
+    if (mapContainerRef.current && map) {
+      setMapInstance(map);
+      // 전역 객체에 map 인스턴스 저장
+      window.mapInstance = map;
+    }
+    
+    // cleanup function
+    return () => {
+      window.mapInstance = null;
+    };
+  }, [map]);
 
   // 핀 위치 + 이미지 변경 표시를 위한 함수
   const handlePinClick = (pinType) => {
@@ -79,8 +98,8 @@ function Map() {
   return (
     <>
       <Header />
-      <div className="main_container">
-        <MapBox/>
+      <div className="container">
+        <div ref={mapContainerRef} style={{width: '100%', height: '100vh'}}/>
         <div className="backArea">
           <Link to="/main">
             <img 
