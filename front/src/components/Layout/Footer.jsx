@@ -13,7 +13,10 @@ import harmfulnessIcon2 from "../../assets/images/map_icons/harmfulness/icon_har
 import homeIcon from "../../assets/images/map_icons/footer/icon_home.png";
 import weatherIcon from "../../assets/images/map_icons/footer/icon_weather.png";
 import searchIcon from "../../assets/images/map_icons/footer/icon_search.png";
+import fullPinIcon from "../../assets/images/map_icons/icon_pullfin.png";
 import "../../assets/css/footer.css";
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 
 function Footer({ onStateChange }) {
@@ -25,6 +28,8 @@ function Footer({ onStateChange }) {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [text, setText] = useState("");
   const [activeIcon, setActiveIcon] = useState(null);
+  const [searchResults, setSearchResults] = useState([]);
+  const [currentMarker, setCurrentMarker] = useState(null);
 
   const icons = [
     { id: 1, src: waterIcon, alt: "용수시설", title: "용수시설" },
@@ -123,14 +128,130 @@ function Footer({ onStateChange }) {
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     setText(e.target.value);
+    
+    if (!e.target.value.trim()) {
+      setSearchResults([]);
+      return;
+    }
+
+    try {
+      const kakaoApiKey = import.meta.env.VITE_KAKAO_REST_API_KEY;
+      
+      // 키워드 검색 API 호출
+      const keywordResponse = await fetch(
+        `https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(e.target.value.trim())}&size=5`,
+        {
+          headers: {
+            'Authorization': `KakaoAK ${kakaoApiKey}`
+          }
+        }
+      );
+
+      // 주소 검색 API 호출
+      const addressResponse = await fetch(
+        `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(e.target.value.trim())}&size=5`,
+        {
+          headers: {
+            'Authorization': `KakaoAK ${kakaoApiKey}`
+          }
+        }
+      );
+
+      const [keywordData, addressData] = await Promise.all([
+        keywordResponse.json(),
+        addressResponse.json()
+      ]);
+
+      let processedResults = [];
+
+      // 키워드 검색 결과 처리 (건물, 상호명)
+      if (keywordData && keywordData.documents) {
+        const keywordResults = keywordData.documents.map(place => ({
+          center: [parseFloat(place.x), parseFloat(place.y)],
+          place_name: place.place_name,
+          address: place.road_address_name || place.address_name,
+          type: 'place',
+          original: place
+        }));
+        processedResults = [...processedResults, ...keywordResults];
+      }
+
+      // 주소 검색 결과 처리
+      if (addressData && addressData.documents) {
+        const addressResults = addressData.documents.map(place => ({
+          center: [parseFloat(place.x), parseFloat(place.y)],
+          place_name: place.address_name,
+          type: 'address',
+          original: place
+        }));
+        processedResults = [...processedResults, ...addressResults];
+      }
+
+      // 검색어와 일치하는 유형의 결과만 필터링
+      const query = e.target.value.trim().toLowerCase();
+      const isAddressQuery = query.includes('동') || query.includes('로') || query.includes('길');
+      
+      const filteredResults = isAddressQuery 
+        ? processedResults.filter(result => result.type === 'address')
+        : processedResults.filter(result => result.type === 'place');
+
+      setSearchResults(filteredResults);
+    } catch (error) {
+      console.error('Search error details:', error);
+      setSearchResults([]);
+    }
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Escape') {
-      closeModal();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (searchResults.length > 0) {
+      handleResultClick(searchResults[0]);
     }
+  };
+
+  const handleResultClick = (result) => {
+    if (!window.mapInstance) {
+      console.error('Map instance not found');
+      return;
+    }
+
+    if (currentMarker) {
+      currentMarker.remove();
+    }
+
+    const el = document.createElement('div');
+    el.className = 'marker';
+    el.style.backgroundImage = `url(${fullPinIcon})`;
+    el.style.width = '26px';
+    el.style.height = '26px';
+    el.style.backgroundSize = 'contain';
+    el.style.backgroundPosition = 'center';
+    el.style.backgroundRepeat = 'no-repeat';
+
+    const marker = new mapboxgl.Marker({
+      element: el,
+      anchor: 'bottom'
+    })
+      .setLngLat(result.center)
+      .addTo(window.mapInstance);
+
+    setCurrentMarker(marker);
+    
+    window.mapInstance.flyTo({
+      center: result.center,
+      zoom: 15,
+      essential: true
+    });
+    
+    setSearchResults([]);
+    setText(result.place_name);
+  };
+
+  const handleSearchInputClick = () => {
+    setText('');
+    setSearchResults([]);
   };
 
   return (
@@ -200,18 +321,35 @@ function Footer({ onStateChange }) {
       {isSearchVisible && (
         <>
           <div className="search-form-container">
-            <form className="search-form">
+            <form className="search-form" onSubmit={handleSubmit}>
               <input 
                 type="text" 
                 placeholder="주소,건물명을 검색하세요"
                 value={text}
                 onChange={handleChange}
+                onClick={handleSearchInputClick}
                 className="search-input"
               />
               <button type="submit" className="search-submit">
                 <img src={searchIcon} alt="검색" />
               </button>
             </form>
+            {searchResults.length > 0 && (
+              <div className="search-results">
+                {searchResults.map((result, index) => (
+                  <div 
+                    key={index} 
+                    className="search-result-item"
+                    onClick={() => handleResultClick(result)}
+                  >
+                    <div className="result-name">{result.place_name}</div>
+                    {result.type === 'place' && result.address && (
+                      <div className="result-address">{result.address}</div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           <div className="search-button-container">
             <button className="search-button">

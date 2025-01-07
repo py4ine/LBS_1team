@@ -15,7 +15,7 @@
   
   .pinArea {
     position: absolute;
-    bottom: 100px;
+    bottom: 80px;
     right: 10px;
     z-index: 10;
     display: flex;
@@ -23,7 +23,7 @@
     gap: 10px;
     transition: transform 0.3s ease-in-out;
   }
-  
+  /* 모달 상태에 따른 위치 조정 - 모든 환경에서 동일하게 적용 */
   .pinArea.search-active {
     transform: translateY(-60px);
   }
@@ -47,10 +47,18 @@
     transition: transform 0.2s;
   }
   
-  .pin-icon:hover {
-    transform: scale(1.1);
+  .marker {
+    cursor: pointer;
+    background-position: center;
   }
   
-  .pin-icon.active {
-    filter: brightness(0) invert(1);
+  .result-name {
+    font-weight: bold;
   }
+  
+  .result-address {
+    font-size: 0.9em;
+    color: var(--bgColor);
+    margin-top: 2px;
+  }
+  
