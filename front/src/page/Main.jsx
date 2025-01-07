@@ -82,11 +82,27 @@ function Main() {
   //   },
   // ];
 
+  //  사건 번호 타입별 이름 -> 구조 / 화재 / 구급 / 생활안전
+  const getIncidentTypeName = (type) => {
+    switch (type) {
+      case 1:
+        return "구조";
+      case 2:
+        return "화재";
+      case 3:
+        return "구급";
+      case 4:
+        return "생활안전";
+      default:
+        return "기타";
+    }
+  };
+
   const CaseItem = ({ data }) => (
     <button className="caseItemBtn" onClick={() => handleCaseClick(data)}>
       <div className="caseItemWrap">
         <div className="caseItemContent">
-          <p>사건 분류 : {data.incident_type}</p>
+          <p>사건 분류 : {getIncidentTypeName(data.incident_type)}</p>
           <p>건물명 : {data.bldg_nm}</p>
           <p>주소 : {data.road_nm_addr}</p>
           <p>신고 사건 번호 : {data.incident_number}</p>
