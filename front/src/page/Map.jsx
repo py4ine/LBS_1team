@@ -7,24 +7,25 @@ import {mapConfig} from "../config/mapConfig";
 import "../assets/css/map.css"
 import backArrowIcon from "../assets/images/map_icons/bg/icon_backarrow_BG.png";
 import fireAreaIcon from "../assets/images/map_icons/bg/icon_linepin_BG.png";
+import fireAreaActiveIcon from "../assets/images/map_icons/bg/icon_linepinW_BG.png";
 import myLocationIcon from "../assets/images/map_icons/bg/icon_mylocation_BG.png";
+import myLocationActiveIcon from "../assets/images/map_icons/bg/icon_mylocationW_BG.png";
 
 
 const MapBox =() => {
-  // console.log("!!")
   const mapContainerRef = useRef(null);
 
   useMap(mapContainerRef, mapConfig.defaultStyle , mapConfig);
 
   return <div ref ={mapContainerRef} style={{width : '100%', height : '100vh'}}/>
-  // 'calc(100vh - 120px)'
 }
 
 function Map() {
   const [isElementsShifted, setIsElementsShifted] = useState(false);
   const [activeModalType, setActiveModalType] = useState(null);
+  const [activePin, setActivePin] = useState(null);
 
-  // 핀 위치 표시를 위한 함수
+  // 핀 위치 + 이미지 변경 표시를 위한 함수
   const handlePinClick = (pinType) => {
     if (pinType === "pin2") {
       // pin2 (내위치 핀) 클릭시 geoLocate 컨트롤 트리거
@@ -34,14 +35,25 @@ function Map() {
       if (geolocateControl) {
         geolocateControl.click();
       }
+    } else if (pinType === "pin1" && activePin === "pin2") {
+      // pin2가 활성화된 상태에서 pin1을 클릭할 때
+      // geolocate 컨트롤을 비활성화
+      const geolocateControl = document.querySelector(
+        ".mapboxgl-ctrl-geolocate"
+      );
+      if (geolocateControl) {
+        geolocateControl.click(); // 한번 더 클릭하여 비활성화
+      }
     }
-    // 나중에 실제 데이터와 연동하여 핀 위치 표시 로직 구현
-    console.log(`${pinType} 핀이 클릭되었습니다`);
+    
+    // 핀 상태 화이트 이미지로 업데이트
+    setActivePin(activePin === pinType ? null : pinType);
   };
 
+  //footer modal이 올라오는 길이가 다르기 때문에 핀1/핀2의 위치를 그에 맞게 조절하기 위한 함수
   const handleModalOrSearchChange = (isOpen, modalType = null) => {
-    setIsElementsShifted(isOpen);
-    setActiveModalType(modalType);
+    setIsElementsShifted(isOpen); // 요소들의 위치 이동 여부를 설정
+    setActiveModalType(modalType); // 활성화된 모달의 타입을 설정
   };
 
   const getPinAreaClassName = () => {
@@ -50,6 +62,18 @@ function Map() {
       return `pinArea ${activeModalType}-modal-active`;
     }
     return 'pinArea search-active';
+  };
+
+  //핀을 눌렀을때 이미지가 변경되게 할 경로 지정 함수
+  const getIconSource = (pinType) => {
+    switch(pinType) {
+      case 'pin1':
+        return activePin === 'pin1' ? fireAreaActiveIcon : fireAreaIcon;
+      case 'pin2':
+        return activePin === 'pin2' ? myLocationActiveIcon : myLocationIcon;
+      default:
+        return '';
+    }
   };
 
   return (
@@ -68,13 +92,13 @@ function Map() {
         </div>
         <div className={getPinAreaClassName()}>
           <img 
-            src={fireAreaIcon} 
+            src={getIconSource('pin1')}
             alt="핀1" 
             className="pin-icon"
             onClick={() => handlePinClick('pin1')}
           />
           <img 
-            src={myLocationIcon} 
+            src={getIconSource('pin2')}
             alt="핀2" 
             className="pin-icon"
             onClick={() => handlePinClick('pin2')}

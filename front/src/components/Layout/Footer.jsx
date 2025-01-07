@@ -24,6 +24,7 @@ function Footer({ onStateChange }) {
   const [modalPosition, setModalPosition] = useState(0);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [text, setText] = useState("");
+  const [activeIcon, setActiveIcon] = useState(null);
 
   const icons = [
     { id: 1, src: waterIcon, alt: "용수시설", title: "용수시설" },
@@ -84,18 +85,21 @@ function Footer({ onStateChange }) {
   const openModal = (modalId) => {
     if (modalId === activeModal) {
       closeModal();
+      setActiveIcon(null);
     } else {
       if (isModalOpen) {
         closeModal();
         setTimeout(() => {
           setIsModalOpen(true);
           setActiveModal(modalId);
+          setActiveIcon(modalId);
           setModalPosition(0);
           onStateChange(true, getModalType(modalId));
         }, 100);
       } else {
         setIsModalOpen(true);
         setActiveModal(modalId);
+        setActiveIcon(modalId);
         setModalPosition(0);
         onStateChange(true, getModalType(modalId));
       }
@@ -105,6 +109,7 @@ function Footer({ onStateChange }) {
   const closeModal = () => {
     setIsModalOpen(false);
     setActiveModal(null);
+    setActiveIcon(null);
     setModalPosition(0);
     onStateChange(isSearchVisible, null);
   };
@@ -112,6 +117,7 @@ function Footer({ onStateChange }) {
   const toggleSearch = () => {
     const newSearchState = !isSearchVisible;
     setIsSearchVisible(newSearchState);
+    setActiveIcon(newSearchState ? 5 : null);
     if (!isModalOpen) {
       onStateChange(newSearchState, null);
     }
@@ -223,21 +229,21 @@ function Footer({ onStateChange }) {
                 <li key={icon.id} className="footer_item">
                   {icon.id === 3 ? (
                     <Link to="/main" className="footer_link">
-                      <div className="footer_icon">
+                      <div className={`footer_icon ${activeIcon === icon.id ? 'active' : ''}`}>
                         <img src={icon.src} alt={icon.alt} />
                         <p className="footer_text">{icon.title}</p>
                       </div>
                     </Link>
                   ) : icon.id === 5 ? (
                     <button className="footer_link" onClick={toggleSearch}>
-                      <div className="footer_icon">
+                      <div className={`footer_icon ${activeIcon === icon.id ? 'active' : ''}`}>
                         <img src={icon.src} alt={icon.alt} />
                         <p className="footer_text">{icon.title}</p>
                       </div>
                     </button>
                   ) : (
                     <button className="footer_link" onClick={() => openModal(icon.id)}>
-                      <div className="footer_icon">
+                      <div className={`footer_icon ${activeIcon === icon.id ? 'active' : ''}`}>
                         <img src={icon.src} alt={icon.alt} />
                         <p className="footer_text">{icon.title}</p>
                       </div>
