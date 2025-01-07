@@ -69,59 +69,75 @@ import { db, schema } from '../../config/dbConfig.js';
 //     }
 // };
 
-const getDetailByBldgId = async (bldg_id) => {
+// const getPoiByOriginId = async (origin_id) => {
+//     const query = `
+//         SELECT 
+//             bldg_id,
+//             bldg_sn,
+//             rds_sn,
+//             sig_cd,
+//             emd_cd,
+//             lotno_addr,
+//             road_nm_addr,
+//             COALESCE(bldg_nm::text , '') as bldg_nm,
+//             ST_asText(bldg_geom) as wkt,
+//             gro_flo_co,
+//             und_flo_co,
+//             bdtyp_cd,
+//             TO_CHAR(crt_dt AT TIME ZONE 'Asia/seoul' , 'YYYY-MM-DD HH24:Mi:SS.USOF') AS crt_dt,
+//             COALESCE(TO_CHAR(mdfcn_dt AT TIME ZONE 'Asia/seoul' ,'YYYY-MM-DD HH24:Mi:SS.USOF' ), '') as mdfcn_dt,
+//             COALESCE(TO_CHAR(recent_poi_dtl_crt_dt AT TIME ZONE 'Asia/seoul' ,'YYYY-MM-DD HH24:Mi:SS.USOF' ), '') as recent_poi_dtl_crt_dt
+//             FROM ${schema}.bldg_team1
+//         where bldg_id = $1
+//     `;
+//     try {
+//         console.log('Executing query:', query);
+//         console.log('With parameters:', [origin_id]);
+
+//         const result = await db.query(query, [origin_id]);
+
+//         // 쿼리 결과 로그
+//         console.log('Query Result:', result.rows);
+
+//         return result.rows;
+//     } catch (error) {
+//         console.error('Error DAO getPoiByOriginId', error);
+//         throw new Error(error.message);
+//     }
+// };
+
+const getCasesALL = async (dispatch_fire_station) => {
     const query = `
         SELECT 
-            lotno_addr, 
-            road_nm_addr, 
-            bldg_nm, 
-            bldg_geom, 
-            gro_flo_co, 
-            und_flo_co, 
-            bdtyp, 
-            bdtyp_detail, 
-            bdst, 
-            bdst_detail, 
-            bd_seismic, 
-            bd_old
-            FROM ${schema}.bldg
-        where bldg_id = $1
+            case_id, 
+            bldg_id, 
+            incident_number, 
+            incident_type, 
+            dispatch_fire_station, 
+            is_resolved, 
+            report_type,
+            disabled_person,
+            report_phone,
+            ST_X(ST_Centroid(bldg_geom)) AS longitude,
+            ST_Y(ST_Centroid(bldg_geom)) AS latitude
+
+
+            FROM ${schema}.case
+        where dispatch_fire_station = $1
     `;
     try {
-        console.log('Executing query:', query);
-        console.log('With parameters:', [bldg_id]);
-
-        const result = await db.query(query, [bldg_id]);
-
-        // 쿼리 결과 로그
-        console.log('Query Result:', result.rows);
-
+        console.log(dispatch_fire_station)
+        const result = await db.query(query, [dispatch_fire_station]);
+        console.log(result.rows)
         return result.rows;
-    } catch (error) {
-        console.error('Error DAO getDetailByBldgId', error);
-        throw new Error(error.message);
-    }
-};
 
-const getDetailALL = async () => {
-    const query = `
-        SELECT *
-        FROM ${schema}.bldg
-        LIMIT 100;
-    `;
-    try {
-        console.log('Executing query:', query);
-        const result = await db.query(query);
-
-        return result.rows;
     } catch (error) {
-        console.error('Error DAO getDetailALL', error);
+        console.error('Error DAO getCasesALL', error);
         throw new Error(error.message);
     }
 };
 
 
 export default {
-    getDetailByBldgId,
-    getDetailALL
+    getCasesALL
 };
