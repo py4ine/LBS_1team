@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react"; // -useEffect 추가 (찬진)
+import { useNavigate, useParams } from "react-router-dom"; // -useParams 추가 (찬진)
 import Header from "../../components/Layout/Header";
 import "../../assets/css/FloorPlan.css";
-import FloorPlanBtn from "../../components/Detail/FloorPlanBtn";
+import FloorPlanBtn from "../../components/Detail/FloorPlanBtn"; // 버튼 컴포넌트 추가 (찬진)
 
 function FloorPlan() {
   const navigate = useNavigate();
+  const { bldg_id } = useParams(); // URL에서 건물 ID 가져오기 (찬진)
   const [imageSrc, setImageSrc] = useState(
     "https://storage.cloud.google.com/lbsteam1/image%203.png"
   );
@@ -43,6 +44,7 @@ function FloorPlan() {
     },
   ];
 
+  // 층별 설계도 버튼 핸들러
   const handleFloorChange = (event) => {
     const floor = event.target.value;
     const defaultImage = {
@@ -72,12 +74,12 @@ function FloorPlan() {
 
           {/* 층 선택 */}
           <div className="floorplan-header">
-            <FloorPlanBtn />
-            {/* <select className="floor-select" onChange={handleFloorChange}>
+            {/* <FloorPlanBtn /> */}
+            <select className="floor-select" onChange={handleFloorChange}>
               <option value="1층">1층 설계도</option>
               <option value="2층">2층</option>
               <option value="3층">3층</option>
-            </select> */}
+            </select>
           </div>
 
           {/* <div class="selectBox2 ">

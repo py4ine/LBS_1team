@@ -106,7 +106,7 @@ const getDetailByBldgId = async (bldg_id) => {
 const getDetailALL = async () => {
   const query = `
         SELECT *
-        FROM ${schema}.bldg_test
+        FROM ${schema}.bldg
         LIMIT 100;
     `;
   try {
