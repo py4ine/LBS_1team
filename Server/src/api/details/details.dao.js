@@ -1,8 +1,8 @@
-import { db, schema } from '../../config/dbConfig.js';
+import { db, schema } from "../../config/dbConfig.js";
 
 // const getPoiByOriginId = async (origin_id) => {
 //     const query = `
-//         SELECT 
+//         SELECT
 //             bldg_id,
 //             bldg_sn,
 //             rds_sn,
@@ -44,7 +44,7 @@ import { db, schema } from '../../config/dbConfig.js';
 //                 'type', 'Feature',
 //                 'geometry', ST_AsGeoJSON(bldg_geom)::json,
 //                 'properties', json_build_object(
-                    
+
 //                 )
 //             ) AS feature
 //         FROM ${schema}.bldg;
@@ -70,7 +70,7 @@ import { db, schema } from '../../config/dbConfig.js';
 // };
 
 const getDetailByBldgId = async (bldg_id) => {
-    const query = `
+  const query = `
         SELECT 
             lotno_addr, 
             road_nm_addr, 
@@ -87,41 +87,40 @@ const getDetailByBldgId = async (bldg_id) => {
             FROM ${schema}.bldg
         where bldg_id = $1
     `;
-    try {
-        console.log('Executing query:', query);
-        console.log('With parameters:', [bldg_id]);
+  try {
+    console.log("Executing query:", query);
+    console.log("With parameters:", [bldg_id]);
 
-        const result = await db.query(query, [bldg_id]);
+    const result = await db.query(query, [bldg_id]);
 
-        // 쿼리 결과 로그
-        console.log('Query Result:', result.rows);
+    // 쿼리 결과 로그
+    console.log("Query Result:", result.rows);
 
-        return result.rows;
-    } catch (error) {
-        console.error('Error DAO getDetailByBldgId', error);
-        throw new Error(error.message);
-    }
+    return result.rows;
+  } catch (error) {
+    console.error("Error DAO getDetailByBldgId", error);
+    throw new Error(error.message);
+  }
 };
 
 const getDetailALL = async () => {
-    const query = `
+  const query = `
         SELECT *
         FROM ${schema}.bldg
         LIMIT 100;
     `;
-    try {
-        console.log('Executing query:', query);
-        const result = await db.query(query);
+  try {
+    console.log("Executing query:", query);
+    const result = await db.query(query);
 
-        return result.rows;
-    } catch (error) {
-        console.error('Error DAO getDetailALL', error);
-        throw new Error(error.message);
-    }
+    return result.rows;
+  } catch (error) {
+    console.error("Error DAO getDetailALL", error);
+    throw new Error(error.message);
+  }
 };
 
-
 export default {
-    getDetailByBldgId,
-    getDetailALL
+  getDetailByBldgId,
+  getDetailALL,
 };
