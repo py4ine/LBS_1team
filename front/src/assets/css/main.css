@@ -38,6 +38,14 @@
   min-height: 0;
   padding: 20px 0;
   user-select: none;
+  /* 스크롤바 숨기기를 위한 CSS 추가 */
+  -ms-overflow-style: none; /* iE, edge를 위한 설정 */
+  scrollbar-width: none; /* firefox를 위한 설정 */
+}
+
+/* chrome, safari, opera를 위한 설정 */
+.main_contentWrap::-webkit-scrollbar {
+  display: none;
 }
 
 .caseItemBtn {
