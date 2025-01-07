@@ -58,7 +58,7 @@ function Map() {
       <div className="main_container">
         <MapBox/>
         <div className="backArea">
-          <Link to="/">
+          <Link to="/main">
             <img 
               src={backArrowIcon}
               alt="뒤로가기" 

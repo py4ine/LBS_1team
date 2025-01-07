@@ -222,7 +222,7 @@ function Footer({ onStateChange }) {
               {icons.map((icon) => (
                 <li key={icon.id} className="footer_item">
                   {icon.id === 3 ? (
-                    <Link to="/" className="footer_link">
+                    <Link to="/main" className="footer_link">
                       <div className="footer_icon">
                         <img src={icon.src} alt={icon.alt} />
                         <p className="footer_text">{icon.title}</p>
