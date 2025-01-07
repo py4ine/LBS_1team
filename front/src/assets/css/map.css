@@ -50,3 +50,7 @@
   .pin-icon:hover {
     transform: scale(1.1);
   }
+  
+  .pin-icon.active {
+    filter: brightness(0) invert(1);
+  }
