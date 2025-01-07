@@ -1,24 +1,50 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react"; // -useEffect 추가 (찬진)
+import { useNavigate, useParams } from "react-router-dom"; // -useParams 추가 (찬진)
 import Header from "../../components/Layout/Header";
 import "../../assets/css/FloorPlan.css";
+import FloorPlanBtn from "../../components/Detail/FloorPlanBtn"; // 버튼 컴포넌트 추가 (찬진)
 
 function FloorPlan() {
   const navigate = useNavigate();
-  const [imageSrc, setImageSrc] = useState("https://storage.cloud.google.com/lbsteam1/image%203.png");
+  const { bldg_id } = useParams(); // URL에서 건물 ID 가져오기 (찬진)
+  const [imageSrc, setImageSrc] = useState(
+    "https://storage.cloud.google.com/lbsteam1/image%203.png"
+  );
   const [isFullScreen, setIsFullScreen] = useState(false); // 특정 컨테이너만 화면 꽉 채우기
 
   // 버튼 데이터 배열
   const buttonData = [
-    { label: "비상구", src: "https://storage.cloud.google.com/lbsteam1/images.png" },
-    { label: "엘리베이터", src: "https://storage.cloud.google.com/lbsteam1/png-clipart-pokemon-pikachu-pikachu-pokemon-games-pokemon-thumbnail.png" },
-    { label: "소화전", src: "https://storage.cloud.google.com/lbsteam1/png-transparent-doraemon-miffy-desktop-doraemon-thumbnail.png" },
-    { label: "창문", src: "https://storage.cloud.google.com/lbsteam1/png-transparent-ghibli-museum-studio-ghibli-animation-animation-food-studio-head-thumbnail.png" },
-    { label: "CCTV", src: "https://storage.cloud.google.com/lbsteam1/image.png" },
-    { label: "출입구", src: "https://storage.cloud.google.com/lbsteam1/image.png" },
-    { label: "인원수", src: "https://storage.cloud.google.com/lbsteam1/png-transparent-computer-icons-test-event-miscellaneous-text-logo.png" },
+    {
+      label: "비상구",
+      src: "https://storage.cloud.google.com/lbsteam1/images.png",
+    },
+    {
+      label: "엘리베이터",
+      src: "https://storage.cloud.google.com/lbsteam1/png-clipart-pokemon-pikachu-pikachu-pokemon-games-pokemon-thumbnail.png",
+    },
+    {
+      label: "소화전",
+      src: "https://storage.cloud.google.com/lbsteam1/png-transparent-doraemon-miffy-desktop-doraemon-thumbnail.png",
+    },
+    {
+      label: "창문",
+      src: "https://storage.cloud.google.com/lbsteam1/png-transparent-ghibli-museum-studio-ghibli-animation-animation-food-studio-head-thumbnail.png",
+    },
+    {
+      label: "CCTV",
+      src: "https://storage.cloud.google.com/lbsteam1/image.png",
+    },
+    {
+      label: "출입구",
+      src: "https://storage.cloud.google.com/lbsteam1/image.png",
+    },
+    {
+      label: "인원수",
+      src: "https://storage.cloud.google.com/lbsteam1/png-transparent-computer-icons-test-event-miscellaneous-text-logo.png",
+    },
   ];
 
+  // 층별 설계도 버튼 핸들러
   const handleFloorChange = (event) => {
     const floor = event.target.value;
     const defaultImage = {
@@ -48,6 +74,7 @@ function FloorPlan() {
 
           {/* 층 선택 */}
           <div className="floorplan-header">
+            {/* <FloorPlanBtn /> */}
             <select className="floor-select" onChange={handleFloorChange}>
               <option value="1층">1층 설계도</option>
               <option value="2층">2층</option>
@@ -71,9 +98,16 @@ function FloorPlan() {
               isFullScreen ? "fullscreen" : ""
             }`}
           >
-            <img src={imageSrc} alt="설계도 이미지" className="floorplan-image" />
+            <img
+              src={imageSrc}
+              alt="설계도 이미지"
+              className="floorplan-image"
+            />
             {isFullScreen && (
-              <button className="close-fullscreen" onClick={handleCloseFullScreen}>
+              <button
+                className="close-fullscreen"
+                onClick={handleCloseFullScreen}
+              >
                 닫기
               </button>
             )}

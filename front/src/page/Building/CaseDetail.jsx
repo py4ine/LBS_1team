@@ -35,7 +35,7 @@ function CaseDetail() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8080/details/1");
+        const response = await fetch("http://localhost:8080/details/573865");
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
