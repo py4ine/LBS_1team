@@ -1,10 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import mapboxgl from 'mapbox-gl'
 import MapboxLanguage from "@mapbox/mapbox-gl-language";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
 const useMap = (mapContainerRef , defaultStyle , mapConfig) => {
+    const mapInstance = useRef(null);
+
     useEffect(() => {
         
         const map = new mapboxgl.Map({
@@ -13,6 +15,9 @@ const useMap = (mapContainerRef , defaultStyle , mapConfig) => {
             center : mapConfig.initialCenter,
             zoom : mapConfig.initialZoom,
         })
+        
+        mapInstance.current = map;  // map 객체를 ref에 저장
+
         // GeoLocationControl 추가 (내위치)
         const geolocate = new mapboxgl.GeolocateControl({
         positionOptions: {
@@ -71,7 +76,7 @@ const useMap = (mapContainerRef , defaultStyle , mapConfig) => {
                 //     // accuracyCircle.style.display = 'none';  // 완전히 숨기기
                 //   }
             });
-        
+            
             geolocate.on("error", (error) => {
                 console.error("위치 찾기 실패:", error);
             });
@@ -81,7 +86,14 @@ const useMap = (mapContainerRef , defaultStyle , mapConfig) => {
         })
         map.addControl(language);
         // 컴포넌트가 언마운트 될때 없애라
-        return () => map.remove();
+        return () => {
+            if (mapInstance.current) {
+                mapInstance.current.remove();
+            }
+        };
     },[mapContainerRef , defaultStyle , mapConfig])
+
+    // Return the map instance
+    return mapInstance.current;  // ref의 current 값을 반환
 }
 export default useMap;
