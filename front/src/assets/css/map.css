@@ -12,18 +12,17 @@
     height: 40px;
     cursor: pointer;
   }
-  
+  /* pinArea 위치 조정 */
   .pinArea {
-    position: absolute;
-    bottom: 100px;
-    right: 10px;
-    z-index: 10;
+    position: fixed;
+    right: calc(50vw - 195px);
+    bottom: calc(50vh - 290px);
     display: flex;
     flex-direction: column;
     gap: 10px;
     transition: transform 0.3s ease-in-out;
   }
-  
+  /* 모달 상태에 따른 pinArea위치 조정 - 모든 환경에서 동일하게 적용 */
   .pinArea.search-active {
     transform: translateY(-60px);
   }
@@ -39,6 +38,9 @@
   .pinArea.weather-modal-active {
     transform: translateY(-70px);
   }
+  .pinArea.pin1-modal-active {
+    transform: translateY(-125px);  /* Pin1 모달의 높이에 맞게 조정 */
+  }
   
   .pin-icon {
     width: 40px;
@@ -47,6 +49,162 @@
     transition: transform 0.2s;
   }
   
-  .pin-icon:hover {
-    transform: scale(1.1);
+  .marker {
+    cursor: pointer;
+    background-position: center;
   }
+  
+  .result-name {
+    font-weight: bold;
+  }
+  
+  .result-address {
+    font-size: 0.9em;
+    color: var(--bgColor);
+    margin-top: 2px;
+  }
+  
+  /* Pin1 Modal Styles */
+  .pin1_modal_container {
+    position: fixed;
+    bottom: 60px;
+    left: 50%;
+    width: 375px;
+    transform: translateX(-50%);
+    z-index: 997;
+    box-sizing: border-box;
+  }
+  
+  .pin1_modal_overlay {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    width: 375px;
+    transform: translateX(-50%);
+    height: calc(100% - 80px);
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 996;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  .pin1_modal_content {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    width: 375px;
+    background-color: white;
+    border-radius: 10px 10px 0 0;
+    padding: 20px;
+    z-index: 998;
+    box-sizing: border-box;
+    transform: translateX(-50%) translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  
+  .pin1_modal_content.active {
+    transform: translateX(-50%) translateY(0);
+  }
+  
+  .pin1_modal_handle {
+    width: 100%;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .pin1_modal_inner {
+    padding: 0 5px;
+  }
+  
+  .pin1_modal_inner h2 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: var(--textColor);
+  }
+  /* 두번째 p 자식태그에만 주어라 */
+  .pin1_modal_inner p:nth-child(2) { 
+    font-size: 12px;
+    color: var(--textColor);
+    margin: 0;
+  }
+
+@keyframes slideUp {
+  from {
+    transform: translateX(-50%) translateY(100%);
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateX(-50%) translateY(0);
+  }
+  to {
+    transform: translateX(-50%) translateY(100%);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  to {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}
+/* pin1 modal 내용 */
+.modal_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.more_details {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.more_icon_text{
+    color: var(--mainColor);
+    font-weight: bold;
+}
+.more_icon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+/* 내위치 마커 */
+.current-location-marker {
+  cursor: pointer;
+}
+
+.current-location-marker:hover {
+  transform: none;
+}
+
+/* mobile pinArea모달 위치 조정 */
+/* 아이폰 Safari에서의 safe-area 고려 */
+@supports (padding: max(0px)) {
+  .pinArea {
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+}
+
+/* viewport 높이가 매우 작은 경우 (가로모드 등) */
+@media screen and (max-height: 500px) {
+  .pinArea {
+    bottom: calc(50vh - 300px);
+  }
+  
+  .pin-icon {
+    width: 36px;
+    height: 36px;
+  }
+}

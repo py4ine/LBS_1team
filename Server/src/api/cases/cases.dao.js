@@ -1,8 +1,8 @@
-import { db, schema } from '../../config/dbConfig.js';
+import { db, schema } from "../../config/dbConfig.js";
 
 // const getPoiByOriginId = async (origin_id) => {
 //     const query = `
-//         SELECT 
+//         SELECT
 //             bldg_id,
 //             bldg_sn,
 //             rds_sn,
@@ -44,7 +44,7 @@ import { db, schema } from '../../config/dbConfig.js';
 //                 'type', 'Feature',
 //                 'geometry', ST_AsGeoJSON(bldg_geom)::json,
 //                 'properties', json_build_object(
-                    
+
 //                 )
 //             ) AS feature
 //         FROM ${schema}.bldg;
@@ -71,7 +71,7 @@ import { db, schema } from '../../config/dbConfig.js';
 
 // const getPoiByOriginId = async (origin_id) => {
 //     const query = `
-//         SELECT 
+//         SELECT
 //             bldg_id,
 //             bldg_sn,
 //             rds_sn,
@@ -107,7 +107,7 @@ import { db, schema } from '../../config/dbConfig.js';
 // };
 
 const getCasesALL = async (dispatch_fire_station) => {
-    const query = `
+  const query = `
         SELECT 
             case_id, 
             bldg_id, 
@@ -119,25 +119,25 @@ const getCasesALL = async (dispatch_fire_station) => {
             disabled_person,
             report_phone,
             ST_X(ST_Centroid(bldg_geom)) AS longitude,
-            ST_Y(ST_Centroid(bldg_geom)) AS latitude
+            ST_Y(ST_Centroid(bldg_geom)) AS latitude,
+            bldg_nm,
+            road_nm_addr
 
 
             FROM ${schema}.case
         where dispatch_fire_station = $1
     `;
-    try {
-        console.log(dispatch_fire_station)
-        const result = await db.query(query, [dispatch_fire_station]);
-        console.log(result.rows)
-        return result.rows;
-
-    } catch (error) {
-        console.error('Error DAO getCasesALL', error);
-        throw new Error(error.message);
-    }
+  try {
+    console.log(dispatch_fire_station);
+    const result = await db.query(query, [dispatch_fire_station]);
+    console.log(result.rows);
+    return result.rows;
+  } catch (error) {
+    console.error("Error DAO getCasesALL", error);
+    throw new Error(error.message);
+  }
 };
 
-
 export default {
-    getCasesALL
+  getCasesALL,
 };
