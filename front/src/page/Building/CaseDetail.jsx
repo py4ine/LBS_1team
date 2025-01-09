@@ -207,6 +207,7 @@ function CaseDetail() {
                 <strong>신고 내용:</strong>
               </p>
             </div>
+
             <div>
               <p>
                 21층 강의실 안에서 탄내가 나서 복도를 나와보니 연기가 난다고 함.
@@ -225,6 +226,7 @@ function CaseDetail() {
             <div>
               <p>1명/청각 장애 2급/남자</p>
             </div>
+
           </div>
         </div>
       </div>

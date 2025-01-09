@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useImperativeHandle, forwardRef } from "react";
 import { Link } from "react-router-dom";
 import waterIcon from "../../assets/images/map_icons/footer/icon_water.png";
 import waterIcon1 from "../../assets/images/map_icons/water/icon_water1.png";
@@ -19,7 +19,7 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 
-function Footer({ onStateChange }) {
+const Footer = forwardRef(({ onStateChange, isPin1Active }, ref) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeModal, setActiveModal] = useState(null);
   const [touchStart, setTouchStart] = useState(0);
@@ -30,6 +30,13 @@ function Footer({ onStateChange }) {
   const [activeIcon, setActiveIcon] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
   const [currentMarker, setCurrentMarker] = useState(null);
+  const [isFirstClickAfterPin1, setIsFirstClickAfterPin1] = useState(false);
+
+  useEffect(() => {
+    if (isPin1Active) {
+      setIsFirstClickAfterPin1(true);
+    }
+  }, [isPin1Active]);
 
   const icons = [
     { id: 1, src: waterIcon, alt: "용수시설", title: "용수시설" },
@@ -74,6 +81,12 @@ function Footer({ onStateChange }) {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Escape') {
+      closeModal();
+    }
+  };
+
   const getModalType = (modalId) => {
     switch(modalId) {
       case 1:
@@ -88,27 +101,31 @@ function Footer({ onStateChange }) {
   };
 
   const openModal = (modalId) => {
-    if (modalId === activeModal) {
+    if (activeModal === modalId) {
       closeModal();
-      setActiveIcon(null);
     } else {
-      if (isModalOpen) {
-        closeModal();
-        setTimeout(() => {
-          setIsModalOpen(true);
-          setActiveModal(modalId);
-          setActiveIcon(modalId);
-          setModalPosition(0);
-          onStateChange(true, getModalType(modalId));
-        }, 100);
-      } else {
-        setIsModalOpen(true);
-        setActiveModal(modalId);
-        setActiveIcon(modalId);
-        setModalPosition(0);
-        onStateChange(true, getModalType(modalId));
+      if (isSearchVisible) {
+        setIsSearchVisible(false);
       }
+      
+      setIsModalOpen(true);
+      setActiveModal(modalId);
+      setActiveIcon(modalId);
+      onStateChange(true, getModalType(modalId));
     }
+  };
+
+  const toggleSearch = () => {
+    const newSearchState = !isSearchVisible;
+    
+    if (isModalOpen) {
+      setIsModalOpen(false);
+      setActiveModal(null);
+    }
+    
+    setIsSearchVisible(newSearchState);
+    setActiveIcon(newSearchState ? 5 : null);
+    onStateChange(newSearchState, null);
   };
 
   const closeModal = () => {
@@ -116,16 +133,7 @@ function Footer({ onStateChange }) {
     setActiveModal(null);
     setActiveIcon(null);
     setModalPosition(0);
-    onStateChange(isSearchVisible, null);
-  };
-
-  const toggleSearch = () => {
-    const newSearchState = !isSearchVisible;
-    setIsSearchVisible(newSearchState);
-    setActiveIcon(newSearchState ? 5 : null);
-    if (!isModalOpen) {
-      onStateChange(newSearchState, null);
-    }
+    onStateChange(false, null);
   };
 
   const handleChange = async (e) => {
@@ -139,7 +147,6 @@ function Footer({ onStateChange }) {
     try {
       const kakaoApiKey = import.meta.env.VITE_KAKAO_REST_API_KEY;
       
-      // 키워드 검색 API 호출
       const keywordResponse = await fetch(
         `https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(e.target.value.trim())}&size=5`,
         {
@@ -149,7 +156,6 @@ function Footer({ onStateChange }) {
         }
       );
 
-      // 주소 검색 API 호출
       const addressResponse = await fetch(
         `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(e.target.value.trim())}&size=5`,
         {
@@ -166,7 +172,6 @@ function Footer({ onStateChange }) {
 
       let processedResults = [];
 
-      // 키워드 검색 결과 처리 (건물, 상호명)
       if (keywordData && keywordData.documents) {
         const keywordResults = keywordData.documents.map(place => ({
           center: [parseFloat(place.x), parseFloat(place.y)],
@@ -178,7 +183,6 @@ function Footer({ onStateChange }) {
         processedResults = [...processedResults, ...keywordResults];
       }
 
-      // 주소 검색 결과 처리
       if (addressData && addressData.documents) {
         const addressResults = addressData.documents.map(place => ({
           center: [parseFloat(place.x), parseFloat(place.y)],
@@ -189,7 +193,6 @@ function Footer({ onStateChange }) {
         processedResults = [...processedResults, ...addressResults];
       }
 
-      // 검색어와 일치하는 유형의 결과만 필터링
       const query = e.target.value.trim().toLowerCase();
       const isAddressQuery = query.includes('동') || query.includes('로') || query.includes('길');
       
@@ -252,6 +255,26 @@ function Footer({ onStateChange }) {
   const handleSearchInputClick = () => {
     setText('');
     setSearchResults([]);
+    if (currentMarker) {
+      currentMarker.remove();
+      setCurrentMarker(null);
+    }
+  };
+
+  const resetState = () => {
+    setIsModalOpen(false);
+    setActiveModal(null);
+    setActiveIcon(null);
+    setModalPosition(0);
+    setIsSearchVisible(false);
+  };
+
+  useImperativeHandle(ref, () => ({
+    resetState
+  }));
+
+  const getIconClass = (iconId) => {
+    return `footer_icon ${activeIcon === iconId ? 'active' : ''}`;
   };
 
   return (
@@ -367,21 +390,21 @@ function Footer({ onStateChange }) {
                 <li key={icon.id} className="footer_item">
                   {icon.id === 3 ? (
                     <Link to="/main" className="footer_link">
-                      <div className={`footer_icon ${activeIcon === icon.id ? 'active' : ''}`}>
+                      <div className={getIconClass(icon.id)}>
                         <img src={icon.src} alt={icon.alt} />
                         <p className="footer_text">{icon.title}</p>
                       </div>
                     </Link>
                   ) : icon.id === 5 ? (
                     <button className="footer_link" onClick={toggleSearch}>
-                      <div className={`footer_icon ${activeIcon === icon.id ? 'active' : ''}`}>
+                      <div className={getIconClass(icon.id)}>
                         <img src={icon.src} alt={icon.alt} />
                         <p className="footer_text">{icon.title}</p>
                       </div>
                     </button>
                   ) : (
                     <button className="footer_link" onClick={() => openModal(icon.id)}>
-                      <div className={`footer_icon ${activeIcon === icon.id ? 'active' : ''}`}>
+                      <div className={getIconClass(icon.id)}>
                         <img src={icon.src} alt={icon.alt} />
                         <p className="footer_text">{icon.title}</p>
                       </div>
@@ -395,6 +418,6 @@ function Footer({ onStateChange }) {
       </div>
     </div>
   );
-}
+});
 
 export default Footer;
