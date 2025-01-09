@@ -8,7 +8,7 @@ import "../assets/css/map.css"
 import backArrowIcon from "../assets/images/map_icons/bg/icon_backarrow_BG.png";
 import fireAreaIcon from "../assets/images/map_icons/bg/icon_linepin_BG.png";
 import myLocationIcon from "../assets/images/map_icons/bg/icon_mylocation_BG.png";
-
+import axios from "axios";
 
 const MapBox = ({ onLoadGeoJson, onLoadWaterJson, onLoadDangerJson, onremovePointLayers }) => {
   const mapContainerRef = useRef(null);
@@ -46,10 +46,49 @@ function Map({ removepoint: initialPointLayers ="point", longitude: initialLongi
   const loadDagerJsonRef = useRef(null);
   const removePointLayersRef = useRef(null);
   
+  
   // useState에 초기값으로 파라미터 값을 전달
   const [longitude, setLongitude] = useState(initialLongitude);
   const [latitude, setLatitude] = useState(initialLatitude);
   const [removepoint, setPointLayers] = useState(initialPointLayers);
+
+
+  const [weatherData, setWeatherData] = useState(null);
+  const [error, setError] = useState(""); // 오류 상태 추가
+
+  const API_KEY = "409e846b281cf5d9778aa237b0136e6b";
+
+  // 날씨 데이터 가져오기
+  const fetchWeatherData = async () => {
+    try {
+      setError(""); // 초기화
+      const response = await axios.get("https://api.openweathermap.org/data/2.5/weather", {
+        params: {
+          lat: latitude,
+          lon: longitude,
+          appid: API_KEY,
+        },
+      });
+
+      const kelvinTemperature = response.data.main.temp;
+      const celsiusTemperature = kelvinTemperature - 273.15;
+
+      setWeatherData({
+        temperature: celsiusTemperature.toFixed(2),
+        humidity: response.data.main.humidity,
+        windSpeed: response.data.wind.speed,
+        windDirection: response.data.wind.deg || "N/A",
+      });
+    } catch (err) {
+      setError("날씨 정보를 가져오는 데 실패했습니다.");
+    }
+  };
+
+  // 초기 날씨 데이터를 가져옵니다.
+  useEffect(() => {
+    fetchWeatherData();
+  }, [latitude, longitude]);
+
 
   const handlePinClick = (pinType) => {
     if (pinType === "pin2") {
@@ -156,7 +195,7 @@ function Map({ removepoint: initialPointLayers ="point", longitude: initialLongi
         onremovePointLayers={handleRemovePointLayers}
         longitude={longitude} // 전달
         latitude={latitude} // 전달
-        removepoint={removepoint} // 전달
+        weatherData={weatherData}
       />
     </>
   );

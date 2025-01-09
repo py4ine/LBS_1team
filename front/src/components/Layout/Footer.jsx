@@ -16,7 +16,7 @@ import searchIcon from "../../assets/images/map_icons/footer/icon_search.png";
 import "../../assets/css/footer.css";
 
 
-function Footer({ onStateChange, onLoadGeoJson, onLoadWaterJson, onLoadDangerJson, onremovePointLayers, longitude, latitude  }) {
+function Footer({ onStateChange, onLoadGeoJson, onLoadWaterJson, onLoadDangerJson, onremovePointLayers, longitude, latitude, weatherData  }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeModal, setActiveModal] = useState(null);
   const [touchStart, setTouchStart] = useState(0);
@@ -26,7 +26,7 @@ function Footer({ onStateChange, onLoadGeoJson, onLoadWaterJson, onLoadDangerJso
   const [text, setText] = useState("");
   const [isWaterVisible, setIsWaterVisible] = useState(false);
   const [isDangerVisible, setIsDangerVisible] = useState(false);
-
+  // console.log(weatherData)
   const icons = [
     { id: 1, src: waterIcon, alt: "용수시설", title: "용수시설" },
     { id: 2, src: harmfulnessIcon, alt: "유해시설", title: "유해시설" },
@@ -47,6 +47,12 @@ function Footer({ onStateChange, onLoadGeoJson, onLoadWaterJson, onLoadDangerJso
     { id: 2, src: harmfulnessIcon2, alt: "2", title: ": 지하식 소화전" },
     
   ];
+
+  const getWindDirection = (degree) => {
+    const directions = ["북", "북동", "동", "남동", "남", "남서", "서", "북서"];
+    const index = Math.round(degree / 45) % 8;
+    return directions[index];
+  };
 
   const handleTouchStart = (e) => {
     setTouchStart(e.targetTouches[0].clientY);
@@ -262,9 +268,10 @@ function Footer({ onStateChange, onLoadGeoJson, onLoadWaterJson, onLoadDangerJso
                   <h2 id={`modal-title-${activeModal}`} className="sr-only">
                     {icons.find(icon => icon.id === activeModal)?.title}
                   </h2>
-                  <p role="text">
-                    {icons.find(icon => icon.id === activeModal)?.title} 모달 내용입니다!
-                  </p>
+                  <p role="text" >온도: {weatherData.temperature}°C</p>
+                  <p>습도: {weatherData.humidity}%</p>
+                  <p>풍속: {weatherData.windSpeed} m/s</p>
+                  <p>풍향: {getWindDirection(weatherData.windDirection)}°</p>
                 </>
               )}
             </div>
