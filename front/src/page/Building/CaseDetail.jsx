@@ -127,12 +127,12 @@ function CaseDetail() {
 
           <h2><strong className="stronger">신고 내용</strong></h2>
 
-          <div className="flex-container">
+          <div className="flex-container flex-wrap">
             <div className="flex-container1"><p><strong>신고자 전화번호:</strong></p></div>
             <div><p>010-1234 5678</p></div>
           </div>
 
-          <div className="flex-container">
+          <div className="flex-container flex-wrap">
             <div className="flex-container1"><p><strong>신고 내용:</strong></p></div>
             <div>
               <p>
@@ -141,7 +141,7 @@ function CaseDetail() {
             </div>
           </div>
 
-          <div className="flex-container">
+          <div className="flex-container flex-wrap">
             <div className="flex-container1"><p><strong>장애 여부:</strong></p></div>
             <div><p>1명/청각 장애 2급/남자</p></div>
           </div>

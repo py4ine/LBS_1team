@@ -4,7 +4,7 @@
   
   /* 상세 정보 컨테이너 */
   .case_detail_container{
-    background: #fff;
+    background: var(--backgroundColor);
     margin-top: 70px;
     /* border: 1px solid #ddd; */
     /* border-radius: 10px; */
@@ -19,32 +19,35 @@
   
   /* 섹션 제목 */
   .case_detail_container h2 {
-    border-bottom: 2px solid #cedc00;
-    border-top: 2px solid #cedc00;
+    border-bottom: 2px solid var(--mainColor);
+    border-top: 2px solid var(--mainColor);
     padding-bottom: 5px;
     margin-bottom: 15px;
     text-align: center;
-    color: #000000;
+    color: var(--textColor);
     font-size: 18px;
   }
   
   /* 텍스트 스타일 */
   .case_detail_container p {
-    margin: 5px;
+    /* flex-container 사이에 gap을 주면 margin+lineheight는 필요없어짐. */
+    /* margin: 5px; */
     font-size: 16px;
-    color: #000000;
-    line-height: 1;
+    color: var(--textColor);
+    /* line-height: 1; */
     word-wrap: break-word; /* 긴 단어를 줄 바꿈 */
   }
   
   .flex-container {
     display: flex; /* Flexbox 활성화 */
-    align-items: center; /* 세로 정렬: 중앙에 정렬 */
-    gap: 0px;
-    margin-top: 3px;
+    gap: 10px;
+    margin-top: 5px;
     
   }
-  
+  .flex-wrap{
+    padding: 0px 20px;
+    align-items: center; /* 세로 정렬: 중앙에 정렬 */
+  }
   .flex-container1{
     white-space: nowrap;
   }
@@ -73,7 +76,7 @@
     left: 50%;
     width: 20px;
     height: 2.5px;
-    background-color: #000000;
+    background-color: var(--textColor);
     transform-origin: center;
   }
   
@@ -87,14 +90,12 @@
   
   .css-x-button:hover::before,
   .css-x-button:hover::after {
-    background-color: #cedc00; /* 호버 시 색상 변경 */
+    background-color: var(--mainColor); /* 호버 시 색상 변경 */
   }
   
   .case_detail_button{
     display: block;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    padding: 0px;
+    margin: 20px 0px;
     font-size: 16px;
     text-align: center;
     border-radius: 10px;
@@ -105,21 +106,21 @@
   .detail-button {
     display: inline-block;
     padding: 15px 30px;
-    width: 100%;
-    height: 100%;
+    width: 310px;
+    height: 50px;
     font-size: 16px;
     font-weight: bold; /* 버튼 텍스트를 굵게 */
-    color: #000000; /* 텍스트 색상 */
-    background-color: #cedc00; /* 버튼 배경색 */
+    color: var(--textColor); /* 텍스트 색상 */
+    background-color: var(--mainColor); /* 버튼 배경색 */
     border: none; /* 기본 테두리 제거 */
-    border-radius: 15px; /* 모서리를 둥글게 */
+    border-radius: 10px; /* 모서리를 둥글게 */
     cursor: pointer; /* 클릭 가능한 커서 */
     transition: background-color 0.3s, transform 0.2s; /* 배경색과 클릭 효과 */
   }
   
   .detail-button:hover {
-    background-color: #000000; /* 호버 시 색상 변경 */
-    color: #cedc00 ;
+    background-color: var(--textColor); /* 호버 시 색상 변경 */
+    color: var(--mainColor) ;
   }
   
   .detail-button:active {

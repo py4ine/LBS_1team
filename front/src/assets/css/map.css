@@ -12,18 +12,17 @@
     height: 40px;
     cursor: pointer;
   }
-  
+  /* pinArea 위치 조정 */
   .pinArea {
-    position: absolute;
-    bottom: 80px;
-    right: 10px;
-    z-index: 10;
+    position: fixed;
+    right: calc(50vw - 195px);
+    bottom: calc(50vh - 290px);
     display: flex;
     flex-direction: column;
     gap: 10px;
     transition: transform 0.3s ease-in-out;
   }
-  /* 모달 상태에 따른 위치 조정 - 모든 환경에서 동일하게 적용 */
+  /* 모달 상태에 따른 pinArea위치 조정 - 모든 환경에서 동일하게 적용 */
   .pinArea.search-active {
     transform: translateY(-60px);
   }
@@ -40,7 +39,7 @@
     transform: translateY(-70px);
   }
   .pinArea.pin1-modal-active {
-    transform: translateY(-130px);  /* Pin1 모달의 높이에 맞게 조정 */
+    transform: translateY(-125px);  /* Pin1 모달의 높이에 맞게 조정 */
   }
   
   .pin-icon {
@@ -188,4 +187,24 @@
 
 .current-location-marker:hover {
   transform: none;
+}
+
+/* mobile pinArea모달 위치 조정 */
+/* 아이폰 Safari에서의 safe-area 고려 */
+@supports (padding: max(0px)) {
+  .pinArea {
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+}
+
+/* viewport 높이가 매우 작은 경우 (가로모드 등) */
+@media screen and (max-height: 500px) {
+  .pinArea {
+    bottom: calc(50vh - 300px);
+  }
+  
+  .pin-icon {
+    width: 36px;
+    height: 36px;
+  }
 }
