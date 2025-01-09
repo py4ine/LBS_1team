@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useRef, useState, useEffect} from "react";
 import { Link } from "react-router-dom";
 import Header from "../components/Layout/Header";
 import Footer from "../components/Layout/Footer";
@@ -10,24 +10,49 @@ import fireAreaIcon from "../assets/images/map_icons/bg/icon_linepin_BG.png";
 import myLocationIcon from "../assets/images/map_icons/bg/icon_mylocation_BG.png";
 
 
-const MapBox =() => {
-  // console.log("!!")
+const MapBox = ({ onLoadGeoJson, onLoadWaterJson, onLoadDangerJson, onremovePointLayers }) => {
   const mapContainerRef = useRef(null);
 
-  useMap(mapContainerRef, mapConfig.defaultStyle , mapConfig);
+  // `useMap`에서 세 개의 로드 함수 반환
+  const { loadGeoJsonRef, loadWaterJsonRef, loadDangerJsonRef, removePointLayersRef } = useMap(mapContainerRef, mapConfig.defaultStyle, mapConfig);
 
-  return <div ref ={mapContainerRef} style={{width : '100%', height : '100vh'}}/>
-  // 'calc(100vh - 120px)'
-}
+  useEffect(() => {
+    if (loadGeoJsonRef.current && onLoadGeoJson) {
+      onLoadGeoJson(loadGeoJsonRef.current);
+    }
+    if (loadWaterJsonRef.current && onLoadWaterJson) {
+      onLoadWaterJson(loadWaterJsonRef.current);
+    }
+    if (loadDangerJsonRef.current && onLoadDangerJson) {
+      onLoadDangerJson(loadDangerJsonRef.current);
+    }
+    if (removePointLayersRef.current && onremovePointLayers) {
+      onremovePointLayers(removePointLayersRef.current);
+    }
+  }, [loadGeoJsonRef, loadWaterJsonRef, loadDangerJsonRef, removePointLayersRef, onLoadGeoJson, onLoadWaterJson, onLoadDangerJson, onremovePointLayers]);
 
-function Map() {
+  return <div ref={mapContainerRef} style={{ width: "100%", height: "100vh" }} />;
+};
+
+
+
+
+
+function Map({ removepoint: initialPointLayers ="point", longitude: initialLongitude = 126.87942186751448, latitude: initialLatitude = 37.48095295527662 }) {
   const [isElementsShifted, setIsElementsShifted] = useState(false);
   const [activeModalType, setActiveModalType] = useState(null);
+  const loadGeoJsonRef = useRef(null);
+  const loadWaterJsonRef = useRef(null);
+  const loadDagerJsonRef = useRef(null);
+  const removePointLayersRef = useRef(null);
+  
+  // useState에 초기값으로 파라미터 값을 전달
+  const [longitude, setLongitude] = useState(initialLongitude);
+  const [latitude, setLatitude] = useState(initialLatitude);
+  const [removepoint, setPointLayers] = useState(initialPointLayers);
 
-  // 핀 위치 표시를 위한 함수
   const handlePinClick = (pinType) => {
     if (pinType === "pin2") {
-      // pin2 (내위치 핀) 클릭시 geoLocate 컨트롤 트리거
       const geolocateControl = document.querySelector(
         ".mapboxgl-ctrl-geolocate"
       );
@@ -35,7 +60,6 @@ function Map() {
         geolocateControl.click();
       }
     }
-    // 나중에 실제 데이터와 연동하여 핀 위치 표시 로직 구현
     console.log(`${pinType} 핀이 클릭되었습니다`);
   };
 
@@ -44,44 +68,96 @@ function Map() {
     setActiveModalType(modalType);
   };
 
+  const handleLoadGeoJson = (longitude, latitude) => {
+    if (loadGeoJsonRef.current) {
+      console.log("GeoJSON 로드 실행:", { longitude, latitude });
+      loadGeoJsonRef.current(longitude, latitude); // GeoJSON 로드
+    } else {
+      console.warn("loadGeoJson 함수가 초기화되지 않았습니다.");
+    }
+  };
+  const handleWaterJson = (longitude, latitude) => {
+    if (loadWaterJsonRef.current) {
+      console.log("Water 로드 실행:", { longitude, latitude });
+      loadWaterJsonRef.current(longitude, latitude); // GeoJSON 로드
+    } else {
+      console.warn("loadWaterJson 함수가 초기화되지 않았습니다.");
+    }
+  };
+  const handleDangerJson = (longitude, latitude) => {
+    if (loadDagerJsonRef.current) {
+      console.log("Danger 로드 실행:", { longitude, latitude });
+      loadDagerJsonRef.current(longitude, latitude); // GeoJSON 로드
+    } else {
+      console.warn("loadDagerJson 함수가 초기화되지 않았습니다.");
+    }
+  };
+
+  const handleRemovePointLayers = (removepoint) => {
+    if (removePointLayersRef.current) {
+      console.log("Danger 로드 실행:", { removepoint });
+      removePointLayersRef.current(removepoint); // GeoJSON 로드
+    } else {
+      console.warn("loadDagerJson 함수가 초기화되지 않았습니다.");
+    }
+  };
+
   const getPinAreaClassName = () => {
-    if (!isElementsShifted) return 'pinArea';
+    if (!isElementsShifted) return "pinArea";
     if (activeModalType) {
       return `pinArea ${activeModalType}-modal-active`;
     }
-    return 'pinArea search-active';
+    return "pinArea search-active";
   };
 
   return (
     <>
       <Header />
       <div className="main_container">
-        <MapBox/>
+        <MapBox
+          onLoadGeoJson={(loadGeoJson) => {
+            loadGeoJsonRef.current = loadGeoJson;
+          }}
+          onLoadWaterJson={(loadWaterJson) => {
+            loadWaterJsonRef.current = loadWaterJson;
+          }}
+          onLoadDangerJson={(loadDangerJson) => {
+            loadDagerJsonRef.current = loadDangerJson;
+          }}
+          onremovePointLayers={(removePointLayers) => {
+            removePointLayersRef.current = removePointLayers;
+          }}
+        />
         <div className="backArea">
           <Link to="/">
-            <img 
-              src={backArrowIcon}
-              alt="뒤로가기" 
-              className="back-icon"
-            />
+            <img src={backArrowIcon} alt="뒤로가기" className="back-icon" />
           </Link>
         </div>
         <div className={getPinAreaClassName()}>
-          <img 
-            src={fireAreaIcon} 
-            alt="핀1" 
+          <img
+            src={fireAreaIcon}
+            alt="핀1"
             className="pin-icon"
-            onClick={() => handlePinClick('pin1')}
+            onClick={() => handlePinClick("pin1")}
           />
-          <img 
-            src={myLocationIcon} 
-            alt="핀2" 
+          <img
+            src={myLocationIcon}
+            alt="핀2"
             className="pin-icon"
-            onClick={() => handlePinClick('pin2')}
+            onClick={() => handlePinClick("pin2")}
           />
         </div>
       </div>
-      <Footer onStateChange={handleModalOrSearchChange} />
+      <Footer
+        onLoadWaterJson={handleWaterJson}
+        onLoadDangerJson={handleDangerJson}
+        onLoadGeoJson={handleLoadGeoJson}
+        onStateChange={handleModalOrSearchChange}
+        onremovePointLayers={handleRemovePointLayers}
+        longitude={longitude} // 전달
+        latitude={latitude} // 전달
+        removepoint={removepoint} // 전달
+      />
     </>
   );
 }

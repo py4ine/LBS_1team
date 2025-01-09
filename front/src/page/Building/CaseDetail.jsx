@@ -19,15 +19,30 @@ import "../../assets/css/casedetail.css";
 
 
 
-function CaseDetail() {
+function CaseDetail({bldgid: initialbldgid = 573865}) {
+  const [bldgid, setBldgid] = useState(initialbldgid);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate(); // useNavigate 훅 사용
 
-  const handleClick = () => {
-    navigate("/map/1/1"); // 이동할 경로
+  const preloadImages = () => {
+    const images = [
+      "https://storage.cloud.google.com/lbsteam1/image%203.png",
+      "https://storage.cloud.google.com/lbsteam1/images.png",
+    ];
+
+    images.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
   };
+  const handleNavigate = () => {
+    preloadImages(); // 페이지 이동 전 이미지 미리 로드
+    navigate("/map/1/1");
+  };
+
+  
   const handleClick2 = () =>{
     navigate("/map")
   };
@@ -35,7 +50,7 @@ function CaseDetail() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8080/details/573865");
+        const response = await fetch(`http://localhost:8080/details/${bldgid}`);
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
@@ -49,6 +64,21 @@ function CaseDetail() {
     };
 
     fetchData();
+    const preloadImages = [
+      "https://storage.cloud.google.com/lbsteam1/image%203.png",
+      "https://storage.cloud.google.com/lbsteam1/images.png",
+      "https://storage.cloud.google.com/lbsteam1/png-clipart-pokemon-pikachu-pikachu-pokemon-games-pokemon-thumbnail.png",
+      "https://storage.cloud.google.com/lbsteam1/png-transparent-doraemon-miffy-desktop-doraemon-thumbnail.png",
+      "https://storage.cloud.google.com/lbsteam1/png-transparent-ghibli-museum-studio-ghibli-animation-animation-food-studio-head-thumbnail.png",
+      "https://storage.cloud.google.com/lbsteam1/png-transparent-computer-icons-test-event-miscellaneous-text-logo.png",
+      "https://storage.cloud.google.com/lbsteam1/image.png"
+    ];
+
+    // 이미지 객체를 만들어 브라우저가 캐싱하도록 함
+    preloadImages.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
   }, []);
 
   if (loading) return <div>Loading...</div>;
@@ -115,7 +145,7 @@ function CaseDetail() {
             </div>
 
             <div className="case_detail_button">
-            <button className="detail-button" onClick={handleClick}><strong>건물 설계 상세 도면보기</strong></button>
+            <button className="detail-button" onClick={handleNavigate}><strong>건물 설계 상세 도면보기</strong></button>
             </div>
             
 

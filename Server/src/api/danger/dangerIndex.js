@@ -1,8 +1,8 @@
 import express from 'express'
-import ctrl from './incidents.ctrl.js'
+import ctrl from './danger.ctrl.js'
 
 const router = express.Router();
-router.get('/', ctrl.getIncidentALL);
+router.get('/', ctrl.getdangerALL);
 
 
 export default router

@@ -16,7 +16,7 @@ import searchIcon from "../../assets/images/map_icons/footer/icon_search.png";
 import "../../assets/css/footer.css";
 
 
-function Footer({ onStateChange }) {
+function Footer({ onStateChange, onLoadGeoJson, onLoadWaterJson, onLoadDangerJson, onremovePointLayers, longitude, latitude  }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeModal, setActiveModal] = useState(null);
   const [touchStart, setTouchStart] = useState(0);
@@ -24,6 +24,8 @@ function Footer({ onStateChange }) {
   const [modalPosition, setModalPosition] = useState(0);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [text, setText] = useState("");
+  const [isWaterVisible, setIsWaterVisible] = useState(false);
+  const [isDangerVisible, setIsDangerVisible] = useState(false);
 
   const icons = [
     { id: 1, src: waterIcon, alt: "용수시설", title: "용수시설" },
@@ -127,6 +129,85 @@ function Footer({ onStateChange }) {
     }
   };
 
+
+
+
+
+  const handleWaterClick = () => {
+    if (isWaterVisible) {
+      // 데이터 제거
+      onremovePointLayers("points");
+      setIsWaterVisible(false); // 상태 초기화
+    } else if (isDangerVisible) {
+      
+      onremovePointLayers("points");
+      setIsDangerVisible(false);
+      // 데이터 로드
+      handleNearbyWaters();
+      setIsWaterVisible(true); // 데이터가 표시 중임을 추적
+    } else {
+
+      handleNearbyWaters();
+      setIsWaterVisible(true);
+    }
+  };
+  
+  const handleDangerClick = () => {
+    if (isDangerVisible) {
+      // 데이터 제거
+      onremovePointLayers("points");
+      setIsDangerVisible(false); // 상태 초기화
+    } else if (isWaterVisible) {
+      onremovePointLayers("points");
+      setIsWaterVisible(false); 
+      // 데이터 로드
+      handleNearbyDanger();
+      setIsDangerVisible(true); // 데이터가 표시 중임을 추적
+    } else {
+
+      handleNearbyDanger();
+      setIsDangerVisible(true); 
+    }
+  };
+  
+
+  
+  const handleNearbyBuildings = () => {
+    // const longitude = 126.87942186751448; // 테스트용 경도
+    // const latitude = 37.48095295527662; // 테스트용 위도
+  
+    if (onLoadGeoJson) {
+      console.log("onLoadGeoJson 호출:", { longitude, latitude });
+      onLoadGeoJson(longitude, latitude);
+    } else {
+      console.warn("onLoadGeoJson 함수가 전달되지 않았습니다.");
+    }
+  };
+
+  const handleNearbyWaters = () => {
+    // const longitude = 126.87942186751448; // 테스트용 경도
+    // const latitude = 37.48095295527662; // 테스트용 위도
+  
+    if (onLoadWaterJson) {
+      console.log("onLoadWaterJson 호출:", { longitude, latitude });
+      onLoadWaterJson(longitude, latitude);
+    } else {
+      console.warn("onLoadWaterJson 함수가 전달되지 않았습니다.");
+    }
+  };
+
+  const handleNearbyDanger = () => {
+    // const longitude = 126.87942186751448; // 테스트용 경도
+    // const latitude = 37.48095295527662; // 테스트용 위도
+  
+    if (onLoadDangerJson) {
+      console.log("onLoadDangerJson 호출:", { longitude, latitude });
+      onLoadDangerJson(longitude, latitude);
+    } else {
+      console.warn("onLoadDangerJson 함수가 전달되지 않았습니다.");
+    }
+  };
+  
   return (
     <div className="footer_mainWrap">
       {isModalOpen && activeModal !== 3 && (
@@ -208,7 +289,7 @@ function Footer({ onStateChange }) {
             </form>
           </div>
           <div className="search-button-container">
-            <button className="search-button">
+            <button className="search-button" onClick={handleNearbyBuildings}>
               주변 건물 조회
             </button>
           </div>
@@ -218,34 +299,74 @@ function Footer({ onStateChange }) {
       <div className="footer_wrap">
         <div className="footer_container">
           <div className="footer_bg">
-            <ul className="footer_list">
-              {icons.map((icon) => (
-                <li key={icon.id} className="footer_item">
-                  {icon.id === 3 ? (
+          <ul className="footer_list">
+              {icons.map((icon) => {
+                let content;
+
+                if (icon.id === 1) {
+                  content = (
+                    <button className="footer_link" onClick={() => {openModal(icon.id); handleWaterClick();}}>
+                      <div className="footer_icon">
+                        <img src={icon.src} alt={icon.alt} />
+                        <p className="footer_text">{icon.title}</p>
+                      </div>
+                    </button>
+                  );
+                } else if (icon.id === 2) {
+                  content = (
+                    <button className="footer_link" onClick={() => {openModal(icon.id); handleDangerClick()}}>
+                      <div className="footer_icon">
+                        <img src={icon.src} alt={icon.alt} />
+                        <p className="footer_text">{icon.title}</p>
+                      </div>
+                    </button>
+                  );
+                } else if (icon.id === 3) {
+                  content = (
                     <Link to="/" className="footer_link">
                       <div className="footer_icon">
                         <img src={icon.src} alt={icon.alt} />
                         <p className="footer_text">{icon.title}</p>
                       </div>
                     </Link>
-                  ) : icon.id === 5 ? (
-                    <button className="footer_link" onClick={toggleSearch}>
-                      <div className="footer_icon">
-                        <img src={icon.src} alt={icon.alt} />
-                        <p className="footer_text">{icon.title}</p>
-                      </div>
-                    </button>
-                  ) : (
+                  );
+                } else if (icon.id === 4) {
+                  content = (
                     <button className="footer_link" onClick={() => openModal(icon.id)}>
                       <div className="footer_icon">
                         <img src={icon.src} alt={icon.alt} />
                         <p className="footer_text">{icon.title}</p>
                       </div>
                     </button>
-                  )}
-                </li>
-              ))}
+                  );
+                } else if (icon.id === 5) {
+                  content = (
+                    <button className="footer_link" onClick={toggleSearch}>
+                      <div className="footer_icon">
+                        <img src={icon.src} alt={icon.alt} />
+                        <p className="footer_text">{icon.title}</p>
+                      </div>
+                    </button>
+                  );
+                } else {
+                  content = (
+                    <button className="footer_link" onClick={() => openModal(icon.id)}>
+                      <div className="footer_icon">
+                        <img src={icon.src} alt={icon.alt} />
+                        <p className="footer_text">{icon.title}</p>
+                      </div>
+                    </button>
+                  );
+                }
+
+                return (
+                  <li key={icon.id} className="footer_item">
+                    {content}
+                  </li>
+                );
+              })}
             </ul>
+
           </div>
         </div>
       </div>
