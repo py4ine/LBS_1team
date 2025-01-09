@@ -22,7 +22,7 @@ const useMap = (mapContainerRef , defaultStyle , mapConfig) => {
         const geolocate = new mapboxgl.GeolocateControl({
         positionOptions: {
           enableHighAccuracy: true, // GPS 정확도를 높게 설정
-          timeout: 3000  // 3초 타임아웃 설정
+          timeout: 6000  // 6초 타임아웃 설정
         },
         trackUserLocation: true, // 사용자 위치 계속 추적
         showUserHeading: true, // 사용자의 방향 표시
@@ -94,6 +94,6 @@ const useMap = (mapContainerRef , defaultStyle , mapConfig) => {
     },[mapContainerRef , defaultStyle , mapConfig])
 
     // Return the map instance
-    return mapInstance.current;  // ref의 current 값을 반환
+    return { map: mapInstance.current, mapboxgl };  // mapboxgl도 함께 반환
 }
 export default useMap;

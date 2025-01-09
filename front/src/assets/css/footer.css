@@ -133,10 +133,8 @@ body {
 }
 
 .footer_icon {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
+  /* 기본 �태 (비활성화) - mainColor */
+  color: var(--mainColor);
 }
 
 .footer_icon img {
@@ -150,8 +148,14 @@ body {
   font-weight: 400;
   color: var(--mainColor);
 }
+
+.footer_icon.active {
+  /* 활성화 상태 - 화이트*/
+  color: var(--bgColor);
+}
+
 .footer_icon.active img {
-  filter: brightness(0) invert(1); /* 이미지를 하얀색으로 변경 */
+  filter: brightness(0) invert(1); /* 이미지만 하얀색으로 변경 */
 }
 
 .footer_icon.active .footer_text {
