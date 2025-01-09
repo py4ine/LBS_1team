@@ -1,12 +1,42 @@
 import React, { useEffect, useState } from "react"; // -useEffect 추가 (찬진)
-import { useNavigate, useParams } from "react-router-dom"; // -useParams 추가 (찬진)
+import { useLocation, useNavigate, useParams } from "react-router-dom"; // -useParams 추가 (찬진)
 import Header from "../../components/Layout/Header";
 import "../../assets/css/FloorPlan.css";
 import FloorPlanBtn from "../../components/Detail/FloorPlanBtn"; // 버튼 컴포넌트 추가 (찬진)
 
 function FloorPlan() {
   const navigate = useNavigate();
-  const { bldg_id } = useParams(); // URL에서 건물 ID 가져오기 (찬진)
+  const { caseId, flplanId } = useParams(); // URL에서 case,flplan ID 가져오기 (찬진)
+  const location = useLocation(); // 이전 페이지에서 전달된 데이터(state) 가져오기 (찬진)
+
+  // location.state에서 층수정보 추출 , 없으면 기본값으로 설정 (찬진)
+  // const { gro_flo_co, und_flo_co } = location.state || {
+  //   gro_flo_co: 1,
+  //   und_flo_co: 0,
+  // };
+
+  // 층수 정보 상태 관리
+  const [floorInfo, setFloorInfo] = useState({
+    gro_flo_co: location.state?.gro_flo_co || 1,
+    und_flo_co: location.state?.und_flo_co || 0,
+  });
+
+  // url , location.state가 변경될때마다 층수정보 업데이트 useEffect
+  useEffect(() => {
+    if (
+      location.state?.gro_flo_co !== undefined &&
+      location.state?.und_flo_co !== undefined
+    ) {
+      setFloorInfo({
+        gro_flo_co: Number(location.state.gro_flo_co),
+        und_flo_co: Number(location.state.und_flo_co),
+      });
+    }
+  }, [location.state]);
+
+  //  url 에서 현재 층수 가져오기 (찬진)
+  const currentFloor = flplanId ? Number(flplanId) : 1;
+
   const [imageSrc, setImageSrc] = useState(
     "https://storage.cloud.google.com/lbsteam1/image%203.png"
   );
@@ -60,8 +90,14 @@ function FloorPlan() {
     setIsFullScreen(false); // 화면 꽉 채우기 비활성화
   };
 
+  const handleFloorNavigation = (floor) => {
+    navigate(`/map/${caseId}/${floor}`, {
+      state: floorInfo,
+    });
+  };
+
   const handleClick = () => {
-    navigate("/map/1"); // 이동할 경로
+    navigate(`/map/${caseId}`); // 이동할 경로
   };
 
   return (
@@ -73,14 +109,20 @@ function FloorPlan() {
           <div className="css-x-button" onClick={handleClick}></div>
 
           {/* 층 선택 */}
-          <div className="floorplan-header">
-            {/* <FloorPlanBtn /> */}
-            <select className="floor-select" onChange={handleFloorChange}>
+          {/* <div className="floorplan-header"> */}
+          <FloorPlanBtn
+            gro_flo_co={floorInfo.gro_flo_co}
+            und_flo_co={floorInfo.und_flo_co}
+            // onChange={handleFloorChange}
+            onFloorSelect={handleFloorNavigation}
+            currentFloor={currentFloor}
+          />
+          {/* <select className="floor-select" onChange={handleFloorChange}>
               <option value="1층">1층 설계도</option>
               <option value="2층">2층</option>
               <option value="3층">3층</option>
-            </select>
-          </div>
+            </select> */}
+          {/* </div> */}
 
           {/* <div class="selectBox2 ">
             <button class="label">fruits 🍊</button>

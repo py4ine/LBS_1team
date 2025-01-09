@@ -1,13 +1,15 @@
 .floorplan_main_container {
-  margin-top: 120px;
+  margin-top: 80px;
+  height: 100%;
 }
 /* 상단 제목과 선택 */
 .floorplan-header {
-  border-bottom: 2px solid #cedc00;
+  /* border-bottom: 2px solid #cedc00; */
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  background-color: skyblue;
 }
 
 .floorplan-header h1 {
@@ -62,17 +64,17 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  justify-content: center;
 }
 
 .icon-buttons button {
-  padding: 10px 20px;
+  width: 80px;
+  height: 28px;
   font-size: 14px;
   font-weight: bold;
-  color: #cedc00;
-  background-color: #000000;
+  color: var(--mainColor);
+  background-color: var(--textColor);
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
