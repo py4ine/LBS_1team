@@ -9,19 +9,72 @@ function FloorPlan() {
   const { bldgId, flplanId } = useParams(); // URL에서 case,flplan ID 가져오기 (찬진)
   const location = useLocation(); // 이전 페이지에서 전달된 데이터(state) 가져오기 (찬진)
 
+  // useState (찬진)
+  const [flImages, setFlImages] = useState([]); // 모든 층의 이미지 데이터 저장
+  const [currentFlImage, setCurrentFlImage] = useState(null); // 현재 보고있는 층의 이미지 데이터
+  const [loading, setLoading] = useState(true); // 로딩
+  const [error, setError] = useState(null); // 에러
+  const [currentImage, setCurrentImage] = useState(""); // 현재 표시되는 이미지 url
+  const [imagesLoaded, setImageLoaded] = useState(false); // 이미지 프리로딩 완료 상태
+
   // location.state에서 층수정보 추출 , 없으면 기본값으로 설정 (찬진)
   // const { gro_flo_co, und_flo_co } = location.state || {
   //   gro_flo_co: 1,
   //   und_flo_co: 0,
   // };
 
-  // 층수 정보 상태 관리
+  // 층수 정보 상태 관리 (찬진)
   const [floorInfo, setFloorInfo] = useState({
     gro_flo_co: location.state?.gro_flo_co || 1,
     und_flo_co: location.state?.und_flo_co || 0,
   });
 
-  // url , location.state가 변경될때마다 층수정보 업데이트 useEffect
+  //  url 에서 현재 층수 가져오기 (찬진)
+  const currentFloor = flplanId ? Number(flplanId) : 1;
+
+  // 이미지 데이터를 가져오고 프리로딩 하는 useEffect
+  useEffect(() => {
+    const fetchFlImages = async () => {
+      setLoading(true);
+      try {
+        // api 이미지 데이터 가져오기
+        const res = await fetch(`http://localhost:8080/images/${bldgId}`);
+        if (!res.ok) {
+          throw new Error("Failed to fetch fl imageds");
+        }
+        const result = await res.json();
+
+        if (result.success) {
+          // 받아온 데이터 저장
+          setFlImages(result.data);
+
+          // 현재 층의 이미지 데이터 찾기
+          const currentFlImage = result.data.find(
+            (floor) => floor.flo_co === currentFloor
+          );
+          setCurrentFlImage(currentFlImage);
+
+          // 모든 층의 모든 이미지 url을 배열화
+          const allImageUrls = result.data.reduce((urls, floor) => {
+            return [
+              ...urls,
+              floor.flo_pl,
+              floor.flo_stair,
+              floor.flo_hydrant,
+              floor.flo_elevator,
+              floor.flo_window,
+              floor.flo_enterance,
+            ];
+          }, []);
+
+          // URL 중복 제거
+          const uniqueImageUrls = [...new Set(allImageUrls)];
+        }
+      } catch (error) {}
+    };
+  });
+
+  // url , location.state가 변경될때마다 층수정보 업데이트 useEffect (찬진)
   useEffect(() => {
     if (
       location.state?.gro_flo_co !== undefined &&
@@ -33,9 +86,6 @@ function FloorPlan() {
       });
     }
   }, [location.state]);
-
-  //  url 에서 현재 층수 가져오기 (찬진)
-  const currentFloor = flplanId ? Number(flplanId) : 1;
 
   const [imageSrc, setImageSrc] = useState(
     "https://storage.cloud.google.com/lbsteam1/image%203.png"
@@ -75,16 +125,16 @@ function FloorPlan() {
   ];
 
   // 층별 설계도 버튼 핸들러
-  const handleFloorChange = (event) => {
-    const floor = event.target.value;
-    const defaultImage = {
-      "1층": "https://storage.cloud.google.com/lbsteam1/image%203.png",
-      "2층": "https://storage.cloud.google.com/lbsteam1/second-floor.png",
-      "3층": "https://storage.cloud.google.com/lbsteam1/third-floor.png",
-    };
-    setImageSrc(defaultImage[floor]);
-    setIsFullScreen(true); // 설계도 컨테이너만 꽉 채우기 활성화
-  };
+  // const handleFloorChange = (event) => {
+  //   const floor = event.target.value;
+  //   const defaultImage = {
+  //     "1층": "https://storage.cloud.google.com/lbsteam1/image%203.png",
+  //     "2층": "https://storage.cloud.google.com/lbsteam1/second-floor.png",
+  //     "3층": "https://storage.cloud.google.com/lbsteam1/third-floor.png",
+  //   };
+  //   setImageSrc(defaultImage[floor]);
+  //   setIsFullScreen(true); // 설계도 컨테이너만 꽉 채우기 활성화
+  // };
 
   const handleCloseFullScreen = () => {
     setIsFullScreen(false); // 화면 꽉 채우기 비활성화
