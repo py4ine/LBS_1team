@@ -1,28 +1,21 @@
-// import React from "react";
-// import Header from "../../components/Layout/Header";
-
-// function CaseDetail() {
-//   return (
-//     <>
-//       <Header />
-//       <div className="main_container">CaseDetail</div>
-//     </>
-//   );
-// }
-
-// export default CaseDetail;
-
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Header from "../../components/Layout/Header";
 import "../../assets/css/casedetail.css";
 
 function CaseDetail() {
+  const location = useLocation(); // (찬진)
+  const caseData = location.state?.caseData;
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate(); // useNavigate 훅 사용
   const { bldgId } = useParams(); // useParams로 caseId 가져오기 (찬진)
+
+  // 사건정보 상태 저장소
+  // const [caseData, setCaseData] = useState(null); // 사건정보 데이터 저장소 (찬진)
+  // const [caseError, setCaseError] = useState(null);
+  // const [caseLoading, setCaseLoading] = useState(true);
 
   const handleClick = () => {
     navigate(`/map/${bldgId}/1`, {
@@ -74,6 +67,28 @@ function CaseDetail() {
       img.src = src;
     });
   }, []);
+
+  //   사건정보 내용 useEffect (찬진)
+  // useEffect(() => {
+  //   const fetchCaseData = async () => {
+  //     try {
+  //       const res = await fetch(
+  //         `http://localhost:8080/cases/?dispatch_fire_station=101`
+  //       );
+  //       if (!res.ok) {
+  //         throw new Error("Failed to fetch caseData");
+  //       }
+  //       const caseResult = await res.json();
+  //       setCaseData(caseResult);
+  //     } catch (error) {
+  //       setCaseError(error.message);
+  //     } finally {
+  //       setCaseLoading(false);
+  //     }
+  //   };
+
+  //   fetchCaseData();
+  // }, []);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -210,41 +225,36 @@ function CaseDetail() {
             <strong className="stronger">신고 내용</strong>
           </h2>
 
-          <div className="flex-container">
+          <div className="flex-container flex-wrap">
             <div className="flex-container1">
               <p>
                 <strong>신고자 전화번호:</strong>
               </p>
             </div>
             <div>
-              <p>010-1234 5678</p>
+              <p>{caseData.report_phone}</p>
             </div>
           </div>
 
-          <div className="flex-container">
+          <div className="flex-container flex-wrap">
             <div className="flex-container1">
               <p>
                 <strong>신고 내용:</strong>
               </p>
             </div>
-
             <div>
-              <p>
-                21층 강의실 안에서 탄내가 나서 복도를 나와보니 연기가 난다고 함.
-                화재 의심이 되고, 사람들이 건물 밖으로 여러 명이 이동 중이라고
-                함. 건물 불이 번지는 것으로 추정.
-              </p>
+              <p>{caseData.report_type}</p>
             </div>
           </div>
 
-          <div className="flex-container">
+          <div className="flex-container flex-wrap">
             <div className="flex-container1">
               <p>
                 <strong>장애 여부:</strong>
               </p>
             </div>
             <div>
-              <p>1명/청각 장애 2급/남자</p>
+              <p>{caseData.disabled_person}</p>
             </div>
           </div>
         </div>
