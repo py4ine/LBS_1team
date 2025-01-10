@@ -13,7 +13,7 @@ import myLocationIcon from "../assets/images/map_icons/bg/icon_mylocation_BG.png
 import myLocationActiveIcon from "../assets/images/map_icons/bg/icon_mylocationW_BG.png";
 import leftArrowIcon from "../assets/images/button_icons/icon_leftarrow_G.png";
 import pullfinIcon from "../assets/images/map_icons/icon_pullfin.png";
-import axios from "axios";
+
 
 function Map() {
   const mapContainerRef = useRef(null);
@@ -40,9 +40,7 @@ function Map() {
   const removePointLayersRef = useRef(null);
 
   // 날씨 데이터 관련 상태
-  const [weatherData, setWeatherData] = useState(null);
-  const [error, setError] = useState("");
-  const API_KEY = "409e846b281cf5d9778aa237b0136e6b";
+  
 
   // localStorage caseData 관리
   // const [caseData, setCaseData] = useState(() => {
@@ -153,40 +151,7 @@ function Map() {
   }, [mapLoaded, map, caseData, mapboxgl]);
 
   // 날씨 데이터 가져오기
-  const fetchWeatherData = async () => {
-    try {
-      setError("");
-      const response = await axios.get(
-        "https://api.openweathermap.org/data/2.5/weather",
-        {
-          params: {
-            lat: latitude,
-            lon: longitude,
-            appid: API_KEY,
-          },
-        }
-      );
-
-      const kelvinTemperature = response.data.main.temp;
-      const celsiusTemperature = kelvinTemperature - 273.15;
-
-      setWeatherData({
-        temperature: celsiusTemperature.toFixed(2),
-        humidity: response.data.main.humidity,
-        windSpeed: response.data.wind.speed,
-        windDirection: response.data.wind.deg || "N/A",
-      });
-      console.log("1:", weatherData);
-    } catch (err) {
-      setError("날씨 정보를 가져오는 데 실패했습니다.");
-    }
-  };
-
-  // 날씨 패치
-  useEffect(() => {
-    fetchWeatherData();
-  }, [longitude, latitude]);
-
+  
   // 데이터 핸들러 함수들
   const handleLoadGeoJson = () => {
     if (map) {
@@ -457,7 +422,8 @@ function Map() {
         onLoadDangerJson={handleDangerJson}
         onLoadGeoJson={handleLoadGeoJson}
         onremovePointLayers={handleRemovePointLayers}
-        weatherData={weatherData}
+        
+        map={map}
       />
     </>
   );

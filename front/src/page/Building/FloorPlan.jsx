@@ -46,7 +46,7 @@ function FloorPlan() {
   const buttonData = [
     {
       label: "비상구",
-      src: "https://storage.cloud.google.com/lbsteam1/images.png",
+      src: "asddsadas",
     },
     {
       label: "엘리베이터",

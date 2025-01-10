@@ -45,10 +45,13 @@ function CaseDetail() {
     const fetchData = async () => {
       try {
         const response = await fetch(`http://localhost:8080/details/${bldgId}`);
+        const responseimg = await fetch(`http://localhost:8080/images/${bldgId}`);
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
         const result = await response.json();
+        const resultimg = await response.json();
+
         setData(result.data[0]);
       } catch (err) {
         setError(err.message);
@@ -59,7 +62,7 @@ function CaseDetail() {
 
     fetchData();
     const preloadImages = [
-      "https://storage.cloud.google.com/lbsteam1/image%203.png",
+      resultimg.flo_pl,
       "https://storage.cloud.google.com/lbsteam1/images.png",
       "https://storage.cloud.google.com/lbsteam1/png-clipart-pokemon-pikachu-pikachu-pokemon-games-pokemon-thumbnail.png",
       "https://storage.cloud.google.com/lbsteam1/png-transparent-doraemon-miffy-desktop-doraemon-thumbnail.png",
