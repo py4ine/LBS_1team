@@ -4,7 +4,7 @@ import waters from "./waters/waterIndex.js";
 import danger from "./danger/dangerIndex.js";
 import cases from "./cases/casesIndex.js";
 import around from "./around/aroundIndex.js";
-
+import images from "./images/imagesIndex.js";
 const mountRouters = (app) => {
   app.use("/login", login);
   app.use("/details", details);
@@ -12,6 +12,7 @@ const mountRouters = (app) => {
   app.use("/danger", danger);
   app.use("/cases", cases);
   app.use("/around", around);
+  app.use("/images", images);
 };
 
 export default mountRouters;
