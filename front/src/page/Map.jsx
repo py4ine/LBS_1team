@@ -431,7 +431,7 @@ function Map() {
                 <div className="modal_header">
                   <h2>건물명 : {caseData.bldg_nm}</h2>
                   <Link
-                    to="/map/1"
+                    to={`/map/${caseData.bldg_id}`}
                     state={{ caseData: caseData }}
                     className="more_details"
                   >
