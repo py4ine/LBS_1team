@@ -31,6 +31,7 @@ function Map() {
   const [longitude, setLongitude] = useState(location.state.caseData.longitude); // (추가)
   const [latitude, setLatitude] = useState(location.state.caseData.latitude); // (추가)
   const [center, setCenter] = useState(null); // 지도 중심점
+  const [bound, setbound] = useState(null); // 지도 중심점
 
   // console.log(location.state.caseData);
   // GeoJSON 관련 ref
@@ -170,26 +171,69 @@ function Map() {
   // console.log("1: ", caseData.longitude);
   const handleWaterJson = () => {
     if (map) {
-      const mapCenter = map.getCenter(); // 현재 지도의 중심점을 직접 가져옴
-
-      // 상태 업데이트
-      setCenter(mapCenter);
+      const mapBound = map.getBounds();
+  
+      // 경계 좌표를 각각 가져옴
+      const southWest = mapBound.getSouthWest();
+      const northWest = mapBound.getNorthWest();
+      const northEast = mapBound.getNorthEast();
+      const southEast = mapBound.getSouthEast();
+  
+      // POLYGON 좌표 생성
+      const polygonCoords = `
+        POLYGON((
+          ${southWest.lng} ${southWest.lat},
+          ${northWest.lng} ${northWest.lat},
+          ${northEast.lng} ${northEast.lat},
+          ${southEast.lng} ${southEast.lat},
+          ${southWest.lng} ${southWest.lat}
+        ))
+      `.replace(/\s+/g, " "); // 공백을 하나로 정리
+  
+      console.log("Generated POLYGON:", polygonCoords);
+  
       if (loadWaterJsonRef.current) {
-        loadWaterJsonRef.current(mapCenter.lng, mapCenter.lat);
+        loadWaterJsonRef.current(polygonCoords);
       }
+    } else {
+      console.error("Map object is not available.");
     }
   };
+  
+  
+
 
   const handleDangerJson = () => {
     if (map) {
-      const mapCenter = map.getCenter(); // 현재 지도의 중심점을 직접 가져옴
-
-      // 상태 업데이트
-      setCenter(mapCenter);
+      const mapBound = map.getBounds();
+  
+      // 경계 좌표를 각각 가져옴
+      const southWest = mapBound.getSouthWest();
+      const northWest = mapBound.getNorthWest();
+      const northEast = mapBound.getNorthEast();
+      const southEast = mapBound.getSouthEast();
+  
+      // POLYGON 좌표 생성
+      const polygonCoords = `
+        POLYGON((
+          ${southWest.lng} ${southWest.lat},
+          ${northWest.lng} ${northWest.lat},
+          ${northEast.lng} ${northEast.lat},
+          ${southEast.lng} ${southEast.lat},
+          ${southWest.lng} ${southWest.lat}
+        ))
+      `.replace(/\s+/g, " "); // 공백을 하나로 정리
+  
+      console.log("Generated POLYGON:", polygonCoords);
+  
       if (loadDangerJsonRef.current) {
-        loadDangerJsonRef.current(mapCenter.lng, mapCenter.lat);
+        loadDangerJsonRef.current(polygonCoords);
       }
+    
+    } else {
+      console.error("Map object is not available.");
     }
+      
   };
 
   const handleRemovePointLayers = (pointType) => {

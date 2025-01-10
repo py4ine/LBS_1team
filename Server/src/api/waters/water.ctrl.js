@@ -19,39 +19,40 @@ const getPoiByOriginId = async (req ,res) => {
     }
 }
 
+
+
+
 const getWaterALL = async (req, res) => {
     try {
-        // 클라이언트로부터 경도와 위도를 받아옴
-        const { longitude, latitude } = req.query;
-        
-        console.log(req.query)
-        // 유효성 검사
-        if (!longitude || !latitude) {
+        const { polygon } = req.query;
+
+        console.log('Received query:', req.query); // 디버깅 로그
+
+        if (!polygon) {
             return res.status(400).json({
                 success: false,
-                message: 'longitude and latitude are required'
+                message: 'polygon query parameter is required'
             });
         }
 
-        // waterDao.getWaterALL 호출 (좌표 전달)
-        const poi = await waterDao.getWaterALL(longitude, latitude);
+        // polygon 값을 DAO로 전달
+        const poi = await waterDao.getWaterALL(polygon);
 
-        // 3항 연산자 사용
         res.json({
             success: true,
             message: 'Data fetched successfully',
             data: poi.length === 0 ? [] : poi
         });
-
     } catch (error) {
         console.error('Error in ctrl getWaterALL', error);
-        const errorMessage = error.message;
         res.status(500).json({
             success: false,
-            message: errorMessage
+            message: error.message
         });
     }
 };
+
+
 
 export default {
     getWaterALL

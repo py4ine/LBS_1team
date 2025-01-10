@@ -106,7 +106,7 @@ import { db, schema } from '../../config/dbConfig.js';
 //     }
 // };
 
-const getdangerALL = async (longitude, latitude) => {
+const getdangerALL = async (polygon) => {
     const query = `
         SELECT
             json_build_object(
@@ -119,17 +119,17 @@ const getdangerALL = async (longitude, latitude) => {
                 )
             ) AS feature
         FROM ${schema}.facilitie_danger
-        WHERE ST_DWithin(
-            danger_geom, 
-            ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography, 
-            200
+        WHERE ST_Within(
+            danger_geom,
+            ST_GeomFromText($1, 4326)
         );
     `;
     try {
 
-        const result = await db.query(query, [longitude, latitude]);
+        console.log('Executing query with polygon:', polygon);
 
-        // GeoJSON FeatureCollection 형태로 데이터 변환
+        const result = await db.query(query, [polygon]);
+
         const geojson = {
             type: 'FeatureCollection',
             features: result.rows.map(row => row.feature) // 각 행의 feature를 묶음
