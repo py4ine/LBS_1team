@@ -1,11 +1,11 @@
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"></meta> 
-import React, {useRef, useState, useEffect} from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import Header from "../components/Layout/Header";
 import Footer from "../components/Layout/Footer";
 import useMap from "../hooks/useMap";
-import {mapConfig} from "../config/mapConfig";
-import "../assets/css/map.css"
+import { mapConfig } from "../config/mapConfig";
+import "../assets/css/map.css";
 import backArrowIcon from "../assets/images/map_icons/bg/icon_backarrow_BG.png";
 import fireAreaIcon from "../assets/images/map_icons/bg/icon_linepin_BG.png";
 import fireAreaActiveIcon from "../assets/images/map_icons/bg/icon_linepinW_BG.png";
@@ -13,7 +13,7 @@ import myLocationIcon from "../assets/images/map_icons/bg/icon_mylocation_BG.png
 import myLocationActiveIcon from "../assets/images/map_icons/bg/icon_mylocationW_BG.png";
 import leftArrowIcon from "../assets/images/button_icons/icon_leftarrow_G.png";
 import pullfinIcon from "../assets/images/map_icons/icon_pullfin.png";
-
+import axios from "axios";
 
 function Map() {
   const mapContainerRef = useRef(null);
@@ -26,38 +26,78 @@ function Map() {
   const footerRef = useRef(null);
   const [currentLocationMarker, setCurrentLocationMarker] = useState(null);
   const [watchId, setWatchId] = useState(null);
-  
   const location = useLocation();
-  
-  // localStorage를 사용하여 caseData 관리
-  const [caseData, setCaseData] = useState(() => {
-    const savedData = localStorage.getItem('caseData');
-    return savedData ? JSON.parse(savedData) : location.state?.caseData;
-  });
+  const [caseData, setCaseData] = useState(location.state.caseData); // caseData 상태 저장소 (찬진)
+  const [longitude, setLongitude] = useState(location.state.caseData.longitude); // (추가)
+  const [latitude, setLatitude] = useState(location.state.caseData.latitude); // (추가)
+  const [center, setCenter] = useState(null); // 지도 중심점
 
-  // location.state가 변경될 때 localStorage 업데이트
-  useEffect(() => {
-    if (location.state?.caseData) {
-      localStorage.setItem('caseData', JSON.stringify(location.state.caseData));
-      setCaseData(location.state.caseData);
-    }
-  }, [location.state]);
+  // console.log(location.state.caseData);
+  // GeoJSON 관련 ref
+  const loadGeoJsonRef = useRef(null);
+  const loadWaterJsonRef = useRef(null);
+  const loadDangerJsonRef = useRef(null);
+  const removePointLayersRef = useRef(null);
 
-  // console.log("location state:", location.state); // (찬진)
+  // 날씨 데이터 관련 상태
+  const [weatherData, setWeatherData] = useState(null);
+  const [error, setError] = useState("");
+  const API_KEY = "409e846b281cf5d9778aa237b0136e6b";
 
-  // console.log("caseData: ", caseData); //(찬진)
+  // localStorage caseData 관리
+  // const [caseData, setCaseData] = useState(() => {
+  //   const savedData = localStorage.getItem("caseData");
+  //   return savedData ? JSON.parse(savedData) : location.state?.caseData;
+  // });
+
+  // // location.state 변경 시 localStorage 업데이트
+  // useEffect(() => {
+  //   if (location.state?.caseData) {
+  //     // localStorage.setItem("caseData", JSON.stringify(location.state.caseData));
+  //     setCaseData(location.state.caseData);
+  //     // setLongitude(caseData.longitude);
+  //     // setLatitude(caseData.latitude);
+  //   }
+  // }, [location.state]);
+  // // location.state 변경 시 localStorage 업데이트
+
+  // useEffect(() => {
+  //   if (caseData) {
+  //     setLongitude(caseData.longitude);
+  //     setLatitude(caseData.latitude);
+  //   }
+  // }, [caseData]);
+  // console.log("data:", longitude);
 
   // useMap hook 사용
-  const {map,mapboxgl} = useMap(mapContainerRef, mapConfig.defaultStyle, mapConfig);
+  const {
+    map,
+    mapboxgl,
+    loadGeoJsonRef: hookGeoJsonRef,
+    loadWaterJsonRef: hookWaterJsonRef,
+    loadDangerJsonRef: hookDangerJsonRef,
+    removePointLayersRef: hookRemovePointLayersRef,
+  } = useMap(mapContainerRef, mapConfig.defaultStyle, mapConfig);
+
+  // ref 설정
+  useEffect(() => {
+    loadGeoJsonRef.current = hookGeoJsonRef.current;
+    loadWaterJsonRef.current = hookWaterJsonRef.current;
+    loadDangerJsonRef.current = hookDangerJsonRef.current;
+    removePointLayersRef.current = hookRemovePointLayersRef.current;
+  }, [
+    hookGeoJsonRef,
+    hookWaterJsonRef,
+    hookDangerJsonRef,
+    hookRemovePointLayersRef,
+  ]);
 
   useEffect(() => {
     if (mapContainerRef.current && map) {
       setMapInstance(map);
-      // 전역 객체에 map 인스턴스 저장
       window.mapInstance = map;
     }
-    
-    // cleanup function
+
     return () => {
       window.mapInstance = null;
     };
@@ -66,44 +106,42 @@ function Map() {
   // map 로드 완료 감지
   useEffect(() => {
     if (map) {
-      map.on('load', () => {
+      map.on("load", () => {
         setMapLoaded(true);
       });
     }
   }, [map]);
 
-  // 마커 생성을 위한 useEffect
+  // 마커 생성
   useEffect(() => {
     if (!map || !mapLoaded || !caseData || !mapboxgl) {
-      return; // 필요한 모든 의존성이 준비되지 않았다면 실행하지 않음
+      return;
     }
 
     try {
       console.log("Creating marker with data:", caseData);
-      
-      const el = document.createElement('div');
-      el.className = 'marker';
+
+      const el = document.createElement("div");
+      el.className = "marker";
       el.style.backgroundImage = `url(${pullfinIcon})`;
-      el.style.width = '40px';
-      el.style.height = '40px';
-      // el.style.backgroundSize = 'cover'; // 100% 대신 cover 사용
-      el.style.backgroundRepeat = 'no-repeat';
-      el.style.backgroundPosition = 'center';
+      el.style.width = "40px";
+      el.style.height = "40px";
+      el.style.backgroundRepeat = "no-repeat";
+      el.style.backgroundPosition = "center";
 
       const marker = new mapboxgl.Marker({
         element: el,
-        anchor: 'bottom' // 마커의 아래쪽 끝이 좌표에 위치하도록 설정
+        anchor: "bottom",
       })
-        .setLngLat([caseData.longitude, caseData.latitude])
+        .setLngLat([longitude, latitude])
         .addTo(map);
 
       map.flyTo({
-        center: [caseData.longitude, caseData.latitude],
+        center: [longitude, latitude],
         zoom: 15,
-        essential: true // 애니메이션이 중단되지 않도록 설정
+        essential: true,
       });
 
-      // cleanup function
       return () => {
         if (marker) {
           marker.remove();
@@ -114,39 +152,116 @@ function Map() {
     }
   }, [mapLoaded, map, caseData, mapboxgl]);
 
-  // Footer 모달 상태를 관리하는 함수
+  // 날씨 데이터 가져오기
+  const fetchWeatherData = async () => {
+    try {
+      setError("");
+      const response = await axios.get(
+        "https://api.openweathermap.org/data/2.5/weather",
+        {
+          params: {
+            lat: latitude,
+            lon: longitude,
+            appid: API_KEY,
+          },
+        }
+      );
+
+      const kelvinTemperature = response.data.main.temp;
+      const celsiusTemperature = kelvinTemperature - 273.15;
+
+      setWeatherData({
+        temperature: celsiusTemperature.toFixed(2),
+        humidity: response.data.main.humidity,
+        windSpeed: response.data.wind.speed,
+        windDirection: response.data.wind.deg || "N/A",
+      });
+      console.log("1:", weatherData);
+    } catch (err) {
+      setError("날씨 정보를 가져오는 데 실패했습니다.");
+    }
+  };
+
+  // 날씨 패치
+  useEffect(() => {
+    fetchWeatherData();
+  }, [longitude, latitude]);
+
+  // 데이터 핸들러 함수들
+  const handleLoadGeoJson = () => {
+    if (map) {
+      const mapCenter = map.getCenter(); // 현재 지도의 중심점을 직접 가져옴
+
+      // 상태 업데이트
+      setCenter(mapCenter);
+
+      // 중심점 좌표를 직접 사용
+      if (loadGeoJsonRef.current) {
+        loadGeoJsonRef.current(mapCenter.lng, mapCenter.lat);
+      }
+    }
+  };
+
+  // console.log("1: ", caseData.longitude);
+  const handleWaterJson = () => {
+    if (map) {
+      const mapCenter = map.getCenter(); // 현재 지도의 중심점을 직접 가져옴
+
+      // 상태 업데이트
+      setCenter(mapCenter);
+      if (loadWaterJsonRef.current) {
+        loadWaterJsonRef.current(mapCenter.lng, mapCenter.lat);
+      }
+    }
+  };
+
+  const handleDangerJson = () => {
+    if (map) {
+      const mapCenter = map.getCenter(); // 현재 지도의 중심점을 직접 가져옴
+
+      // 상태 업데이트
+      setCenter(mapCenter);
+      if (loadDangerJsonRef.current) {
+        loadDangerJsonRef.current(mapCenter.lng, mapCenter.lat);
+      }
+    }
+  };
+
+  const handleRemovePointLayers = (pointType) => {
+    if (removePointLayersRef.current) {
+      removePointLayersRef.current(pointType);
+    }
+  };
+
+  // Footer 모달 상태 관리
   const handleModalOrSearchChange = (isOpen, modalType = null) => {
-    // Pin1 모달이 열려있을 때 Footer 모달을 열려고 하면 Pin1 모달 닫기
     if (isOpen && isPin1ModalOpen) {
       setIsPin1ModalOpen(false);
       setActivePin(null);
     }
-    
+
     setIsElementsShifted(isOpen);
     setActiveModalType(modalType);
   };
 
-  // Pin1 클릭을 관리하는 함수
+  // Pin 클릭 핸들러
   const handlePinClick = (pinType) => {
     if (pinType === "pin1") {
       const newModalState = !isPin1ModalOpen;
-      
-      // Footer 모달이 열려있을 때 Pin1을 열려고 하면 Footer 모달 닫기
+
       if (isElementsShifted) {
         setIsElementsShifted(false);
         setActiveModalType(null);
-        
-        // Footer 컴포넌트의 상태도 리셋
+
         if (footerRef.current) {
           footerRef.current.resetState();
         }
       }
-      
+
       setIsPin1ModalOpen(newModalState);
-      handleModalOrSearchChange(newModalState, 'pin1');
+      handleModalOrSearchChange(newModalState, "pin1");
     }
     if (pinType === "pin2") {
-      // 이미 마커가 있다면 제거하고 위치 추적 중지
       if (currentLocationMarker) {
         currentLocationMarker.remove();
         setCurrentLocationMarker(null);
@@ -158,62 +273,57 @@ function Map() {
         return;
       }
 
-      // 실시간 위치 추적 시작
       if (navigator.geolocation) {
-        // 최초 위치 확인
         navigator.geolocation.getCurrentPosition(
           (position) => {
             const lat = position.coords.latitude;
             const lng = position.coords.longitude;
-            
+
             if (map) {
-              // 최초 위치로 지도 이동
               map.flyTo({
                 center: [lng, lat],
                 zoom: 15,
-                essential: true
+                essential: true,
               });
 
-              // 현재 위치 마커 생성
-              const el = document.createElement('div');
-              el.className = 'current-location-marker';
-              el.style.width = '20px';
-              el.style.height = '20px';
-              el.style.borderRadius = '50%';
-              el.style.backgroundColor = 'var(--textColor)';
-              el.style.border = '2px solid white';
-              el.style.boxShadow = '0 0 10px rgba(0,0,0,0.3)';
+              const el = document.createElement("div");
+              el.className = "current-location-marker";
+              el.style.width = "20px";
+              el.style.height = "20px";
+              el.style.borderRadius = "50%";
+              el.style.backgroundColor = "var(--textColor)";
+              el.style.border = "2px solid white";
+              el.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
 
               const marker = new mapboxgl.Marker({
                 element: el,
-                anchor: 'center',
+                anchor: "center",
                 offset: [0, 0],
-                // 마커의 움직�을 부드럽게 하지 않음
-                animate: false
+                animate: false,
               })
                 .setLngLat([lng, lat])
                 .addTo(map);
 
               setCurrentLocationMarker(marker);
 
-              // 실시간 위치 추적 시작 (뷰포트 이동 없이)
               const id = navigator.geolocation.watchPosition(
                 (newPosition) => {
                   const newLat = newPosition.coords.latitude;
                   const newLng = newPosition.coords.longitude;
-                  
-                  // 마커의 위치 조용히 업데이트
                   marker.setLngLat([newLng, newLat]);
+
+                  // 위치가 업데이트될 때마다 날씨 정보도 업데이트
+                  fetchWeatherData(newLat, newLng);
                 },
                 (error) => {
-                  console.error('Error tracking location:', error);
-                  alert('위치 추적을 할 수 없습니다.');
+                  console.error("Error tracking location:", error);
+                  alert("위치 추적을 할 수 없습니다.");
                   setActivePin(null);
                 },
                 {
                   enableHighAccuracy: true,
                   maximumAge: 0,
-                  timeout: 5000
+                  timeout: 5000,
                 }
               );
 
@@ -221,47 +331,44 @@ function Map() {
             }
           },
           (error) => {
-            console.error('Error getting initial location:', error);
-            alert('초기 위치를 가져올 수 없습니다.');
+            console.error("Error getting initial location:", error);
+            alert("초기 위치를 가져올 수 없습니다.");
             setActivePin(null);
           },
           {
             enableHighAccuracy: true,
             maximumAge: 0,
-            timeout: 5000
+            timeout: 5000,
           }
         );
       } else {
-        alert('이 브라우저에서는 위치 정보를 사용할 수 없습니다.');
+        alert("이 브라우저에서는 위치 정보를 사용할 수 없습니다.");
         setActivePin(null);
       }
     }
-    
+
     setActivePin(activePin === pinType ? null : pinType);
   };
 
   const getPinAreaClassName = () => {
-    // Pin1 모달이 활성화되어 있으면 항상 pin1-modal-active 클래스 반환
     if (isPin1ModalOpen) {
-      return 'pinArea pin1-modal-active';
+      return "pinArea pin1-modal-active";
     }
-    // 그 외의 경우 기존 로직 유지
-    if (!isElementsShifted) return 'pinArea';
+    if (!isElementsShifted) return "pinArea";
     if (activeModalType) {
       return `pinArea ${activeModalType}-modal-active`;
     }
-    return 'pinArea search-active';
+    return "pinArea search-active";
   };
 
-  //핀을 눌렀을때 이미지가 변경되게 할 경로 지정 함수
   const getIconSource = (pinType) => {
-    switch(pinType) {
-      case 'pin1':
-        return activePin === 'pin1' ? fireAreaActiveIcon : fireAreaIcon;
-      case 'pin2':
-        return activePin === 'pin2' ? myLocationActiveIcon : myLocationIcon;
+    switch (pinType) {
+      case "pin1":
+        return activePin === "pin1" ? fireAreaActiveIcon : fireAreaIcon;
+      case "pin2":
+        return activePin === "pin2" ? myLocationActiveIcon : myLocationIcon;
       default:
-        return '';
+        return "";
     }
   };
 
@@ -276,56 +383,62 @@ function Map() {
 
   return (
     <>
+      <Helmet>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+      </Helmet>
       <Header />
       <div className="container">
-        <div ref={mapContainerRef} style={{width: '100%', height: '100vh'}}/>
+        <div ref={mapContainerRef} style={{ width: "100%", height: "100vh" }} />
         <div className="backArea">
           <Link to="/main">
-            <img 
-              src={backArrowIcon}
-              alt="뒤로가기" 
-              className="back-icon"
-            />
+            <img src={backArrowIcon} alt="뒤로가기" className="back-icon" />
           </Link>
         </div>
         <div className={getPinAreaClassName()}>
-          <img 
-            src={getIconSource('pin1')}
-            alt="핀1" 
+          <img
+            src={getIconSource("pin1")}
+            alt="핀1"
             className="pin-icon"
-            onClick={() => handlePinClick('pin1')}
+            onClick={() => handlePinClick("pin1")}
           />
-          <img 
-            src={getIconSource('pin2')}
-            alt="핀2" 
+          <img
+            src={getIconSource("pin2")}
+            alt="핀2"
             className="pin-icon"
-            onClick={() => handlePinClick('pin2')}
+            onClick={() => handlePinClick("pin2")}
           />
         </div>
-        
+
         {/* Pin1 Modal */}
         {isPin1ModalOpen && caseData && (
           <div className="pin1_modal_container">
-            <div 
-              className="pin1_modal_overlay" 
+            <div
+              className="pin1_modal_overlay"
               onClick={() => setIsPin1ModalOpen(false)}
             />
-            <div className={`pin1_modal_content ${isPin1ModalOpen ? 'active' : ''}`}>
+            <div
+              className={`pin1_modal_content ${
+                isPin1ModalOpen ? "active" : ""
+              }`}
+            >
               <div className="pin1_modal_handle">
                 <div className="handle_bar" />
               </div>
               <div className="pin1_modal_inner">
                 <div className="modal_header">
                   <h2>건물명 : {caseData.bldg_nm}</h2>
-                  <Link 
-                    to="/map/1" 
-                    state={{ caseData: caseData }} // CaseData 전달->CaseDetail 페이지로 이동
+                  <Link
+                    to="/map/1"
+                    state={{ caseData: caseData }}
                     className="more_details"
                   >
                     <p className="more_icon_text">더보기</p>
-                    <img 
-                      src={leftArrowIcon} 
-                      alt="더보기" 
+                    <img
+                      src={leftArrowIcon}
+                      alt="더보기"
                       className="more_icon"
                     />
                   </Link>
@@ -336,10 +449,15 @@ function Map() {
           </div>
         )}
       </div>
-      <Footer 
+      <Footer
         ref={footerRef}
-        onStateChange={handleModalOrSearchChange} 
+        onStateChange={handleModalOrSearchChange}
         isPin1Active={isPin1ModalOpen}
+        onLoadWaterJson={handleWaterJson}
+        onLoadDangerJson={handleDangerJson}
+        onLoadGeoJson={handleLoadGeoJson}
+        onremovePointLayers={handleRemovePointLayers}
+        weatherData={weatherData}
       />
     </>
   );

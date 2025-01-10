@@ -6,7 +6,7 @@ import FloorPlanBtn from "../../components/Detail/FloorPlanBtn"; // 버튼 컴�
 
 function FloorPlan() {
   const navigate = useNavigate();
-  const { caseId, flplanId } = useParams(); // URL에서 case,flplan ID 가져오기 (찬진)
+  const { bldgId, flplanId } = useParams(); // URL에서 case,flplan ID 가져오기 (찬진)
   const location = useLocation(); // 이전 페이지에서 전달된 데이터(state) 가져오기 (찬진)
 
   // location.state에서 층수정보 추출 , 없으면 기본값으로 설정 (찬진)
@@ -91,13 +91,13 @@ function FloorPlan() {
   };
 
   const handleFloorNavigation = (floor) => {
-    navigate(`/map/${caseId}/${floor}`, {
+    navigate(`/map/${bldgId}/${floor}`, {
       state: floorInfo,
     });
   };
 
   const handleClick = () => {
-    navigate(`/map/${caseId}`); // 이동할 경로
+    navigate(`/map/${bldgId}`); // 이동할 경로
   };
 
   return (

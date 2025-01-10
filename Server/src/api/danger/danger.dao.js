@@ -106,7 +106,7 @@ import { db, schema } from '../../config/dbConfig.js';
 //     }
 // };
 
-const getIncidentALL = async (longitude, latitude) => {
+const getdangerALL = async (longitude, latitude) => {
     const query = `
         SELECT
             json_build_object(
@@ -137,12 +137,12 @@ const getIncidentALL = async (longitude, latitude) => {
 
         return geojson;
     } catch (error) {
-        console.error('Error DAO getIncidentALL', error);
+        console.error('Error DAO getdangerALL', error);
         throw new Error(error.message);
     }
 };
 
 
 export default {
-    getIncidentALL
+    getdangerALL
 };

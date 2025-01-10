@@ -31,8 +31,8 @@ function App() {
         <Route path="/map" element={<Map />}></Route>
 
         {/* 상세 페이지 */}
-        <Route path="/map/:caseId" element={<CaseDetail />}></Route>
-        <Route path="/map/:caseId/:flplanId" element={<FloorPlan />}></Route>
+        <Route path="/map/:bldgId" element={<CaseDetail />}></Route>
+        <Route path="/map/:bldgId/:flplanId" element={<FloorPlan />}></Route>
 
         {/* CCTV 페이지 */}
         <Route path="/cctv" element={<Cctv />}></Route>

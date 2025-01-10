@@ -1,4 +1,4 @@
-import incidentDao from './incidents.dao.js'
+import dangerDao from './danger.dao.js';
 
 // const getPoiByOriginId = async (req ,res) => {
 //     const origin_id = Number(req.params.origin_id);
@@ -19,7 +19,7 @@ import incidentDao from './incidents.dao.js'
 //     }
 // }
 
-const getIncidentALL = async (req ,res) => {
+const getdangerALL = async (req ,res) => {
 
     try{
         const { longitude, latitude } = req.query;
@@ -31,7 +31,7 @@ const getIncidentALL = async (req ,res) => {
                 message: 'longitude and latitude are required'
             });
         }
-        const poi = await incidentDao.getIncidentALL(longitude, latitude);
+        const poi = await dangerDao.getdangerALL(longitude, latitude);
         //3항연산자
         res.json({
             success: true,
@@ -40,12 +40,12 @@ const getIncidentALL = async (req ,res) => {
         });
 
     }catch(error){
-        console.error('Error in ctrl getIncidentALL' , error);
+        console.error('Error in ctrl getdangerALL' , error);
         const errorMessage = error.message;
         res.status(500).json({success:false , message : errorMessage})
     }
 }
 
 export default {
-    getIncidentALL
+    getdangerALL
 }

@@ -22,10 +22,10 @@ function CaseDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate(); // useNavigate 훅 사용
-  const { caseId } = useParams(); // useParams로 caseId 가져오기 (찬진)
+  const { bldgId } = useParams(); // useParams로 caseId 가져오기 (찬진)
 
   const handleClick = () => {
-    navigate(`/map/${caseId}/1`, {
+    navigate(`/map/${bldgId}/1`, {
       state: {
         gro_flo_co: data.gro_flo_co,
         und_flo_co: data.und_flo_co,
@@ -33,13 +33,18 @@ function CaseDetail() {
     }); // 이동할 경로
   };
   const handleClick2 = () => {
-    navigate("/map");
+    navigate("/map", {
+      state: {
+        gro_flo_co: data.gro_flo_co,
+        und_flo_co: data.und_flo_co,
+      },
+    });
   };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8080/details/573865");
+        const response = await fetch(`http://localhost:8080/details/${bldgId}`);
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
@@ -53,6 +58,21 @@ function CaseDetail() {
     };
 
     fetchData();
+    const preloadImages = [
+      "https://storage.cloud.google.com/lbsteam1/image%203.png",
+      "https://storage.cloud.google.com/lbsteam1/images.png",
+      "https://storage.cloud.google.com/lbsteam1/png-clipart-pokemon-pikachu-pikachu-pokemon-games-pokemon-thumbnail.png",
+      "https://storage.cloud.google.com/lbsteam1/png-transparent-doraemon-miffy-desktop-doraemon-thumbnail.png",
+      "https://storage.cloud.google.com/lbsteam1/png-transparent-ghibli-museum-studio-ghibli-animation-animation-food-studio-head-thumbnail.png",
+      "https://storage.cloud.google.com/lbsteam1/png-transparent-computer-icons-test-event-miscellaneous-text-logo.png",
+      "https://storage.cloud.google.com/lbsteam1/image.png",
+    ];
+
+    // 이미지 객체를 만들어 브라우저가 캐싱하도록 함
+    preloadImages.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
   }, []);
 
   if (loading) return <div>Loading...</div>;
@@ -226,7 +246,6 @@ function CaseDetail() {
             <div>
               <p>1명/청각 장애 2급/남자</p>
             </div>
-
           </div>
         </div>
       </div>
