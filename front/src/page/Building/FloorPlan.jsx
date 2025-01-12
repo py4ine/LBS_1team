@@ -15,7 +15,7 @@ function FloorPlan() {
   const [loading, setLoading] = useState(true); // 로딩
   const [error, setError] = useState(null); // 에러
   const [currentImage, setCurrentImage] = useState(""); // 현재 표시되는 이미지 url
-  const [imagesLoaded, setImageLoaded] = useState(false); // 이미지 프리로딩 완료 상태
+  const [imagesLoaded, setImagesLoaded] = useState(false); // 이미지 프리로딩 완료 상태
 
   // location.state에서 층수정보 추출 , 없으면 기본값으로 설정 (찬진)
   // const { gro_flo_co, und_flo_co } = location.state || {
@@ -69,10 +69,42 @@ function FloorPlan() {
 
           // URL 중복 제거
           const uniqueImageUrls = [...new Set(allImageUrls)];
+
+          // 각 이미지 프리로드
+          const imagePromises = uniqueImageUrls.map((url) => {
+            return new Promise((resolve, reject) => {
+              const img = new Image();
+              img.onload = () => resolve(url);
+              img.onerror = () => reject(url);
+              img.src = url;
+            });
+          });
         }
-      } catch (error) {}
+
+        // 모든 이미지 로드되기까지 기다리기
+        Promise.all(imagePromises)
+          .then(() => {
+            setImagesLoaded(true);
+            if (currentFlImage) {
+              setCurrentImage(currentFlImage.flo_pl);
+            }
+          })
+          .catch((err) => {
+            console.error("Some images failed load:", err);
+            setImagesLoaded(true);
+            if (currentFlImage) {
+              setCurrentImage(currentFlImage.flo_pl);
+            }
+          });
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
     };
-  });
+
+    fetchFlImages();
+  }, [bldgId, currentFloor]); // bldgId, currentFloor가 변경될때마다 실행
 
   // url , location.state가 변경될때마다 층수정보 업데이트 useEffect (찬진)
   useEffect(() => {
@@ -87,42 +119,68 @@ function FloorPlan() {
     }
   }, [location.state]);
 
-  const [imageSrc, setImageSrc] = useState(
-    "https://storage.cloud.google.com/lbsteam1/image%203.png"
-  );
+  // 주석 테스트 (찬진)
+  // const [imageSrc, setImageSrc] = useState(
+  //   "https://storage.cloud.google.com/lbsteam1/image%203.png"
+  // );
   const [isFullScreen, setIsFullScreen] = useState(false); // 특정 컨테이너만 화면 꽉 채우기
 
-  // 버튼 데이터 배열
-  const buttonData = [
-    {
-      label: "비상구",
-      src: "https://storage.cloud.google.com/lbsteam1/images.png",
-    },
-    {
-      label: "엘리베이터",
-      src: "https://storage.cloud.google.com/lbsteam1/png-clipart-pokemon-pikachu-pikachu-pokemon-games-pokemon-thumbnail.png",
-    },
-    {
-      label: "소화전",
-      src: "https://storage.cloud.google.com/lbsteam1/png-transparent-doraemon-miffy-desktop-doraemon-thumbnail.png",
-    },
-    {
-      label: "창문",
-      src: "https://storage.cloud.google.com/lbsteam1/png-transparent-ghibli-museum-studio-ghibli-animation-animation-food-studio-head-thumbnail.png",
-    },
-    {
-      label: "CCTV",
-      src: "https://storage.cloud.google.com/lbsteam1/image.png",
-    },
-    {
-      label: "출입구",
-      src: "https://storage.cloud.google.com/lbsteam1/image.png",
-    },
-    {
-      label: "인원수",
-      src: "https://storage.cloud.google.com/lbsteam1/png-transparent-computer-icons-test-event-miscellaneous-text-logo.png",
-    },
-  ];
+  // 아이콘 버튼 클릭 핸들러 -> 각 버튼아이콘에 해당하는 이미지로 변경
+  const handleIconBtnClick = (iconType) => {
+    if (!currentFlImage) return;
+
+    switch (iconType) {
+      case "비상구":
+        setCurrentImage(currentFlImage.flo_stair);
+        break;
+      case "엘리베이터":
+        setCurrentImage(currentFlImage.flo_elevator);
+        break;
+      case "소화전":
+        setCurrentImage(currentFlImage.flo_hydrant);
+        break;
+      case "창문":
+        setCurrentImage(currentFlImage.flo_window);
+        break;
+      case "출입구":
+        setCurrentImage(currentFlImage.flo_enterance);
+        break;
+      default:
+        setCurrentImage(currentFlImage.flo_pl);
+    }
+  };
+
+  // 버튼 데이터 배열 (주석 테스트 찬진)
+  // const buttonData = [
+  //   {
+  //     label: "비상구",
+  //     src: "https://storage.cloud.google.com/lbsteam1/images.png",
+  //   },
+  //   {
+  //     label: "엘리베이터",
+  //     src: "https://storage.cloud.google.com/lbsteam1/png-clipart-pokemon-pikachu-pikachu-pokemon-games-pokemon-thumbnail.png",
+  //   },
+  //   {
+  //     label: "소화전",
+  //     src: "https://storage.cloud.google.com/lbsteam1/png-transparent-doraemon-miffy-desktop-doraemon-thumbnail.png",
+  //   },
+  //   {
+  //     label: "창문",
+  //     src: "https://storage.cloud.google.com/lbsteam1/png-transparent-ghibli-museum-studio-ghibli-animation-animation-food-studio-head-thumbnail.png",
+  //   },
+  //   {
+  //     label: "CCTV",
+  //     src: "https://storage.cloud.google.com/lbsteam1/image.png",
+  //   },
+  //   {
+  //     label: "출입구",
+  //     src: "https://storage.cloud.google.com/lbsteam1/image.png",
+  //   },
+  //   {
+  //     label: "인원수",
+  //     src: "https://storage.cloud.google.com/lbsteam1/png-transparent-computer-icons-test-event-miscellaneous-text-logo.png",
+  //   },
+  // ];
 
   // 층별 설계도 버튼 핸들러
   // const handleFloorChange = (event) => {
@@ -138,6 +196,9 @@ function FloorPlan() {
 
   const handleCloseFullScreen = () => {
     setIsFullScreen(false); // 화면 꽉 채우기 비활성화
+    if (currentFlImage) {
+      setCurrentImage(currentFlImage.flo_pl);
+    } // if 추가 (찬진)
   };
 
   const handleFloorNavigation = (floor) => {
@@ -149,6 +210,22 @@ function FloorPlan() {
   const handleClick = () => {
     navigate(`/map/${bldgId}`); // 이동할 경로
   };
+
+  // 로딩중이거나 이미지로딩중
+  if (loading || imagesLoaded) return <div>Loading...</div>;
+  // 에러
+  // if (error) return <div>Error: {error}</div>;
+  // 현재층 이미지데이터 없을때
+  // if (!currentFlImage) return <div>No Floor data</div>;
+
+  // 아이콘 버튼 데이터
+  const buttonData = [
+    { label: "비상구", key: "stair" },
+    { label: "엘리베이터", key: "elevator" },
+    { label: "소화전", key: "hydrant" },
+    { label: "창문", key: "window" },
+    { label: "출입구", key: "enterance" },
+  ];
 
   return (
     <>
@@ -190,11 +267,15 @@ function FloorPlan() {
               isFullScreen ? "fullscreen" : ""
             }`}
           >
-            <img
-              src={imageSrc}
-              alt="설계도 이미지"
-              className="floorplan-image"
-            />
+            {/* currentImage 추가 (찬진) */}
+            {currentImage && (
+              <img
+                src={currentImage}
+                // src={imageSrc}
+                alt="설계도 이미지"
+                className="floorplan-image"
+              />
+            )}
             {isFullScreen && (
               <button
                 className="close-fullscreen"
@@ -209,12 +290,25 @@ function FloorPlan() {
           {!isFullScreen && (
             <div className="icon-buttons">
               {buttonData.map((button, index) => (
-                <button key={index} onClick={() => setImageSrc(button.src)}>
+                <button
+                  key={index}
+                  onClick={() => handleIconBtnClick(button.label)}
+                >
                   {button.label}
                 </button>
               ))}
             </div>
           )}
+
+          {/* {!isFullScreen && (
+            <div className="icon-buttons">
+              {buttonData.map((button, index) => (
+                <button key={index} onClick={() => setImageSrc(button.src)}>
+                  {button.label}
+                </button>
+              ))}
+            </div>
+          )} */}
         </div>
       </div>
     </>
