@@ -190,7 +190,7 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
                 "water-type-2-icon",
                 "water-type-1-icon",
               ],
-              "icon-size": 0.5,
+              "icon-size": 1.0,
             },
           });
           console.log("포인트 레이어 추가 완료");
@@ -263,7 +263,7 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
                 "harmfulness-type-1-icon",
                 "harmfulness-type-1-icon",
               ],
-              "icon-size": 0.5,
+              "icon-size": 1.0,
             },
           });
           console.log("포인트 레이어 추가 완료");

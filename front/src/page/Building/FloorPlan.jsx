@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"; // -useEffect 추가 (찬진)
 import { useLocation, useNavigate, useParams } from "react-router-dom"; // -useParams 추가 (찬진)
 import Header from "../../components/Layout/Header";
-import "../../assets/css/FloorPlan.css";
+import "../../assets/css/floorplan.css";
 import FloorPlanBtn from "../../components/Detail/FloorPlanBtn"; // 버튼 컴포넌트 추가 (찬진)
 
 function FloorPlan() {
@@ -38,7 +38,7 @@ function FloorPlan() {
   const currentFloor = flplanId ? Number(flplanId) : 1;
 
   const [imageSrc, setImageSrc] = useState(
-    "https://storage.cloud.google.com/lbsteam1/image%203.png"
+    "https://storage.googleapis.com/lbsteam1/1.%20(A01~A25)%20%ED%8F%89%EB%A9%B4%EB%8F%84%20%EC%A0%84%EC%B2%B4-25.png"
   );
   const [isFullScreen, setIsFullScreen] = useState(false); // 특정 컨테이너만 화면 꽉 채우기
 

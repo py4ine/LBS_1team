@@ -81,8 +81,8 @@ const Footer = forwardRef(
       { id: 6, src: waterIcon6, alt: "5", title: ": 비상소화장치" },
     ];
     const harmfulnessArea = [
-      { id: 1, src: harmfulnessIcon1, alt: "1", title: ": 지상식 소화전" },
-      { id: 2, src: harmfulnessIcon2, alt: "2", title: ": 지하식 소화전" },
+      { id: 1, src: harmfulnessIcon1, alt: "1", title: ": 유해화학시설" },
+      { id: 2, src: harmfulnessIcon2, alt: "2", title: ": 주유소" },
     ];
 
     
