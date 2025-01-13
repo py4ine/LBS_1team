@@ -40,7 +40,7 @@ function FloorPlan() {
         // api 이미지 데이터 가져오기
         const res = await fetch(`http://localhost:8080/images/${bldgId}`);
         if (!res.ok) {
-          throw new Error("Failed to fetch fl imageds");
+          throw new Error("Failed to fetch fl images");
         }
         const result = await res.json();
 
@@ -64,7 +64,7 @@ function FloorPlan() {
               floor.flo_elevator,
               floor.flo_window,
               floor.flo_enterance,
-            ];
+            ].filter(Boolean); // null , undefind 값 제거
           }, []);
 
           // URL 중복 제거
@@ -72,30 +72,31 @@ function FloorPlan() {
 
           // 각 이미지 프리로드
           const imagePromises = uniqueImageUrls.map((url) => {
+            if (!url) return Promise.resolve(); // url이 없는 경우 처리
             return new Promise((resolve, reject) => {
               const img = new Image();
               img.onload = () => resolve(url);
-              img.onerror = () => reject(url);
+              img.onerror = () => resolve(url); // 에러시에도 resolve 처리
               img.src = url;
             });
           });
-        }
 
-        // 모든 이미지 로드되기까지 기다리기
-        Promise.all(imagePromises)
-          .then(() => {
-            setImagesLoaded(true);
-            if (currentFlImage) {
-              setCurrentImage(currentFlImage.flo_pl);
-            }
-          })
-          .catch((err) => {
-            console.error("Some images failed load:", err);
-            setImagesLoaded(true);
-            if (currentFlImage) {
-              setCurrentImage(currentFlImage.flo_pl);
-            }
-          });
+          // 모든 이미지 로드되기까지 기다리기
+          await Promise.all(imagePromises)
+            .then(() => {
+              setImagesLoaded(true);
+              if (currentFlImage) {
+                setCurrentImage(currentFlImage.flo_pl);
+              }
+            })
+            .catch((err) => {
+              console.error("Some images failed load:", err);
+              setImagesLoaded(true);
+              if (currentFlImage) {
+                setCurrentImage(currentFlImage.flo_pl);
+              }
+            });
+        }
       } catch (err) {
         setError(err.message);
       } finally {
@@ -212,11 +213,11 @@ function FloorPlan() {
   };
 
   // 로딩중이거나 이미지로딩중
-  if (loading || imagesLoaded) return <div>Loading...</div>;
+  if (loading) return <div>Loading...</div>;
   // 에러
-  // if (error) return <div>Error: {error}</div>;
+  if (error) return <div>Error: {error}</div>;
   // 현재층 이미지데이터 없을때
-  // if (!currentFlImage) return <div>No Floor data</div>;
+  if (!currentFlImage) return <div>1층, 2층, 20층만 데이터가 있습니다</div>;
 
   // 아이콘 버튼 데이터
   const buttonData = [
