@@ -25,12 +25,17 @@ function CaseDetail() {
       }, // 데이터 같이 이동 (찬진)
     }); // 이동할 경로
   };
+
+  // 닫기 버튼 클릭시 이전 데이터 다시 반환
   const handleClick2 = () => {
     navigate("/map", {
       state: {
-        gro_flo_co: data.gro_flo_co,
-        und_flo_co: data.und_flo_co,
+        caseData: caseData,
       },
+      // state: {
+      //   gro_flo_co: data.gro_flo_co,
+      //   und_flo_co: data.und_flo_co,
+      // },
     });
   };
 
@@ -51,21 +56,21 @@ function CaseDetail() {
     };
 
     fetchData();
-    const preloadImages = [
-      "https://storage.cloud.google.com/lbsteam1/image%203.png",
-      "https://storage.cloud.google.com/lbsteam1/images.png",
-      "https://storage.cloud.google.com/lbsteam1/png-clipart-pokemon-pikachu-pikachu-pokemon-games-pokemon-thumbnail.png",
-      "https://storage.cloud.google.com/lbsteam1/png-transparent-doraemon-miffy-desktop-doraemon-thumbnail.png",
-      "https://storage.cloud.google.com/lbsteam1/png-transparent-ghibli-museum-studio-ghibli-animation-animation-food-studio-head-thumbnail.png",
-      "https://storage.cloud.google.com/lbsteam1/png-transparent-computer-icons-test-event-miscellaneous-text-logo.png",
-      "https://storage.cloud.google.com/lbsteam1/image.png",
-    ];
+    // const preloadImages = [
+    //   "https://storage.cloud.google.com/lbsteam1/image%203.png",
+    //   "https://storage.cloud.google.com/lbsteam1/images.png",
+    //   "https://storage.cloud.google.com/lbsteam1/png-clipart-pokemon-pikachu-pikachu-pokemon-games-pokemon-thumbnail.png",
+    //   "https://storage.cloud.google.com/lbsteam1/png-transparent-doraemon-miffy-desktop-doraemon-thumbnail.png",
+    //   "https://storage.cloud.google.com/lbsteam1/png-transparent-ghibli-museum-studio-ghibli-animation-animation-food-studio-head-thumbnail.png",
+    //   "https://storage.cloud.google.com/lbsteam1/png-transparent-computer-icons-test-event-miscellaneous-text-logo.png",
+    //   "https://storage.cloud.google.com/lbsteam1/image.png",
+    // ];
 
-    // 이미지 객체를 만들어 브라우저가 캐싱하도록 함
-    preloadImages.forEach((src) => {
-      const img = new Image();
-      img.src = src;
-    });
+    // // 이미지 객체를 만들어 브라우저가 캐싱하도록 함
+    // preloadImages.forEach((src) => {
+    //   const img = new Image();
+    //   img.src = src;
+    // });
   }, []);
 
   //   사건정보 내용 useEffect (찬진)
