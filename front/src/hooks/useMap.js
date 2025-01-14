@@ -123,11 +123,11 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
     loadGeoJsonRef.current = loadGeoJson;
 
     // Water JSON 로드 함수
-    const loadWaterJson = async (longitude, latitude) => {
-      console.log("loadWaterJson 호출:", { longitude, latitude });
+    const loadWaterJson = async (polygon) => {
+      console.log("loadWaterJson 호출:", { polygon });
       try {
         const response = await fetch(
-          `http://localhost:8080/waters?longitude=${longitude}&latitude=${latitude}`
+          `http://localhost:8080/waters?polygon=${polygon}`
         );
         console.log("API 요청 완료");
 
@@ -190,7 +190,7 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
                 "water-type-2-icon",
                 "water-type-1-icon",
               ],
-              "icon-size": 0.5,
+              "icon-size": 1.0,
             },
           });
           console.log("포인트 레이어 추가 완료");
@@ -203,11 +203,11 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
     loadWaterJsonRef.current = loadWaterJson;
 
     // Danger JSON 로드 함수
-    const loadDangerJson = async (longitude, latitude) => {
-      console.log("loadDangerJson 호출:", { longitude, latitude });
+    const loadDangerJson = async (polygon) => {
+      console.log("loadDangerJson 호출:", { polygon });
       try {
         const response = await fetch(
-          `http://localhost:8080/danger?longitude=${longitude}&latitude=${latitude}`
+          `http://localhost:8080/danger?polygon=${polygon}`
         );
         console.log("API 요청 완료");
 
@@ -263,7 +263,7 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
                 "harmfulness-type-1-icon",
                 "harmfulness-type-1-icon",
               ],
-              "icon-size": 0.5,
+              "icon-size": 1.0,
             },
           });
           console.log("포인트 레이어 추가 완료");

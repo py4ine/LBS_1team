@@ -1,0 +1,16 @@
+service: react-kimhojun
+runtime: nodejs20
+instance_class: F1
+env_variables:
+  PORT: 5173
+  NODE_ENV: production
+
+handlers:
+  # 정적 파일 경로 설정
+  - url: /static
+    static_dir: dist/static
+
+  # 모든 요청을 index.html로 리다이렉트
+  - url: /.*
+    static_files: dist/index.html
+    upload: dist/index.html

@@ -13,7 +13,6 @@ import myLocationIcon from "../assets/images/map_icons/bg/icon_mylocation_BG.png
 import myLocationActiveIcon from "../assets/images/map_icons/bg/icon_mylocationW_BG.png";
 import leftArrowIcon from "../assets/images/button_icons/icon_leftarrow_G.png";
 import pullfinIcon from "../assets/images/map_icons/icon_pullfin.png";
-import axios from "axios";
 
 function Map() {
   const mapContainerRef = useRef(null);
@@ -31,6 +30,7 @@ function Map() {
   const [longitude, setLongitude] = useState(location.state.caseData.longitude); // (추가)
   const [latitude, setLatitude] = useState(location.state.caseData.latitude); // (추가)
   const [center, setCenter] = useState(null); // 지도 중심점
+  const [bound, setbound] = useState(null); // 지도 중심점
   const [caseMarker, setCaseMarker] = useState(null); // 사건 위치 마커 상태 저장소 (찬진)
 
   // console.log(location.state.caseData);
@@ -41,9 +41,6 @@ function Map() {
   const removePointLayersRef = useRef(null);
 
   // 날씨 데이터 관련 상태
-  const [weatherData, setWeatherData] = useState(null);
-  const [error, setError] = useState("");
-  const API_KEY = "409e846b281cf5d9778aa237b0136e6b";
 
   // localStorage caseData 관리
   // const [caseData, setCaseData] = useState(() => {
@@ -253,39 +250,6 @@ function Map() {
   }, [mapLoaded, map, caseData, mapboxgl]);
 
   // 날씨 데이터 가져오기
-  const fetchWeatherData = async () => {
-    try {
-      setError("");
-      const response = await axios.get(
-        "https://api.openweathermap.org/data/2.5/weather",
-        {
-          params: {
-            lat: latitude,
-            lon: longitude,
-            appid: API_KEY,
-          },
-        }
-      );
-
-      const kelvinTemperature = response.data.main.temp;
-      const celsiusTemperature = kelvinTemperature - 273.15;
-
-      setWeatherData({
-        temperature: celsiusTemperature.toFixed(2),
-        humidity: response.data.main.humidity,
-        windSpeed: response.data.wind.speed,
-        windDirection: response.data.wind.deg || "N/A",
-      });
-      console.log("1:", weatherData);
-    } catch (err) {
-      setError("날씨 정보를 가져오는 데 실패했습니다.");
-    }
-  };
-
-  // 날씨 패치
-  useEffect(() => {
-    fetchWeatherData();
-  }, [longitude, latitude]);
 
   // 데이터 핸들러 함수들
   const handleLoadGeoJson = () => {
@@ -305,25 +269,63 @@ function Map() {
   // console.log("1: ", caseData.longitude);
   const handleWaterJson = () => {
     if (map) {
-      const mapCenter = map.getCenter(); // 현재 지도의 중심점을 직접 가져옴
+      const mapBound = map.getBounds();
 
-      // 상태 업데이트
-      setCenter(mapCenter);
+      // 경계 좌표를 각각 가져옴
+      const southWest = mapBound.getSouthWest();
+      const northWest = mapBound.getNorthWest();
+      const northEast = mapBound.getNorthEast();
+      const southEast = mapBound.getSouthEast();
+
+      // POLYGON 좌표 생성
+      const polygonCoords = `
+        POLYGON((
+          ${southWest.lng} ${southWest.lat},
+          ${northWest.lng} ${northWest.lat},
+          ${northEast.lng} ${northEast.lat},
+          ${southEast.lng} ${southEast.lat},
+          ${southWest.lng} ${southWest.lat}
+        ))
+      `.replace(/\s+/g, " "); // 공백을 하나로 정리
+
+      console.log("Generated POLYGON:", polygonCoords);
+
       if (loadWaterJsonRef.current) {
-        loadWaterJsonRef.current(mapCenter.lng, mapCenter.lat);
+        loadWaterJsonRef.current(polygonCoords);
       }
+    } else {
+      console.error("Map object is not available.");
     }
   };
 
   const handleDangerJson = () => {
     if (map) {
-      const mapCenter = map.getCenter(); // 현재 지도의 중심점을 직접 가져옴
+      const mapBound = map.getBounds();
 
-      // 상태 업데이트
-      setCenter(mapCenter);
+      // 경계 좌표를 각각 가져옴
+      const southWest = mapBound.getSouthWest();
+      const northWest = mapBound.getNorthWest();
+      const northEast = mapBound.getNorthEast();
+      const southEast = mapBound.getSouthEast();
+
+      // POLYGON 좌표 생성
+      const polygonCoords = `
+        POLYGON((
+          ${southWest.lng} ${southWest.lat},
+          ${northWest.lng} ${northWest.lat},
+          ${northEast.lng} ${northEast.lat},
+          ${southEast.lng} ${southEast.lat},
+          ${southWest.lng} ${southWest.lat}
+        ))
+      `.replace(/\s+/g, " "); // 공백을 하나로 정리
+
+      console.log("Generated POLYGON:", polygonCoords);
+
       if (loadDangerJsonRef.current) {
-        loadDangerJsonRef.current(mapCenter.lng, mapCenter.lat);
+        loadDangerJsonRef.current(polygonCoords);
       }
+    } else {
+      console.error("Map object is not available.");
     }
   };
 
@@ -568,7 +570,7 @@ function Map() {
         onLoadDangerJson={handleDangerJson}
         onLoadGeoJson={handleLoadGeoJson}
         onremovePointLayers={handleRemovePointLayers}
-        weatherData={weatherData}
+        map={map}
         removeCaseMarker={removeCaseMarker} // footer 에 마커 제거함수 전달 (찬진)
       />
     </>

@@ -22,6 +22,7 @@ import fullPinIcon from "../../assets/images/map_icons/icon_pullfin.png";
 import "../../assets/css/footer.css";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import axios from "axios";
 
 const Footer = forwardRef(
   (
@@ -33,9 +34,9 @@ const Footer = forwardRef(
       onremovePointLayers,
       longitude,
       latitude,
-      weatherData,
       isPin1Active,
       removeCaseMarker,
+      map,
     },
     ref
   ) => {
@@ -50,6 +51,9 @@ const Footer = forwardRef(
     const [searchResults, setSearchResults] = useState([]);
     const [currentMarker, setCurrentMarker] = useState(null);
     const [isFirstClickAfterPin1, setIsFirstClickAfterPin1] = useState(false);
+    const [weatherData, setWeatherData] = useState(null);
+    const [error, setError] = useState("");
+    const API_KEY = "409e846b281cf5d9778aa237b0136e6b";
 
     useEffect(() => {
       if (isPin1Active) {
@@ -75,9 +79,71 @@ const Footer = forwardRef(
       { id: 6, src: waterIcon6, alt: "5", title: ": 비상소화장치" },
     ];
     const harmfulnessArea = [
-      { id: 1, src: harmfulnessIcon1, alt: "1", title: ": 지상식 소화전" },
-      { id: 2, src: harmfulnessIcon2, alt: "2", title: ": 지하식 소화전" },
+      { id: 1, src: harmfulnessIcon1, alt: "1", title: ": 유해화학시설" },
+      { id: 2, src: harmfulnessIcon2, alt: "2", title: ": 주유소" },
     ];
+
+    const handleWeatherClick = () => {
+      if (isDangerVisible) {
+        // 데이터 제거
+        onremovePointLayers("points");
+        setIsDangerVisible(false); // 상태 초기화
+      } else if (isWaterVisible) {
+        onremovePointLayers("points");
+        setIsWaterVisible(false);
+        // 데이터 로드
+      }
+
+      if (map) {
+        const center = map.getCenter(); // map 객체로 중심 좌표 가져오기
+        const latitude = center.lat;
+        const longitude = center.lng;
+
+        console.log("현재 지도 중심:", { latitude, longitude });
+        fetchWeatherData(latitude, longitude); // 날씨 데이터 가져오기
+      } else {
+        console.error("map 객체가 전달되지 않았습니다.");
+      }
+    };
+
+    // 날씨 데이터 가져오기 함수
+    const fetchWeatherData = async (latitude, longitude) => {
+      try {
+        setError(""); // 기존 에러 상태 초기화
+        const response = await axios.get(
+          "https://api.openweathermap.org/data/2.5/weather",
+          {
+            params: {
+              lat: latitude,
+              lon: longitude,
+              appid: API_KEY,
+            },
+          }
+        );
+
+        const kelvinTemperature = response.data.main.temp;
+        const celsiusTemperature = kelvinTemperature - 273.15;
+
+        setWeatherData({
+          temperature: celsiusTemperature.toFixed(2),
+          humidity: response.data.main.humidity,
+          windSpeed: response.data.wind.speed,
+          windDirection: response.data.wind.deg || "N/A",
+        });
+
+        console.log("Weather Data:", {
+          temperature: celsiusTemperature.toFixed(2),
+          humidity: response.data.main.humidity,
+          windSpeed: response.data.wind.speed,
+          windDirection: response.data.wind.deg || "N/A",
+        });
+      } catch (err) {
+        setError("날씨 정보를 가져오는 데 실패했습니다.");
+        console.error(err);
+      }
+    };
+
+    // 날씨 정보 버튼 클릭 핸들러
 
     const getWindDirection = (degree) => {
       const directions = [
@@ -111,6 +177,15 @@ const Footer = forwardRef(
       const diff = touchEnd - touchStart;
       if (diff > 50) {
         closeModal();
+        if (isDangerVisible) {
+          // 데이터 제거
+          onremovePointLayers("points");
+          setIsDangerVisible(false); // 상태 초기화
+        } else if (isWaterVisible) {
+          onremovePointLayers("points");
+          setIsWaterVisible(false);
+          // 데이터 로드
+        }
       } else {
         setModalPosition(0);
       }
@@ -152,7 +227,15 @@ const Footer = forwardRef(
 
     const toggleSearch = () => {
       const newSearchState = !isSearchVisible;
-
+      if (isDangerVisible) {
+        // 데이터 제거
+        onremovePointLayers("points");
+        setIsDangerVisible(false); // 상태 초기화
+      } else if (isWaterVisible) {
+        onremovePointLayers("points");
+        setIsWaterVisible(false);
+        // 데이터 로드
+      }
       if (isModalOpen) {
         setIsModalOpen(false);
         setActiveModal(null);
@@ -462,7 +545,7 @@ const Footer = forwardRef(
                       </div>
                     ))}
                   </div>
-                ) : (
+                ) : weatherData ? ( // weatherData가 null이 아닌 경우에만 렌더링
                   <>
                     <h2 id={`modal-title-${activeModal}`} className="sr-only">
                       {icons.find((icon) => icon.id === activeModal)?.title}
@@ -470,8 +553,10 @@ const Footer = forwardRef(
                     <p role="text">온도: {weatherData.temperature}°C</p>
                     <p>습도: {weatherData.humidity}%</p>
                     <p>풍속: {weatherData.windSpeed} m/s</p>
-                    <p>풍향: {getWindDirection(weatherData.windDirection)}°</p>
+                    <p>풍향: {getWindDirection(weatherData.windDirection)}</p>
                   </>
+                ) : (
+                  <p>날씨 데이터를 불러오는 중입니다...</p> // weatherData가 null일 때 표시
                 )}
               </div>
             </div>
@@ -572,7 +657,10 @@ const Footer = forwardRef(
                     content = (
                       <button
                         className="footer_link"
-                        onClick={() => openModal(icon.id)}
+                        onClick={() => {
+                          openModal(icon.id);
+                          handleWeatherClick();
+                        }}
                       >
                         <div className={iconClass}>
                           <img src={icon.src} alt={icon.alt} />

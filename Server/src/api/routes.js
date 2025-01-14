@@ -5,6 +5,7 @@ import danger from "./danger/dangerIndex.js";
 import cases from "./cases/casesIndex.js";
 import around from "./around/aroundIndex.js";
 import images from "./images/imagesIndex.js";
+
 const mountRouters = (app) => {
   app.use("/login", login);
   app.use("/details", details);

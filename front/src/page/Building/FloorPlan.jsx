@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"; // -useEffect 추가 (찬진)
 import { useLocation, useNavigate, useParams } from "react-router-dom"; // -useParams 추가 (찬진)
 import Header from "../../components/Layout/Header";
-import "../../assets/css/FloorPlan.css";
+import "../../assets/css/floorplan.css";
 import FloorPlanBtn from "../../components/Detail/FloorPlanBtn"; // 버튼 컴포넌트 추가 (찬진)
 
 function FloorPlan() {
