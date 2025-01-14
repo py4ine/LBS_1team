@@ -35,6 +35,7 @@ const Footer = forwardRef(
       latitude,
       weatherData,
       isPin1Active,
+      removeCaseMarker,
     },
     ref
   ) => {
@@ -253,14 +254,22 @@ const Footer = forwardRef(
       }
     };
 
+    // 검색 핸들러
     const handleResultClick = (result) => {
       if (!window.mapInstance) {
         console.error("Map instance not found");
         return;
       }
 
+      // 기존 검색 마커 제거
       if (currentMarker) {
         currentMarker.remove();
+      }
+
+      // 사건 위치 마커 제거
+      // props.removeCaseMarker();
+      if (removeCaseMarker) {
+        removeCaseMarker();
       }
 
       const el = document.createElement("div");
@@ -308,8 +317,17 @@ const Footer = forwardRef(
       setIsSearchVisible(false);
     };
 
+    //  footer에서 ref를 통해 접근할수 있는 함수 추가
     useImperativeHandle(ref, () => ({
       resetState,
+
+      // 검색 마커 제거 (찬진)
+      removeSearchMarker: () => {
+        if (currentMarker) {
+          currentMarker.remove();
+          setCurrentMarker(null);
+        }
+      },
     }));
 
     const getIconClass = (iconId) => {

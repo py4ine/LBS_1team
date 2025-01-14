@@ -31,6 +31,7 @@ function Map() {
   const [longitude, setLongitude] = useState(location.state.caseData.longitude); // (추가)
   const [latitude, setLatitude] = useState(location.state.caseData.latitude); // (추가)
   const [center, setCenter] = useState(null); // 지도 중심점
+  const [caseMarker, setCaseMarker] = useState(null); // 사건 위치 마커 상태 저장소 (찬진)
 
   // console.log(location.state.caseData);
   // GeoJSON 관련 ref
@@ -113,11 +114,89 @@ function Map() {
   }, [map]);
 
   // 마커 생성
-  useEffect(() => {
-    if (!map || !mapLoaded || !caseData || !mapboxgl) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (!map || !mapLoaded || !caseData || !mapboxgl) {
+  //     return;
+  //   }
 
+  //   try {
+  //     console.log("Creating marker with data:", caseData);
+
+  //     const el = document.createElement("div");
+  //     el.className = "marker";
+  //     el.style.backgroundImage = `url(${pullfinIcon})`;
+  //     el.style.width = "40px";
+  //     el.style.height = "40px";
+  //     el.style.backgroundRepeat = "no-repeat";
+  //     el.style.backgroundPosition = "center";
+
+  //     const marker = new mapboxgl.Marker({
+  //       element: el,
+  //       anchor: "bottom",
+  //     })
+  //       .setLngLat([longitude, latitude])
+  //       .addTo(map);
+
+  //     setCaseMarker(marker); // 마커 상태 저장 (찬진)
+
+  //     map.flyTo({
+  //       center: [longitude, latitude],
+  //       zoom: 15,
+  //       essential: true,
+  //     });
+
+  //     return () => {
+  //       if (marker) {
+  //         marker.remove();
+  //       }
+  //     };
+  //   } catch (error) {
+  //     console.error("Error creating marker:", error);
+  //   }
+  // }, [mapLoaded, map, caseData, mapboxgl]);
+
+  // // 사건 마거 제거 (찬진)
+  // const removeCaseMarker = () => {
+  //   if (caseMarker) {
+  //     caseMarker.remove();
+  //     setCaseMarker(null);
+  //   }
+  // };
+
+  // // 사건 핀 리필 (찬진)
+  // const caseRepin = () => {
+  //   try {
+  //     console.log("Creating marker with data:", caseData);
+
+  //     const el = document.createElement("div");
+  //     el.className = "marker";
+  //     el.style.backgroundImage = `url(${pullfinIcon})`;
+  //     el.style.width = "40px";
+  //     el.style.height = "40px";
+  //     el.style.backgroundRepeat = "no-repeat";
+  //     el.style.backgroundPosition = "center";
+
+  //     const marker = new mapboxgl.Marker({
+  //       element: el,
+  //       anchor: "bottom",
+  //     })
+  //       .setLngLat([longitude, latitude])
+  //       .addTo(map);
+
+  //     setCaseMarker(marker); // 마커 상태 저장 (찬진)
+
+  //     map.flyTo({
+  //       center: [longitude, latitude],
+  //       zoom: 15,
+  //       essential: true,
+  //     });
+  //   } catch (error) {
+  //     console.error("Error creating marker:", error);
+  //   }
+  // };
+
+  // 마커 생성 코드 최적화
+  const createMarker = () => {
     try {
       console.log("Creating marker with data:", caseData);
 
@@ -136,20 +215,41 @@ function Map() {
         .setLngLat([longitude, latitude])
         .addTo(map);
 
+      setCaseMarker(marker);
+
       map.flyTo({
         center: [longitude, latitude],
         zoom: 15,
         essential: true,
       });
 
-      return () => {
-        if (marker) {
-          marker.remove();
-        }
-      };
+      return marker;
     } catch (error) {
       console.error("Error creating marker:", error);
+      return null;
     }
+  };
+
+  // 사건 마커 제거 (찬진)
+  const removeCaseMarker = () => {
+    if (caseMarker) {
+      caseMarker.remove();
+    }
+  };
+
+  // useEffect에서 마커 관리
+  useEffect(() => {
+    if (!map || !mapLoaded || !caseData || !mapboxgl) {
+      return;
+    }
+
+    const marker = createMarker();
+
+    return () => {
+      if (marker) {
+        marker.remove();
+      }
+    };
   }, [mapLoaded, map, caseData, mapboxgl]);
 
   // 날씨 데이터 가져오기
@@ -258,6 +358,15 @@ function Map() {
         }
       }
 
+      // footer의 currentMarker 제거하기 위한 함수
+      const removeSearchMarker = () => {
+        if (footerRef.current) {
+          footerRef.current.removeSearchMarker();
+        }
+      };
+
+      removeSearchMarker(); // 검색 마커 제거 (찬진)
+      createMarker(); // 사건핀 마커 재생성 및 이동 (찬진)
       setIsPin1ModalOpen(newModalState);
       handleModalOrSearchChange(newModalState, "pin1");
     }
@@ -270,9 +379,11 @@ function Map() {
           setWatchId(null);
         }
         setActivePin(null);
+
         return;
       }
 
+      // 현재 위치 마커 생성 및 위치 추적 로직
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
@@ -458,6 +569,7 @@ function Map() {
         onLoadGeoJson={handleLoadGeoJson}
         onremovePointLayers={handleRemovePointLayers}
         weatherData={weatherData}
+        removeCaseMarker={removeCaseMarker} // footer 에 마커 제거함수 전달 (찬진)
       />
     </>
   );
