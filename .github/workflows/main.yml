@@ -1,0 +1,37 @@
+name: Deploy to App Engine
+
+on:
+  push:
+    branches:
+      - main  # 배포를 트리거할 브랜치
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v3
+
+    - name: Authenticate to GCP
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: ${{ secrets.GCP_KEY }}
+
+    # 프론트엔드 배포
+    - name: Deploy Frontend to App Engine
+      uses: google-github-actions/deploy-appengine@v2
+      with:
+        project_id: your-gcp-project-id
+        working_directory: ./front  # 프론트엔드 app.yaml 위치
+        deliverables: app.yaml  # 배포에 사용할 yaml 파일
+        promote: true
+
+    # 백엔드 배포
+    # - name: Deploy Backend to App Engine
+    #   uses: google-github-actions/deploy-appengine@v2
+    #   with:
+    #     project_id: your-gcp-project-id
+    #     working_directory: ./server  # 백엔드 app.yaml 위치
+    #     deliverables: app.yaml  # 배포에 사용할 yaml 파일
+    #     promote: true
