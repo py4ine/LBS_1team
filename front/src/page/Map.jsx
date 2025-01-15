@@ -21,7 +21,7 @@ function Map() {
   const [activeModalType, setActiveModalType] = useState(null);
   const [activePin, setActivePin] = useState(null);
   const [isPin1ModalOpen, setIsPin1ModalOpen] = useState(false);
-  const [mapLoaded, setMapLoaded] = useState(false);
+  // const [mapLoaded, setMapLoaded] = useState(false);
   const footerRef = useRef(null);
   const [currentLocationMarker, setCurrentLocationMarker] = useState(null);
   const [watchId, setWatchId] = useState(null);
@@ -30,7 +30,7 @@ function Map() {
   const [longitude, setLongitude] = useState(location.state.caseData.longitude); // (추가)
   const [latitude, setLatitude] = useState(location.state.caseData.latitude); // (추가)
   const [center, setCenter] = useState(null); // 지도 중심점
-  const [bound, setbound] = useState(null); // 지도 중심점
+  // const [bound, setbound] = useState(null); // 지도 중심점
   const [caseMarker, setCaseMarker] = useState(null); // 사건 위치 마커 상태 저장소 (찬진)
 
   // console.log(location.state.caseData);
@@ -71,6 +71,7 @@ function Map() {
   const {
     map,
     mapboxgl,
+    mapLoaded ,
     loadGeoJsonRef: hookGeoJsonRef,
     loadWaterJsonRef: hookWaterJsonRef,
     loadDangerJsonRef: hookDangerJsonRef,
@@ -102,13 +103,13 @@ function Map() {
   }, [map]);
 
   // map 로드 완료 감지
-  useEffect(() => {
-    if (map) {
-      map.on("load", () => {
-        setMapLoaded(true);
-      });
-    }
-  }, [map]);
+  // useEffect(() => {
+  //   if (map) {
+  //     map.on("load", () => {
+  //       setMapLoaded(true);
+  //     });
+  //   }
+  // }, [map]);
 
   // 마커 생성
   // useEffect(() => {
