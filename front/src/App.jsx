@@ -19,7 +19,7 @@ function App() {
         {/* <Route path="/style" element={<Style />}></Route> */}
 
         {/* 초기 경로 로그인으로 연결 */}
-        <Route path="/" element={<Navigate to="/main" />} />
+        <Route path="/" element={<Navigate to="/login" />} />
 
         {/* 로그인 페이지 */}
         <Route path="/login" element={<Login />}></Route>
