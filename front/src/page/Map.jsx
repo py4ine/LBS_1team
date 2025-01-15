@@ -52,6 +52,7 @@ function Map() {
     });
   };
 
+  // location.state가 변경될 때 상태 업데이트를 위한 useEffect 추가
   useEffect(() => {
     if (location.state?.caseData) {
       setCaseData(location.state.caseData);
@@ -572,7 +573,7 @@ function Map() {
                   <h2>건물명 : {caseData.bldg_nm}</h2>
                   <Link
                     to={`/map/${caseData.bldg_id}`}
-                    state={{ caseData: caseData }}
+                    state={{ caseData: caseData, fs_code: fs_code }}
                     className="more_details"
                   >
                     <p className="more_icon_text">더보기</p>

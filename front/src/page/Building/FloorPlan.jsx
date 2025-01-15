@@ -9,6 +9,7 @@ function FloorPlan() {
   const { bldgId, flplanId } = useParams(); // URL에서 case,flplan ID 가져오기 (찬진)
   const location = useLocation(); // 이전 페이지에서 전달된 데이터(state) 가져오기 (찬진)
   const caseData = location.state?.caseData; // (찬진)
+  const fs_code = location.state.fs_code; // (찬진)
 
   // useState (찬진)
   const [flImages, setFlImages] = useState([]); // 모든 층의 이미지 데이터 저장
@@ -205,7 +206,11 @@ function FloorPlan() {
 
   const handleFloorNavigation = (floor) => {
     navigate(`/map/${bldgId}/${floor}`, {
-      state: floorInfo,
+      state: {
+        floorInfo,
+        caseData: caseData,
+        fs_code: fs_code,
+      },
     });
   };
 
@@ -213,6 +218,7 @@ function FloorPlan() {
     navigate(`/map/${bldgId}`, {
       state: {
         caseData: caseData,
+        fs_code: fs_code,
       },
     }); // 이동할 경로
   };
@@ -234,6 +240,7 @@ function FloorPlan() {
     { label: "소화전", key: "hydrant" },
     { label: "창문", key: "window" },
     { label: "출입구", key: "enterance" },
+    { label: "CCTV", key: "enterance" },
   ];
 
   return (
