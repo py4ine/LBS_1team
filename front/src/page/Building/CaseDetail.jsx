@@ -44,14 +44,14 @@ function CaseDetail() {
     const fetchData = async () => {
       try {
         const response = await fetch(`http://localhost:8080/details/${bldgId}`);
-        const responseimg = await fetch(
-          `http://localhost:8080/images/${bldgId}`
-        );
+        // const responseimg = await fetch(
+        //   `http://localhost:8080/images/${bldgId}`
+        // );
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
         const result = await response.json();
-        const resultimg = await response.json();
+        // const resultimg = await responseimg.json();
 
         setData(result.data[0]);
       } catch (err) {
