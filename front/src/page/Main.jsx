@@ -16,6 +16,7 @@ function Main() {
 
   // useEffect
   useEffect(() => {
+    console.log(fsCode)
     const fetchCaseData = async () => {
       try {
         // API 호출

@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import Header from "../components/Layout/Header";
 import Footer from "../components/Layout/Footer";
@@ -39,6 +39,19 @@ function Map() {
   const loadWaterJsonRef = useRef(null);
   const loadDangerJsonRef = useRef(null);
   const removePointLayersRef = useRef(null);
+
+
+  const navigate = useNavigate();
+
+  const handleBackClick = () => {
+    navigate("/main", {
+      state: {
+        caseData: caseData,
+        
+      },
+    });
+  };
+  
 
   // 날씨 데이터 관련 상태
 
@@ -507,9 +520,12 @@ function Map() {
       <div className="container">
         <div ref={mapContainerRef} style={{ width: "100%", height: "100vh" }} />
         <div className="backArea">
-          <Link to="/main">
-            <img src={backArrowIcon} alt="뒤로가기" className="back-icon" />
-          </Link>
+        <img
+            src={backArrowIcon}
+            alt="뒤로가기"
+            className="back-icon"
+            onClick={handleBackClick}
+          />
         </div>
         <div className={getPinAreaClassName()}>
           <img
