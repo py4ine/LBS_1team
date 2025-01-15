@@ -2,10 +2,14 @@
 /* 메인 컨테이너 */
 
 /* 상세 정보 컨테이너 */
+.main_container {
+  padding-top: 60px;
+}
 .case_detail_container {
   background: var(--backgroundColor);
-  padding-top: 80px;
-  height: 100%;
+  /* margin-top: 70px; */
+  padding-top: 10px;
+  /* position: relative; */
   /* border: 1px solid #ddd; */
   /* border-radius: 10px; */
   /* padding: 0px; */
@@ -25,6 +29,8 @@
   text-align: center;
   color: var(--textColor);
   font-size: 18px;
+  position: relative;
+  /* padding-right: 40px; */
 }
 
 /* 텍스트 스타일 */
@@ -35,6 +41,11 @@
   color: var(--textColor);
   /* line-height: 1; */
   word-wrap: break-word; /* 긴 단어를 줄 바꿈 */
+}
+
+.caseDetail_header {
+  position: relative;
+  background-color: skyblue;
 }
 
 .flex-container {
@@ -56,7 +67,11 @@
 }
 
 .css-x-button {
-  position: relative;
+  /* position: relative; */
+  /* position: absolute; */
+  position: fixed;
+  /* top: %; */
+  /* transform: translateY(-50%); */
   left: 93%;
   width: 30px;
   height: 30px;

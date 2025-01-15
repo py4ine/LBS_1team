@@ -6,6 +6,7 @@ import "../../assets/css/casedetail.css";
 function CaseDetail() {
   const location = useLocation(); // (찬진)
   const caseData = location.state?.caseData;
+  const fs_code = location.state.fs_code; // (찬진)
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -23,6 +24,7 @@ function CaseDetail() {
         caseData: caseData,
         gro_flo_co: data.gro_flo_co,
         und_flo_co: data.und_flo_co,
+        fs_code: fs_code,
       }, // 데이터 같이 이동 (찬진)
     }); // 이동할 경로
   };
@@ -32,6 +34,7 @@ function CaseDetail() {
     navigate("/map", {
       state: {
         caseData: caseData,
+        fs_code: fs_code,
       },
       // state: {
       //   gro_flo_co: data.gro_flo_co,
@@ -110,10 +113,14 @@ function CaseDetail() {
       <Header />
       <div className="main_container">
         <div className="case_detail_container">
-          <div className="css-x-button" onClick={handleClick2}></div>
-          <h2>
-            <strong>출동 정보</strong>
-          </h2>
+          {/* <div className="css-x-button" onClick={handleClick2}></div> */}
+          <div className="caseDetail_header">
+            <button className="css-x-button" onClick={handleClick2}></button>
+            <h2>
+              <strong>출동 정보</strong>
+            </h2>
+          </div>
+
           <div className="case_detail_container2">
             <div className="flex-container">
               <div className="flex-container1">
