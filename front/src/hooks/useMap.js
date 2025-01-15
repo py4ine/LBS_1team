@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import MapboxLanguage from "@mapbox/mapbox-gl-language";
 
@@ -7,6 +7,7 @@ mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
   const mapInstance = useRef(null);
   const loadGeoJsonRef = useRef(null);
+  const [mapLoaded, setMapLoaded] = useState(false);
   const loadWaterJsonRef = useRef(null);
   const loadDangerJsonRef = useRef(null);
   const removePointLayersRef = useRef(null);
@@ -20,6 +21,11 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
     });
 
     mapInstance.current = map;
+
+    map.on("load", () => {
+      setMapLoaded(true);
+      console.log("Map loaded successfully.");
+    });
 
     // GeoLocationControl 설정
     const geolocate = new mapboxgl.GeolocateControl({
@@ -312,6 +318,7 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
     loadWaterJsonRef,
     loadDangerJsonRef,
     removePointLayersRef,
+    mapLoaded
   };
 };
 

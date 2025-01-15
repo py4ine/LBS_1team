@@ -32,6 +32,9 @@
   align-items: center; /* 자식 요소들을 수평 방향으로 중앙 정렬 */
   background-color: #141e28; /* 배경색 설정 */
   height: 100vh; /* 화면 전체 높이를 배율로 */
+  position: relative;
+  max-width: 375px;
+  margin: 0 auto;
 }
 
 .logo_image {
@@ -61,6 +64,7 @@
   top: 55%;
   left: 50%;
   transform: translateY(-40%) translateX(-50%);
+  width: 300px;
 }
 
 .login input {
@@ -69,13 +73,14 @@
   padding: 10px; /* 입력 필드 내부 여백 */
   font-size: 16px; /* 글자 크기 설정 */
   font-weight: 400; /* 버튼 글자 굵기 */
-  width: 130%; /* 입력 필드 가로 크기 */
+  width: 100%; /* 입력 필드 가로 크기 */
   margin-bottom: 20px; /* 각 입력 필드 간의 간격 */
   text-align: center; /* 텍스트를 중앙 정렬 */
   background-color: transparent; /* 배경 투명하게 */
   color: white; /* 글자 색상 설정 */
   outline: none; /* 포커스 시 파란 테두리 제거 */
   box-sizing: border-box; /* 테두리와 패딩 포함하여 크기 계산 */
+  position: relative;
 }
 .login input::placeholder {
   color: white; /* 플레이스홀더 텍스트 색상 설정 */
@@ -114,3 +119,20 @@
     opacity: 0; /* 서서히 사라짐 */
   }
 }
+
+/* 키보드가 올라왔을 때의 동작 처리 */
+@media screen and (max-height: 500px) {
+  .login_wrap {
+    position: relative;
+    top: 120px;
+    transform: translateX(-50%);
+    padding-bottom: 20px;
+  }
+  
+  .logo_image {
+    position: absolute;
+    top: 20px;
+    transform: translateX(-50%);
+  }
+}
+

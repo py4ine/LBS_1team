@@ -24,9 +24,6 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import axios from "axios";
 
-
-
-
 const Footer = forwardRef(
   (
     {
@@ -38,6 +35,7 @@ const Footer = forwardRef(
       longitude,
       latitude,
       isPin1Active,
+      removeCaseMarker,
       map,
     },
     ref
@@ -85,9 +83,6 @@ const Footer = forwardRef(
       { id: 2, src: harmfulnessIcon2, alt: "2", title: ": 주유소" },
     ];
 
-    
-
-
     const handleWeatherClick = () => {
       if (isDangerVisible) {
         // 데이터 제거
@@ -98,58 +93,57 @@ const Footer = forwardRef(
         setIsWaterVisible(false);
         // 데이터 로드
       }
-  
+
       if (map) {
         const center = map.getCenter(); // map 객체로 중심 좌표 가져오기
         const latitude = center.lat;
         const longitude = center.lng;
-  
+
         console.log("현재 지도 중심:", { latitude, longitude });
         fetchWeatherData(latitude, longitude); // 날씨 데이터 가져오기
       } else {
         console.error("map 객체가 전달되지 않았습니다.");
       }
     };
-    
-  // 날씨 데이터 가져오기 함수
-  const fetchWeatherData = async (latitude, longitude) => {
-    try {
-      setError(""); // 기존 에러 상태 초기화
-      const response = await axios.get(
-        "https://api.openweathermap.org/data/2.5/weather",
-        {
-          params: {
-            lat: latitude,
-            lon: longitude,
-            appid: API_KEY,
-          },
-        }
-      );
 
-      const kelvinTemperature = response.data.main.temp;
-      const celsiusTemperature = kelvinTemperature - 273.15;
+    // 날씨 데이터 가져오기 함수
+    const fetchWeatherData = async (latitude, longitude) => {
+      try {
+        setError(""); // 기존 에러 상태 초기화
+        const response = await axios.get(
+          "https://api.openweathermap.org/data/2.5/weather",
+          {
+            params: {
+              lat: latitude,
+              lon: longitude,
+              appid: API_KEY,
+            },
+          }
+        );
 
-      setWeatherData({
-        temperature: celsiusTemperature.toFixed(2),
-        humidity: response.data.main.humidity,
-        windSpeed: response.data.wind.speed,
-        windDirection: response.data.wind.deg || "N/A",
-      });
+        const kelvinTemperature = response.data.main.temp;
+        const celsiusTemperature = kelvinTemperature - 273.15;
 
-      console.log("Weather Data:", {
-        temperature: celsiusTemperature.toFixed(2),
-        humidity: response.data.main.humidity,
-        windSpeed: response.data.wind.speed,
-        windDirection: response.data.wind.deg || "N/A",
-      });
-    } catch (err) {
-      setError("날씨 정보를 가져오는 데 실패했습니다.");
-      console.error(err);
-    }
-  };
+        setWeatherData({
+          temperature: celsiusTemperature.toFixed(2),
+          humidity: response.data.main.humidity,
+          windSpeed: response.data.wind.speed,
+          windDirection: response.data.wind.deg || "N/A",
+        });
 
-  // 날씨 정보 버튼 클릭 핸들러
-  
+        console.log("Weather Data:", {
+          temperature: celsiusTemperature.toFixed(2),
+          humidity: response.data.main.humidity,
+          windSpeed: response.data.wind.speed,
+          windDirection: response.data.wind.deg || "N/A",
+        });
+      } catch (err) {
+        setError("날씨 정보를 가져오는 데 실패했습니다.");
+        console.error(err);
+      }
+    };
+
+    // 날씨 정보 버튼 클릭 핸들러
 
     const getWindDirection = (degree) => {
       const directions = [
@@ -343,14 +337,22 @@ const Footer = forwardRef(
       }
     };
 
+    // 검색 핸들러
     const handleResultClick = (result) => {
       if (!window.mapInstance) {
         console.error("Map instance not found");
         return;
       }
 
+      // 기존 검색 마커 제거
       if (currentMarker) {
         currentMarker.remove();
+      }
+
+      // 사건 위치 마커 제거
+      // props.removeCaseMarker();
+      if (removeCaseMarker) {
+        removeCaseMarker();
       }
 
       const el = document.createElement("div");
@@ -398,8 +400,17 @@ const Footer = forwardRef(
       setIsSearchVisible(false);
     };
 
+    //  footer에서 ref를 통해 접근할수 있는 함수 추가
     useImperativeHandle(ref, () => ({
       resetState,
+
+      // 검색 마커 제거 (찬진)
+      removeSearchMarker: () => {
+        if (currentMarker) {
+          currentMarker.remove();
+          setCurrentMarker(null);
+        }
+      },
     }));
 
     const getIconClass = (iconId) => {
@@ -439,9 +450,6 @@ const Footer = forwardRef(
         setIsDangerVisible(true);
       }
     };
-
-   
-
 
     const handleNearbyBuildings = () => {
       // const longitude = 126.87942186751448; // 테스트용 경도
@@ -542,10 +550,21 @@ const Footer = forwardRef(
                     <h2 id={`modal-title-${activeModal}`} className="sr-only">
                       {icons.find((icon) => icon.id === activeModal)?.title}
                     </h2>
-                    <p role="text">온도: {weatherData.temperature}°C</p>
-                    <p>습도: {weatherData.humidity}%</p>
-                    <p>풍속: {weatherData.windSpeed} m/s</p>
-                    <p>풍향: {getWindDirection(weatherData.windDirection)}</p>
+                    <div className="weather">
+                      <p>
+                        <strong>습도:</strong> {weatherData.humidity}%
+                      </p>
+                      <p>
+                        <strong>풍속:</strong> {weatherData.windSpeed} m/s
+                      </p>
+                      <p>
+                        <strong>온도:</strong> {weatherData.temperature}°C
+                      </p>
+                      <p>
+                        <strong>풍향:</strong>{" "}
+                        {getWindDirection(weatherData.windDirection)}
+                      </p>
+                    </div>
                   </>
                 ) : (
                   <p>날씨 데이터를 불러오는 중입니다...</p> // weatherData가 null일 때 표시
@@ -649,10 +668,10 @@ const Footer = forwardRef(
                     content = (
                       <button
                         className="footer_link"
-                        onClick={() => 
-                          {openModal(icon.id);
-                          handleWeatherClick();}
-                        }
+                        onClick={() => {
+                          openModal(icon.id);
+                          handleWeatherClick();
+                        }}
                       >
                         <div className={iconClass}>
                           <img src={icon.src} alt={icon.alt} />

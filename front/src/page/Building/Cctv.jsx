@@ -32,10 +32,11 @@ function Cctv() {
   useEffect(() => {
     if (Hls.isSupported()) {
       const hls = new Hls();
-      hls.loadSource("http://localhost:8888/mypath/index.m3u8"); // 개인 휴대폰 ip webcam URL
-      // hls.loadSource(
-      //   "http://210.99.70.120:1935/live/cctv092.stream/playlist.m3u8"
-      // ); // 도로 상황 cctv
+      // hls.loadSource("http://localhost:8888/mypath/index.m3u8"); // 개인 휴대폰 ip webcam URL
+      hls.loadSource(
+        "http://210.99.70.120:1935/live/cctv092.stream/playlist.m3u8"
+      );
+      // 도로 상황 cctv
       hls.attachMedia(videoRef.current);
     }
   }, []);

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import '../assets/css/login.css'
+import { useNavigate } from "react-router-dom";
 
 
 function Login() {
+  const navigate = useNavigate();
   const [showIntro, setShowIntro] = useState(true); // 인트로 상태 관리
   const [loginInfo, setLoginInfo] = useState({
     firestationCode: '',
@@ -24,8 +26,8 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userInfo = {
-      fsc: e.target.firestationCode.value,
-      pass: e.target.password.value
+      fs_code: parseInt(e.target.firestationCode.value, 10),
+      password: e.target.password.value
     };
 
     try {
@@ -36,9 +38,13 @@ function Login() {
       });
       const result = await response.json()
       console.log(result);
+      console.log(userInfo);
+
+      
 
       if (result.success === true) {
         alert("로그인에 성공하였습니다.");
+        navigate('/main', { state: { fs_code: userInfo.fs_code } });
 
       } else {
         alert("소방서 코드와 비밀번호가 일치하지 않습니다.");

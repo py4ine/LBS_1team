@@ -94,7 +94,7 @@ body {
   height: 60px;
   transform: translateX(-50%);
   z-index: 1000;
-  background:#141e28;
+  background: #141e28;
 }
 
 .footer_container {
@@ -271,7 +271,8 @@ body {
   z-index: 999;
 }
 
-.water-icons-container,.harmfulness-icons-container{
+.water-icons-container,
+.harmfulness-icons-container {
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -279,14 +280,16 @@ body {
   padding-left: 110px;
 }
 
-.water-icon-item,.harmfulness-icon-item {
+.water-icon-item,
+.harmfulness-icon-item {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.water-icon-item,.harmfulness-icon-item span {
-  font-size: 14px;
+.water-icon-item,
+.harmfulness-icon-item span {
+  font-size: 18px;
 }
 .sr-only {
   position: absolute;
@@ -332,3 +335,21 @@ body {
   background-position: center;
 }
 
+.weather {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2열 그리드 */
+  gap: 10px; /* 요소 간격 */
+  text-align: start; /* 텍스트 가운데 정렬 */
+  /* margin: 20px auto; */
+  font-size: 18px; /* 글자 크기 */
+  font-family: Arial, sans-serif; /* 폰트 */
+  padding: 0 10%; /* 좌우 동일한 패딩 */
+}
+
+.weather p {
+  margin: 0;
+}
+
+.weather strong {
+  font-weight: bold;
+}
