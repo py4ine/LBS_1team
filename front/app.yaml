@@ -6,11 +6,16 @@ env_variables:
   NODE_ENV: production
 
 handlers:
-  # 정적 파일 경로 설정
-  - url: /static
-    static_dir: dist/static
+  # index.html 제공
+  - url: /
+    static_files: dist/index.html
+    upload: dist/index.html
 
-  # 모든 요청을 index.html로 리다이렉트
+  # 정적 파일 제공 (assets 폴더 내 모든 파일)
+  - url: /assets
+    static_dir: dist/assets
+
+  # 나머지 모든 요청을 index.html로 라우팅 (React 라우팅 처리)
   - url: /.*
     static_files: dist/index.html
     upload: dist/index.html
