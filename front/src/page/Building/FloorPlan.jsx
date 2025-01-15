@@ -225,7 +225,7 @@ function FloorPlan() {
   // 에러
   if (error) return <div>Error: {error}</div>;
   // 현재층 이미지데이터 없을때
-  if (!currentFlImage) return <div>1층, 2층, 20층만 데이터가 있습니다</div>;
+  // if (!currentFlImage) return <div>1층, 2층, 20층만 데이터가 있습니다</div>;
 
   // 아이콘 버튼 데이터
   const buttonData = [
