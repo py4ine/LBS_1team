@@ -12,16 +12,16 @@ function Main() {
   const [loading, setLoading] = useState(true); // 로딩 상태 관리
   const [error, setError] = useState(null); // 에러 상태 관리
   const location = useLocation();
-  const fsCode = location.state?.fs_code;
+  const fs_code = location.state?.fs_code;
 
   // useEffect
   useEffect(() => {
-    console.log(fsCode)
+    console.log(fs_code);
     const fetchCaseData = async () => {
       try {
         // API 호출
         const res = await fetch(
-          `http://localhost:8080/cases?dispatch_fire_station=${fsCode}`
+          `http://localhost:8080/cases?dispatch_fire_station=${fs_code}`
         );
 
         // 응답 상태 확인
@@ -50,6 +50,8 @@ function Main() {
     navigate("/map", {
       state: {
         caseData: data,
+        fs_code: fs_code,
+
         // coordinates: {
         //   lat: data.latitude,
         //   lng: data.longitude,

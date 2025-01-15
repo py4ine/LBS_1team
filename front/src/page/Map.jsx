@@ -27,6 +27,7 @@ function Map() {
   const [watchId, setWatchId] = useState(null);
   const location = useLocation();
   const [caseData, setCaseData] = useState(location.state.caseData); // caseData 상태 저장소 (찬진)
+  const [fs_code, setFs_code] = useState(location.state.fsCode); // fsCode 상태저장소
   const [longitude, setLongitude] = useState(location.state.caseData.longitude); // (추가)
   const [latitude, setLatitude] = useState(location.state.caseData.latitude); // (추가)
   const [center, setCenter] = useState(null); // 지도 중심점
@@ -40,18 +41,27 @@ function Map() {
   const loadDangerJsonRef = useRef(null);
   const removePointLayersRef = useRef(null);
 
-
   const navigate = useNavigate();
 
   const handleBackClick = () => {
     navigate("/main", {
       state: {
         caseData: caseData,
-        
+        fs_code: fs_code,
       },
     });
   };
-  
+
+  useEffect(() => {
+    if (location.state?.caseData) {
+      setCaseData(location.state.caseData);
+      setLongitude(location.state.caseData.longitude);
+      setLatitude(location.state.caseData.latitude);
+    }
+    if (location.state?.fs_code) {
+      setFs_code(location.state.fs_code);
+    }
+  }, [location.state]);
 
   // 날씨 데이터 관련 상태
 
@@ -84,7 +94,7 @@ function Map() {
   const {
     map,
     mapboxgl,
-    mapLoaded ,
+    mapLoaded,
     loadGeoJsonRef: hookGeoJsonRef,
     loadWaterJsonRef: hookWaterJsonRef,
     loadDangerJsonRef: hookDangerJsonRef,
@@ -520,7 +530,7 @@ function Map() {
       <div className="container">
         <div ref={mapContainerRef} style={{ width: "100%", height: "100vh" }} />
         <div className="backArea">
-        <img
+          <img
             src={backArrowIcon}
             alt="뒤로가기"
             className="back-icon"
