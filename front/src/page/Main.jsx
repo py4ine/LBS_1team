@@ -3,7 +3,7 @@ import "../assets/css/main.css";
 import Header from "../components/Layout/Header";
 import main_img from "../assets/images/img/main.png";
 import arrow_G from "../assets/images/button_icons/icon_leftarrow_G.png";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function Main() {
   const navigate = useNavigate(); // 네비게이션 훅
@@ -11,6 +11,8 @@ function Main() {
   const [caseData, setCaseData] = useState(); // 사건 데이터 저장
   const [loading, setLoading] = useState(true); // 로딩 상태 관리
   const [error, setError] = useState(null); // 에러 상태 관리
+  const location = useLocation();
+  const fsCode = location.state?.fs_code;
 
   // useEffect
   useEffect(() => {
@@ -18,7 +20,7 @@ function Main() {
       try {
         // API 호출
         const res = await fetch(
-          "http://localhost:8080/cases?dispatch_fire_station=101"
+          `http://localhost:8080/cases?dispatch_fire_station=${fsCode}`
         );
 
         // 응답 상태 확인
