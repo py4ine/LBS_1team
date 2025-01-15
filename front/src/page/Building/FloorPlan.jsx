@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom"; // -useP
 import Header from "../../components/Layout/Header";
 import "../../assets/css/floorplan.css";
 import FloorPlanBtn from "../../components/Detail/FloorPlanBtn"; // 버튼 컴포넌트 추가 (찬진)
+import cctvIcon from "../../assets/images/button_icons/button_icons.png";
 
 function FloorPlan() {
   const navigate = useNavigate();
@@ -17,6 +18,9 @@ function FloorPlan() {
   const [error, setError] = useState(null); // 에러
   const [currentImage, setCurrentImage] = useState(""); // 현재 표시되는 이미지 url
   const [imagesLoaded, setImagesLoaded] = useState(false); // 이미지 프리로딩 완료 상태
+
+  const [showCCTV, setShowCCTV] = useState(false); // CCTV 아이콘 표시 여부
+  const [cctvIcons, setCctvIcons] = useState([]); // CCTV 아이콘 위치 관리
 
   // location.state에서 층수정보 추출 , 없으면 기본값으로 설정 (찬진)
   // const { gro_flo_co, und_flo_co } = location.state || {
@@ -134,21 +138,46 @@ function FloorPlan() {
     switch (iconType) {
       case "비상구":
         setCurrentImage(currentFlImage.flo_stair);
+        setShowCCTV(false);
         break;
       case "엘리베이터":
         setCurrentImage(currentFlImage.flo_elevator);
+        setShowCCTV(false);
         break;
       case "소화전":
         setCurrentImage(currentFlImage.flo_hydrant);
+        setShowCCTV(false);
         break;
       case "창문":
         setCurrentImage(currentFlImage.flo_window);
+        setShowCCTV(false);
         break;
       case "출입구":
         setCurrentImage(currentFlImage.flo_enterance);
+        setShowCCTV(false);
+        break;
+      case "CCTV":
+        setShowCCTV(true); // CCTV 아이콘 표시
+        const newCCTVIcon1 = {
+          id: 1, // 고유 ID
+          x: "80%", // X축 위치 (예: 중앙)
+          y: "85.5%", // Y축 위치 (예: 중앙)
+        };
+        const newCCTVIcon2 = {
+          id: 2, // 고유 ID
+          x: "80%", // X축 위치 (예: 중앙)
+          y: "78%", // Y축 위치 (예: 중앙)
+        };
+        setCctvIcons([newCCTVIcon1, newCCTVIcon2]);
+        setCurrentImage(currentFlImage.flo_pl); // CCTV 이미지로 변경
+        break;
+      case "인원수":
+        setCurrentImage(currentFlImage.flo_pl); // CCTV 이미지로 변경
+        setShowCCTV(false);
         break;
       default:
         setCurrentImage(currentFlImage.flo_pl);
+        setShowCCTV(false);
     }
   };
 
@@ -216,6 +245,14 @@ function FloorPlan() {
       },
     }); // 이동할 경로
   };
+
+  const handleCCTVIconClick = (id) => {
+    if (id === 1) {
+      navigate("/cctv"); // 1번 아이콘 경로
+    } else if (id === 2) {
+      navigate("/cctv"); // 2번 아이콘 경로
+    }
+  };
   // const handleClick = () => {
   //   navigate(-1); // 이동할 경로
   // };
@@ -234,6 +271,8 @@ function FloorPlan() {
     { label: "소화전", key: "hydrant" },
     { label: "창문", key: "window" },
     { label: "출입구", key: "enterance" },
+    { label: "CCTV", key: "cctv" },
+    { label: "인원수", key: "person" },
   ];
 
   return (
@@ -293,6 +332,25 @@ function FloorPlan() {
                 닫기
               </button>
             )}
+            {showCCTV &&
+              cctvIcons.map((icon) => (
+                <div
+                  key={icon.id}
+                  className="cctv-icon"
+                  style={{
+                    position: "absolute",
+                    top: icon.y,
+                    left: icon.x,
+                    width: "40px",
+                    height: "40px",
+                    backgroundImage: `url(${cctvIcon})`, // CCTV 아이콘 이미지 경로
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    zIndex: 15,
+                  }}
+                  onClick={() => handleCCTVIconClick(icon.id)}
+                />
+              ))}
           </div>
 
           {/* 아이콘 버튼 */}

@@ -550,10 +550,21 @@ const Footer = forwardRef(
                     <h2 id={`modal-title-${activeModal}`} className="sr-only">
                       {icons.find((icon) => icon.id === activeModal)?.title}
                     </h2>
-                    <p role="text">온도: {weatherData.temperature}°C</p>
-                    <p>습도: {weatherData.humidity}%</p>
-                    <p>풍속: {weatherData.windSpeed} m/s</p>
-                    <p>풍향: {getWindDirection(weatherData.windDirection)}</p>
+                    <div className="weather">
+                      <p>
+                        <strong>습도:</strong> {weatherData.humidity}%
+                      </p>
+                      <p>
+                        <strong>풍속:</strong> {weatherData.windSpeed} m/s
+                      </p>
+                      <p>
+                        <strong>온도:</strong> {weatherData.temperature}°C
+                      </p>
+                      <p>
+                        <strong>풍향:</strong>{" "}
+                        {getWindDirection(weatherData.windDirection)}
+                      </p>
+                    </div>
                   </>
                 ) : (
                   <p>날씨 데이터를 불러오는 중입니다...</p> // weatherData가 null일 때 표시

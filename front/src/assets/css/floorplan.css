@@ -31,7 +31,7 @@
 /* 설계도 이미지 */
 .floorplan-image-container {
   display: flex;
-
+  position: relative;
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
@@ -88,20 +88,9 @@
   left: 93%;
   width: 30px;
   height: 30px;
+
   background-color: transparent;
   cursor: pointer;
-}
-
-.css-x-button::before,
-.css-x-button::after {
-  content: "";
-  position: absolute;
-  top: 30%;
-  left: 50%;
-  width: 20px;
-  height: 2.5px;
-  background-color: #000000;
-  transform-origin: center;
 }
 
 .css-x-button::before {
@@ -115,4 +104,9 @@
 .css-x-button:hover::before,
 .css-x-button:hover::after {
   background-color: #cedc00; /* 호버 시 색상 변경 */
+}
+
+.cctv-icon {
+  /* border: 1px solid #000; */
+  border-radius: 00%; /* 동그랗게 */
 }

@@ -4,7 +4,8 @@
 /* 상세 정보 컨테이너 */
 .case_detail_container {
   background: var(--backgroundColor);
-  margin-top: 70px;
+  padding-top: 80px;
+  height: 100%;
   /* border: 1px solid #ddd; */
   /* border-radius: 10px; */
   /* padding: 0px; */
@@ -71,6 +72,7 @@
   left: 50%;
   width: 20px;
   height: 2.5px;
+
   background-color: var(--textColor);
   transform-origin: center;
 }
