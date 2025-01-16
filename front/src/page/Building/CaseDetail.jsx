@@ -49,9 +49,9 @@ function CaseDetail() {
         const response = await fetch(
           `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/details/${bldgId}`
         );
-        const responseimg = await fetch(
-          `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/images/${bldgId}`
-        );
+        // const responseimg = await fetch(
+        //   `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/images/${bldgId}`
+        // );
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }

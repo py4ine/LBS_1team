@@ -44,7 +44,9 @@ function FloorPlan() {
       setLoading(true);
       try {
         // api 이미지 데이터 가져오기
-        const res = await fetch(`http://localhost:8080/images/${bldgId}`);
+        const res = await fetch(
+          `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/images/${bldgId}`
+        );
         if (!res.ok) {
           throw new Error("Failed to fetch fl images");
         }
