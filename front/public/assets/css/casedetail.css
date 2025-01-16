@@ -1,0 +1,140 @@
+/* detail page 김호준 */
+/* 메인 컨테이너 */
+
+/* 상세 정보 컨테이너 */
+.main_container {
+  padding-top: 150px;
+}
+.case_detail_container {
+  background: var(--backgroundColor);
+  /* margin-top: 70px; */
+  padding-top: 10px;
+  /* position: relative; */
+  /* border: 1px solid #ddd; */
+  /* border-radius: 10px; */
+  /* padding: 0px; */
+
+  /* max-width: 600px; 최대 너비 설정 */
+  /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+  /* box-sizing: border-box;  */
+  /* overflow: hidden; 요소가 튀어나오지 않도록 처리 */
+}
+
+/* 섹션 제목 */
+.case_detail_container h2 {
+  border-bottom: 2px solid var(--mainColor);
+  border-top: 2px solid var(--mainColor);
+  padding-bottom: 5px;
+  margin-bottom: 15px;
+  text-align: center;
+  color: var(--textColor);
+  font-size: 18px;
+  position: relative;
+  /* padding-right: 40px; */
+}
+
+/* 텍스트 스타일 */
+.case_detail_container p {
+  /* flex-container 사이에 gap을 주면 margin+lineheight는 필요없어짐. */
+  /* margin: 5px; */
+  font-size: 16px;
+  color: var(--textColor);
+  /* line-height: 1; */
+  word-wrap: break-word; /* 긴 단어를 줄 바꿈 */
+}
+
+.caseDetail_header {
+  position: relative;
+  background-color: skyblue;
+}
+
+.flex-container {
+  display: flex; /* Flexbox 활성화 */
+  gap: 10px;
+  margin-top: 5px;
+}
+.flex-wrap {
+  padding: 0px 20px;
+  align-items: center; /* 세로 정렬: 중앙에 정렬 */
+}
+.flex-container1 {
+  white-space: nowrap;
+}
+
+.case_detail_container2 {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.css-x-button {
+  /* position: relative; */
+  /* position: absolute; */
+  position: fixed;
+  /* top: %; */
+  /* transform: translateY(-50%); */
+  left: 93%;
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.css-x-button::before,
+.css-x-button::after {
+  content: "";
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  width: 20px;
+  height: 2.5px;
+
+  background-color: var(--textColor);
+  transform-origin: center;
+}
+
+.css-x-button::before {
+  transform: translate(-50%, -50%) rotate(45deg); /* 대각선 1 */
+}
+
+.css-x-button::after {
+  transform: translate(-50%, -50%) rotate(-45deg); /* 대각선 2 */
+}
+
+.css-x-button:hover::before,
+.css-x-button:hover::after {
+  background-color: var(--mainColor); /* 호버 시 색상 변경 */
+}
+
+.case_detail_button {
+  display: block;
+  margin: 20px 0px;
+  font-size: 16px;
+  text-align: center;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.detail-button {
+  display: inline-block;
+  padding: 15px 30px;
+  width: 310px;
+  height: 50px;
+  font-size: 16px;
+  font-weight: bold; /* 버튼 텍스트를 굵게 */
+  color: var(--textColor); /* 텍스트 색상 */
+  background-color: var(--mainColor); /* 버튼 배경색 */
+  border: none; /* 기본 테두리 제거 */
+  border-radius: 10px; /* 모서리를 둥글게 */
+  cursor: pointer; /* 클릭 가능한 커서 */
+  transition: background-color 0.3s, transform 0.2s; /* 배경색과 클릭 효과 */
+}
+
+.detail-button:hover {
+  background-color: var(--textColor); /* 호버 시 색상 변경 */
+  color: var(--mainColor);
+}
+
+.detail-button:active {
+  transform: scale(0.95); /* 클릭 시 약간 축소 */
+}

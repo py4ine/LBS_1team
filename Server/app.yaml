@@ -1,0 +1,21 @@
+service: node-kimhojun
+runtime: nodejs20
+instance_class: F1
+env_variables:
+  NODE_ENV: production
+  DB_HOST: /cloudsql/winged-woods-442503-f1:asia-northeast3:codelab
+  DB_USER: codelab
+  DB_PASSWORD: codelab1234
+  DB_NAME: postgres
+  DB_PORT: 5432
+
+
+handlers:
+  # 정적 파일 처리
+  # - url: /images/(.*)
+  #   static_files: tmp/\1
+  #   upload: tmp/(.*)
+
+  # 동적 요청 처리
+  - url: /.*
+    script: auto

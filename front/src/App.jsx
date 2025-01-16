@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
+import { connectWebSocket } from "./page/websocketManager.js";
 
 import "./assets/css/index.css";
 
@@ -10,8 +11,13 @@ import Map from "./page/Map.jsx";
 import CaseDetail from "./page/Building/CaseDetail.jsx";
 import FloorPlan from "./page/Building/FloorPlan.jsx";
 import Cctv from "./page/Building/Cctv.jsx";
+import Counting from "./page/Building/Counting.jsx";
 
 function App() {
+  useEffect(() =>{
+    connectWebSocket();  // 컴포넌트가 마운트되면 웹소켓 연결
+  }, []);
+  
   return (
     <>
       <Routes>
@@ -36,6 +42,10 @@ function App() {
 
         {/* CCTV 페이지 */}
         <Route path="/cctv" element={<Cctv />}></Route>
+
+        {/* Counting 페이지 */}
+        <Route path="/counting" element={<Counting />}></Route>
+
       </Routes>
     </>
   );

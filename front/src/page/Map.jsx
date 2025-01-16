@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import Header from "../components/Layout/Header";
 import Footer from "../components/Layout/Footer";
@@ -13,7 +13,6 @@ import myLocationIcon from "../assets/images/map_icons/bg/icon_mylocation_BG.png
 import myLocationActiveIcon from "../assets/images/map_icons/bg/icon_mylocationW_BG.png";
 import leftArrowIcon from "../assets/images/button_icons/icon_leftarrow_G.png";
 import pullfinIcon from "../assets/images/map_icons/icon_pullfin.png";
-import axios from "axios";
 
 function Map() {
   const mapContainerRef = useRef(null);
@@ -22,15 +21,18 @@ function Map() {
   const [activeModalType, setActiveModalType] = useState(null);
   const [activePin, setActivePin] = useState(null);
   const [isPin1ModalOpen, setIsPin1ModalOpen] = useState(false);
-  const [mapLoaded, setMapLoaded] = useState(false);
+  // const [mapLoaded, setMapLoaded] = useState(false);
   const footerRef = useRef(null);
   const [currentLocationMarker, setCurrentLocationMarker] = useState(null);
   const [watchId, setWatchId] = useState(null);
   const location = useLocation();
   const [caseData, setCaseData] = useState(location.state.caseData); // caseData 상태 저장소 (찬진)
+  const [fs_code, setFs_code] = useState(location.state.fsCode); // fsCode 상태저장소
   const [longitude, setLongitude] = useState(location.state.caseData.longitude); // (추가)
   const [latitude, setLatitude] = useState(location.state.caseData.latitude); // (추가)
   const [center, setCenter] = useState(null); // 지도 중심점
+  // const [bound, setbound] = useState(null); // 지도 중심점
+  const [caseMarker, setCaseMarker] = useState(null); // 사건 위치 마커 상태 저장소 (찬진)
 
   // console.log(location.state.caseData);
   // GeoJSON 관련 ref
@@ -39,10 +41,30 @@ function Map() {
   const loadDangerJsonRef = useRef(null);
   const removePointLayersRef = useRef(null);
 
+  const navigate = useNavigate();
+
+  const handleBackClick = () => {
+    navigate("/main", {
+      state: {
+        caseData: caseData,
+        fs_code: fs_code,
+      },
+    });
+  };
+
+  // location.state가 변경될 때 상태 업데이트를 위한 useEffect 추가
+  useEffect(() => {
+    if (location.state?.caseData) {
+      setCaseData(location.state.caseData);
+      setLongitude(location.state.caseData.longitude);
+      setLatitude(location.state.caseData.latitude);
+    }
+    if (location.state?.fs_code) {
+      setFs_code(location.state.fs_code);
+    }
+  }, [location.state]);
+
   // 날씨 데이터 관련 상태
-  const [weatherData, setWeatherData] = useState(null);
-  const [error, setError] = useState("");
-  const API_KEY = "409e846b281cf5d9778aa237b0136e6b";
 
   // localStorage caseData 관리
   // const [caseData, setCaseData] = useState(() => {
@@ -73,6 +95,7 @@ function Map() {
   const {
     map,
     mapboxgl,
+    mapLoaded,
     loadGeoJsonRef: hookGeoJsonRef,
     loadWaterJsonRef: hookWaterJsonRef,
     loadDangerJsonRef: hookDangerJsonRef,
@@ -104,20 +127,98 @@ function Map() {
   }, [map]);
 
   // map 로드 완료 감지
-  useEffect(() => {
-    if (map) {
-      map.on("load", () => {
-        setMapLoaded(true);
-      });
-    }
-  }, [map]);
+  // useEffect(() => {
+  //   if (map) {
+  //     map.on("load", () => {
+  //       setMapLoaded(true);
+  //     });
+  //   }
+  // }, [map]);
 
   // 마커 생성
-  useEffect(() => {
-    if (!map || !mapLoaded || !caseData || !mapboxgl) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (!map || !mapLoaded || !caseData || !mapboxgl) {
+  //     return;
+  //   }
 
+  //   try {
+  //     console.log("Creating marker with data:", caseData);
+
+  //     const el = document.createElement("div");
+  //     el.className = "marker";
+  //     el.style.backgroundImage = `url(${pullfinIcon})`;
+  //     el.style.width = "40px";
+  //     el.style.height = "40px";
+  //     el.style.backgroundRepeat = "no-repeat";
+  //     el.style.backgroundPosition = "center";
+
+  //     const marker = new mapboxgl.Marker({
+  //       element: el,
+  //       anchor: "bottom",
+  //     })
+  //       .setLngLat([longitude, latitude])
+  //       .addTo(map);
+
+  //     setCaseMarker(marker); // 마커 상태 저장 (찬진)
+
+  //     map.flyTo({
+  //       center: [longitude, latitude],
+  //       zoom: 15,
+  //       essential: true,
+  //     });
+
+  //     return () => {
+  //       if (marker) {
+  //         marker.remove();
+  //       }
+  //     };
+  //   } catch (error) {
+  //     console.error("Error creating marker:", error);
+  //   }
+  // }, [mapLoaded, map, caseData, mapboxgl]);
+
+  // // 사건 마거 제거 (찬진)
+  // const removeCaseMarker = () => {
+  //   if (caseMarker) {
+  //     caseMarker.remove();
+  //     setCaseMarker(null);
+  //   }
+  // };
+
+  // // 사건 핀 리필 (찬진)
+  // const caseRepin = () => {
+  //   try {
+  //     console.log("Creating marker with data:", caseData);
+
+  //     const el = document.createElement("div");
+  //     el.className = "marker";
+  //     el.style.backgroundImage = `url(${pullfinIcon})`;
+  //     el.style.width = "40px";
+  //     el.style.height = "40px";
+  //     el.style.backgroundRepeat = "no-repeat";
+  //     el.style.backgroundPosition = "center";
+
+  //     const marker = new mapboxgl.Marker({
+  //       element: el,
+  //       anchor: "bottom",
+  //     })
+  //       .setLngLat([longitude, latitude])
+  //       .addTo(map);
+
+  //     setCaseMarker(marker); // 마커 상태 저장 (찬진)
+
+  //     map.flyTo({
+  //       center: [longitude, latitude],
+  //       zoom: 15,
+  //       essential: true,
+  //     });
+  //   } catch (error) {
+  //     console.error("Error creating marker:", error);
+  //   }
+  // };
+
+  // 마커 생성 코드 최적화
+  const createMarker = () => {
     try {
       console.log("Creating marker with data:", caseData);
 
@@ -136,56 +237,44 @@ function Map() {
         .setLngLat([longitude, latitude])
         .addTo(map);
 
+      setCaseMarker(marker);
+
       map.flyTo({
         center: [longitude, latitude],
         zoom: 15,
         essential: true,
       });
 
-      return () => {
-        if (marker) {
-          marker.remove();
-        }
-      };
+      return marker;
     } catch (error) {
       console.error("Error creating marker:", error);
-    }
-  }, [mapLoaded, map, caseData, mapboxgl]);
-
-  // 날씨 데이터 가져오기
-  const fetchWeatherData = async () => {
-    try {
-      setError("");
-      const response = await axios.get(
-        "https://api.openweathermap.org/data/2.5/weather",
-        {
-          params: {
-            lat: latitude,
-            lon: longitude,
-            appid: API_KEY,
-          },
-        }
-      );
-
-      const kelvinTemperature = response.data.main.temp;
-      const celsiusTemperature = kelvinTemperature - 273.15;
-
-      setWeatherData({
-        temperature: celsiusTemperature.toFixed(2),
-        humidity: response.data.main.humidity,
-        windSpeed: response.data.wind.speed,
-        windDirection: response.data.wind.deg || "N/A",
-      });
-      console.log("1:", weatherData);
-    } catch (err) {
-      setError("날씨 정보를 가져오는 데 실패했습니다.");
+      return null;
     }
   };
 
-  // 날씨 패치
+  // 사건 마커 제거 (찬진)
+  const removeCaseMarker = () => {
+    if (caseMarker) {
+      caseMarker.remove();
+    }
+  };
+
+  // useEffect에서 마커 관리
   useEffect(() => {
-    fetchWeatherData();
-  }, [longitude, latitude]);
+    if (!map || !mapLoaded || !caseData || !mapboxgl) {
+      return;
+    }
+
+    const marker = createMarker();
+
+    return () => {
+      if (marker) {
+        marker.remove();
+      }
+    };
+  }, [mapLoaded, map, caseData, mapboxgl]);
+
+  // 날씨 데이터 가져오기
 
   // 데이터 핸들러 함수들
   const handleLoadGeoJson = () => {
@@ -205,25 +294,63 @@ function Map() {
   // console.log("1: ", caseData.longitude);
   const handleWaterJson = () => {
     if (map) {
-      const mapCenter = map.getCenter(); // 현재 지도의 중심점을 직접 가져옴
+      const mapBound = map.getBounds();
 
-      // 상태 업데이트
-      setCenter(mapCenter);
+      // 경계 좌표를 각각 가져옴
+      const southWest = mapBound.getSouthWest();
+      const northWest = mapBound.getNorthWest();
+      const northEast = mapBound.getNorthEast();
+      const southEast = mapBound.getSouthEast();
+
+      // POLYGON 좌표 생성
+      const polygonCoords = `
+        POLYGON((
+          ${southWest.lng} ${southWest.lat},
+          ${northWest.lng} ${northWest.lat},
+          ${northEast.lng} ${northEast.lat},
+          ${southEast.lng} ${southEast.lat},
+          ${southWest.lng} ${southWest.lat}
+        ))
+      `.replace(/\s+/g, " "); // 공백을 하나로 정리
+
+      console.log("Generated POLYGON:", polygonCoords);
+
       if (loadWaterJsonRef.current) {
-        loadWaterJsonRef.current(mapCenter.lng, mapCenter.lat);
+        loadWaterJsonRef.current(polygonCoords);
       }
+    } else {
+      console.error("Map object is not available.");
     }
   };
 
   const handleDangerJson = () => {
     if (map) {
-      const mapCenter = map.getCenter(); // 현재 지도의 중심점을 직접 가져옴
+      const mapBound = map.getBounds();
 
-      // 상태 업데이트
-      setCenter(mapCenter);
+      // 경계 좌표를 각각 가져옴
+      const southWest = mapBound.getSouthWest();
+      const northWest = mapBound.getNorthWest();
+      const northEast = mapBound.getNorthEast();
+      const southEast = mapBound.getSouthEast();
+
+      // POLYGON 좌표 생성
+      const polygonCoords = `
+        POLYGON((
+          ${southWest.lng} ${southWest.lat},
+          ${northWest.lng} ${northWest.lat},
+          ${northEast.lng} ${northEast.lat},
+          ${southEast.lng} ${southEast.lat},
+          ${southWest.lng} ${southWest.lat}
+        ))
+      `.replace(/\s+/g, " "); // 공백을 하나로 정리
+
+      console.log("Generated POLYGON:", polygonCoords);
+
       if (loadDangerJsonRef.current) {
-        loadDangerJsonRef.current(mapCenter.lng, mapCenter.lat);
+        loadDangerJsonRef.current(polygonCoords);
       }
+    } else {
+      console.error("Map object is not available.");
     }
   };
 
@@ -258,6 +385,15 @@ function Map() {
         }
       }
 
+      // footer의 currentMarker 제거하기 위한 함수
+      const removeSearchMarker = () => {
+        if (footerRef.current) {
+          footerRef.current.removeSearchMarker();
+        }
+      };
+
+      removeSearchMarker(); // 검색 마커 제거 (찬진)
+      createMarker(); // 사건핀 마커 재생성 및 이동 (찬진)
       setIsPin1ModalOpen(newModalState);
       handleModalOrSearchChange(newModalState, "pin1");
     }
@@ -270,9 +406,11 @@ function Map() {
           setWatchId(null);
         }
         setActivePin(null);
+
         return;
       }
 
+      // 현재 위치 마커 생성 및 위치 추적 로직
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
@@ -393,9 +531,12 @@ function Map() {
       <div className="container">
         <div ref={mapContainerRef} style={{ width: "100%", height: "100vh" }} />
         <div className="backArea">
-          <Link to="/main">
-            <img src={backArrowIcon} alt="뒤로가기" className="back-icon" />
-          </Link>
+          <img
+            src={backArrowIcon}
+            alt="뒤로가기"
+            className="back-icon"
+            onClick={handleBackClick}
+          />
         </div>
         <div className={getPinAreaClassName()}>
           <img
@@ -431,8 +572,8 @@ function Map() {
                 <div className="modal_header">
                   <h2>건물명 : {caseData.bldg_nm}</h2>
                   <Link
-                    to="/map/1"
-                    state={{ caseData: caseData }}
+                    to={`/map/${caseData.bldg_id}`}
+                    state={{ caseData: caseData, fs_code: fs_code }}
                     className="more_details"
                   >
                     <p className="more_icon_text">더보기</p>
@@ -457,7 +598,9 @@ function Map() {
         onLoadDangerJson={handleDangerJson}
         onLoadGeoJson={handleLoadGeoJson}
         onremovePointLayers={handleRemovePointLayers}
-        weatherData={weatherData}
+        map={map}
+        removeCaseMarker={removeCaseMarker} // footer 에 마커 제거함수 전달 (찬진)
+        fs_code={fs_code} // 소방서 코드 전달
       />
     </>
   );

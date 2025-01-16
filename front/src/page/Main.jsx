@@ -3,7 +3,7 @@ import "../assets/css/main.css";
 import Header from "../components/Layout/Header";
 import main_img from "../assets/images/img/main.png";
 import arrow_G from "../assets/images/button_icons/icon_leftarrow_G.png";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function Main() {
   const navigate = useNavigate(); // 네비게이션 훅
@@ -11,14 +11,25 @@ function Main() {
   const [caseData, setCaseData] = useState(); // 사건 데이터 저장
   const [loading, setLoading] = useState(true); // 로딩 상태 관리
   const [error, setError] = useState(null); // 에러 상태 관리
+  const location = useLocation();
+  const fs_code = location.state?.fs_code; // 소방서 코드
 
   // useEffect
   useEffect(() => {
+    console.log(fs_code);
+
+    // 소방서 코드 없을때 로그인페이지 이동
+    if (!fs_code) {
+      navigate("/login");
+      return;
+    }
+
     const fetchCaseData = async () => {
       try {
         // API 호출
         const res = await fetch(
-          "http://localhost:8080/cases?dispatch_fire_station=101"
+          // "http://localhost:8080/cases?dispatch_fire_station=101"
+          `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/cases?dispatch_fire_station=${fs_code}`
         );
 
         // 응답 상태 확인
@@ -40,13 +51,15 @@ function Main() {
     };
 
     fetchCaseData();
-  }, []);
+  }, [fs_code]);
 
   // 사건 클릭시 지도페이지 이동
   const handleCaseClick = (data) => {
     navigate("/map", {
       state: {
         caseData: data,
+        fs_code: fs_code,
+
         // coordinates: {
         //   lat: data.latitude,
         //   lng: data.longitude,

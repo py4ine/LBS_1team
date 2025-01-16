@@ -105,7 +105,9 @@ const getPoiByOriginId = async (origin_id) => {
         throw new Error(error.message);
     }
 };
-const getWaterALL = async (longitude, latitude) => {
+
+
+const getWaterALL = async (polygon) => {
     const query = `
         SELECT
             json_build_object(
@@ -117,25 +119,21 @@ const getWaterALL = async (longitude, latitude) => {
                 )
             ) AS feature
         FROM ${schema}.water
-        WHERE ST_DWithin(
-            water_geom, 
-            ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography, 
-            200
+        WHERE ST_Within(
+            water_geom,
+            ST_GeomFromText($1, 4326)
         );
     `;
+
     try {
-        console.log('Executing query with params:', { longitude, latitude });
+        console.log('Executing query with polygon:', polygon);
 
-        // 쿼리에 파라미터 전달
-        const result = await db.query(query, [longitude, latitude]);
+        const result = await db.query(query, [polygon]);
 
-        // GeoJSON FeatureCollection 형태로 데이터 변환
         const geojson = {
             type: 'FeatureCollection',
             features: result.rows.map(row => row.feature) // 각 행의 feature를 묶음
         };
-
-        // console.log('GeoJSON Result:', geojson);
 
         return geojson;
     } catch (error) {

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import MapboxLanguage from "@mapbox/mapbox-gl-language";
 
@@ -7,6 +7,7 @@ mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
   const mapInstance = useRef(null);
   const loadGeoJsonRef = useRef(null);
+  const [mapLoaded, setMapLoaded] = useState(false);
   const loadWaterJsonRef = useRef(null);
   const loadDangerJsonRef = useRef(null);
   const removePointLayersRef = useRef(null);
@@ -20,6 +21,11 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
     });
 
     mapInstance.current = map;
+
+    map.on("load", () => {
+      setMapLoaded(true);
+      console.log("Map loaded successfully.");
+    });
 
     // GeoLocationControl 설정
     const geolocate = new mapboxgl.GeolocateControl({
@@ -70,7 +76,8 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
       console.log("loadGeoJson 호출:", { longitude, latitude });
       try {
         const response = await fetch(
-          `http://localhost:8080/around?longitude=${longitude}&latitude=${latitude}`
+          // `http://localhost:8080/around?longitude=${longitude}&latitude=${latitude}`
+          `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/around?longitude=${longitude}&latitude=${latitude}`
         );
         console.log("API 요청 완료");
 
@@ -123,11 +130,12 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
     loadGeoJsonRef.current = loadGeoJson;
 
     // Water JSON 로드 함수
-    const loadWaterJson = async (longitude, latitude) => {
-      console.log("loadWaterJson 호출:", { longitude, latitude });
+    const loadWaterJson = async (polygon) => {
+      console.log("loadWaterJson 호출:", { polygon });
       try {
         const response = await fetch(
-          `http://localhost:8080/waters?longitude=${longitude}&latitude=${latitude}`
+          // `http://localhost:8080/waters?polygon=${polygon}`
+          `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/waters?polygon=${polygon}`
         );
         console.log("API 요청 완료");
 
@@ -141,12 +149,30 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
         }
 
         const images = [
-          { id: "water-type-1-icon", src: "/water/icon_water1.png" },
-          { id: "water-type-2-icon", src: "/water/icon_water2.png" },
-          { id: "water-type-3-icon", src: "/water/icon_water3.png" },
-          { id: "water-type-4-icon", src: "/water/icon_water4.png" },
-          { id: "water-type-5-icon", src: "/water/icon_water5.png" },
-          { id: "water-type-6-icon", src: "/water/icon_water6.png" },
+          {
+            id: "water-type-1-icon",
+            src: "/assets/images/map_icons/water/icon_water1.png",
+          },
+          {
+            id: "water-type-2-icon",
+            src: "/assets/images/map_icons/water/icon_water2.png",
+          },
+          {
+            id: "water-type-3-icon",
+            src: "/assets/images/map_icons/water/icon_water3.png",
+          },
+          {
+            id: "water-type-4-icon",
+            src: "/assets/images/map_icons/water/icon_water4.png",
+          },
+          {
+            id: "water-type-5-icon",
+            src: "/assets/images/map_icons/water/icon_water5.png",
+          },
+          {
+            id: "water-type-6-icon",
+            src: "/assets/images/map_icons/water/icon_water6.png",
+          },
         ];
 
         images.forEach(({ id, src }) => {
@@ -190,7 +216,7 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
                 "water-type-2-icon",
                 "water-type-1-icon",
               ],
-              "icon-size": 0.5,
+              "icon-size": 1.0,
             },
           });
           console.log("포인트 레이어 추가 완료");
@@ -203,11 +229,12 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
     loadWaterJsonRef.current = loadWaterJson;
 
     // Danger JSON 로드 함수
-    const loadDangerJson = async (longitude, latitude) => {
-      console.log("loadDangerJson 호출:", { longitude, latitude });
+    const loadDangerJson = async (polygon) => {
+      console.log("loadDangerJson 호출:", { polygon });
       try {
         const response = await fetch(
-          `http://localhost:8080/danger?longitude=${longitude}&latitude=${latitude}`
+          // `http://localhost:8080/danger?polygon=${polygon}`
+          `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/danger?polygon=${polygon}`
         );
         console.log("API 요청 완료");
 
@@ -230,11 +257,11 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
           const images = [
             {
               id: "harmfulness-type-1-icon",
-              src: "/harmfulness/icon_harmfulness1.png",
+              src: "/assets/images/map_icons/harmfulness/icon_harmfulness1.png",
             },
             {
               id: "harmfulness-type-2-icon",
-              src: "/harmfulness/icon_harmfulness2.png",
+              src: "/assets/images/map_icons/harmfulness/icon_harmfulness2.png",
             },
           ];
 
@@ -263,7 +290,7 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
                 "harmfulness-type-1-icon",
                 "harmfulness-type-1-icon",
               ],
-              "icon-size": 0.5,
+              "icon-size": 1.0,
             },
           });
           console.log("포인트 레이어 추가 완료");
@@ -309,6 +336,7 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
     loadWaterJsonRef,
     loadDangerJsonRef,
     removePointLayersRef,
+    mapLoaded,
   };
 };
 

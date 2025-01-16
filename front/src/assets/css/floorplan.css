@@ -1,6 +1,30 @@
+/* 전체 컨테이너 */
+.floorplan_main_wrap{
+  position: fixed;
+  top: 60px;
+  width: calc(100% - 20px);
+  max-width: 355px;
+  height: calc(100vh - 60px);
+  overflow-y: auto;
+  background-color: var(--bgColor);
+  -webkit-overflow-scrolling: touch;
+  /* 스크롤바 숨기기를 위한 CSS 추가 */
+  -ms-overflow-style: none; /* iE, edge를 위한 설정 */
+  scrollbar-width: none; /* firefox를 위한 설정 */
+  box-sizing: border-box;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0 auto;
+}
+/* chrome, safari, opera를 위한 설정 */
+.floorplan_main_wrap::-webkit-scrollbar {
+  display: none;
+}
 .floorplan_main_container {
-  margin-top: 80px;
-  height: 100%;
+  position: relative;
+  width: 100%;
+  padding-top: 20px;
+  box-sizing: border-box;
 }
 /* 상단 제목과 선택 */
 .floorplan-header {
@@ -31,7 +55,7 @@
 /* 설계도 이미지 */
 .floorplan-image-container {
   display: flex;
-
+  position: relative;
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
@@ -83,36 +107,40 @@
   background-color: #000000;
 }
 
-.css-x-button {
-  position: relative;
-  left: 93%;
-  width: 30px;
-  height: 30px;
-  background-color: transparent;
-  cursor: pointer;
+/* X 버튼 */
+.floorplan_main_wrap .css-x-button2 {
+  position: absolute !important;
+  top: 10px !important;
+  right: 0px !important;
+  width: 30px !important;
+  height: 30px !important;
+  background-color: transparent !important;
+  cursor: pointer !important;
+  z-index: 1000 !important;
 }
 
-.css-x-button::before,
-.css-x-button::after {
-  content: "";
+/* X 버튼 before/after 가상요소 */
+.floorplan_main_wrap .css-x-button2::before,
+.floorplan_main_wrap .css-x-button2::after {
+  content: '';
   position: absolute;
-  top: 30%;
+  top: 50%;
   left: 50%;
   width: 20px;
-  height: 2.5px;
-  background-color: #000000;
+  height: 2px;
+  background-color: var(--textColor);
   transform-origin: center;
 }
 
-.css-x-button::before {
-  transform: translate(-50%, -50%) rotate(45deg); /* 대각선 1 */
+.floorplan_main_wrap .css-x-button2::before {
+  transform: translate(-50%, -50%) rotate(45deg);
 }
 
-.css-x-button::after {
-  transform: translate(-50%, -50%) rotate(-45deg); /* 대각선 2 */
+.floorplan_main_wrap .css-x-button2::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
 }
 
-.css-x-button:hover::before,
-.css-x-button:hover::after {
-  background-color: #cedc00; /* 호버 시 색상 변경 */
+.cctv-icon {
+  /* border: 1px solid #000; */
+  border-radius: 00%; /* 동그랗게 */
 }

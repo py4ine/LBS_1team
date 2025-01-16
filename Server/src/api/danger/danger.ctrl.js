@@ -22,16 +22,16 @@ import dangerDao from './danger.dao.js';
 const getdangerALL = async (req ,res) => {
 
     try{
-        const { longitude, latitude } = req.query;
+        const { polygon } = req.query;
 
         // 유효성 검사
-        if (!longitude || !latitude) {
+        if (!polygon) {
             return res.status(400).json({
                 success: false,
                 message: 'longitude and latitude are required'
             });
         }
-        const poi = await dangerDao.getdangerALL(longitude, latitude);
+        const poi = await dangerDao.getdangerALL(polygon);
         //3항연산자
         res.json({
             success: true,

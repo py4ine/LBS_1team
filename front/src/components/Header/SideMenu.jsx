@@ -1,6 +1,6 @@
 import React from "react";
 import profileImg from "../../assets/images/img/profile.png";
-import "../../assets/css/SideMenu.css";
+import "../../assets/css/sideMenu.css";
 import arrow from "../../assets/images/button_icons/icon_leftarrow_G.png";
 
 function SideMenu({ isOpen, onClose }) {
