@@ -56,6 +56,7 @@ async def update_count(model, url):
     try:
         while True:
             await asyncio.sleep(0.03)  # 비동기 대기
+
             if not cap.isOpened():
                 cap = await reconnect("연결 실패", cap, url)
                 continue
@@ -105,14 +106,12 @@ async def update_count(model, url):
 
                 # 객체가 중간선을 넘어갔는지 확인
                 if track_id in object_tracks:
-                    prev_x, prev_y = object_tracks[track_id]  # 이전 프레임의 중심 Y 좌표
-
+                    prev_x, prev_y = object_tracks[track_id]  # 이전 프레임의 중심 Y 좌표    
                     if prev_y < mid_y <= center_y:  # 위 -> 아래로 이동
                         count_num += 1  # 카운트 증가
-
                     elif prev_y > mid_y >= center_y:  # 아래 -> 위로 이동
                         count_num -= 1  # 카운트 감소
-
+                
                 # 현재 객체 위치 저장
                 object_tracks[track_id] = (center_x, center_y)
 
@@ -165,20 +164,18 @@ async def favicon():
 # count_num 반환 API
 @app.get("/counting")
 async def get_count():
-    return {"count_num": count_num}
+    return {
+        "count_num": count_num
+    }
 
-# 웹소켓 API
-@app.websocket("/stream")
-async def websocket_endpoint(websocket: WebSocket):
+async def stream_useQueue(websocket: WebSocket):
     await websocket.accept()
     try:
         while True:
-            
-            # Queue 사용
             frame = await frame_queue.get()
             await websocket.send_bytes(frame)
             await websocket.send_text(str(count_num))
-            
+
             # # image_buffer 사용
             # with lock:
             #     if image_buffer:
@@ -187,8 +184,12 @@ async def websocket_endpoint(websocket: WebSocket):
             # await asyncio.sleep(0.03)  # 30 FPS
 
     except WebSocketDisconnect:
-        print("WebSocket connection closed")    
+        print("WebSocket connection closed")
 
+# 웹소켓 API
+@app.websocket("/stream")
+async def websocket_endpoint(websocket: WebSocket):
+    await stream_useQueue(websocket)
 
 # CORS 설정
 app.add_middleware(
@@ -202,7 +203,7 @@ app.add_middleware(
 # FastAPI startup 이벤트에 update_count 함수 등록
 @app.on_event("startup")
 async def startup_event():
-    asyncio.create_task(update_count(model, url))
+    asyncio.create_task(update_count(model, url, frame_queue, "count_num"))
 
 @app.on_event("shutdown")
 async def shutdown_event():

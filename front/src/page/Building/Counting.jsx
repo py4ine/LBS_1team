@@ -9,6 +9,7 @@ function Counting() {
         setActivePage("counting");
 
         const handleCountingUpdate = (event) => {
+            // console.log(event.detail);
             setCount(event.detail.count);  // 서버에서 받은 카운트 업데이트
         };
 
