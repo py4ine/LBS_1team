@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "../assets/css/login.css";
 import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer, Bounce } from "react-toastify"; // toast추가 (찬진)
-import "react-toastify/dist/ReactToastify.css"; // CSS import 추가
+import { toast, ToastContainer, Bounce, Slide } from "react-toastify"; // toast추가 (찬진)
+// import "react-toastify/dist/ReactToastify.css"; // CSS import 추가
 function Login() {
   const navigate = useNavigate();
   const [showIntro, setShowIntro] = useState(true); // 인트로 상태 관리
@@ -12,33 +12,37 @@ function Login() {
   });
   const successToast = () =>
     toast.success("로그인에 성공하였습니다", {
-      position: "bottom-center",
+      position: "top-center",
       autoClose: 1000,
-      hideProgressBar: false,
+      hideProgressBar: true,
       closeOnClick: true,
       pauseOnHover: false,
       draggable: true,
       progress: undefined,
-      theme: "light",
-      transition: Bounce,
+      theme: "dark",
+      transition: Slide,
       style: {
-        borderRadius: "10px",
+        // borderRadius: "10px",
+        backgroundColor: "#141e28",
+        color: "white",
       },
     });
 
   const errToast = () =>
     toast.error("소방서 코드와 비밀번호가 일치하지 않습니다.", {
-      position: "bottom-center",
+      position: "top-center",
       autoClose: 1000,
-      hideProgressBar: false,
+      hideProgressBar: true,
       closeOnClick: true,
       pauseOnHover: false,
       draggable: true,
       progress: undefined,
-      theme: "light",
-      transition: Bounce,
+      theme: "dark",
+      transition: Slide,
       style: {
-        borderRadius: "10px",
+        // borderRadius: "10px",
+        backgroundColor: "#141e28",
+        color: "white",
       },
     });
 
@@ -121,7 +125,7 @@ function Login() {
         {/* toast (찬진) */}
         <ToastContainer
           style={{
-            width: "330px",
+            width: "375px",
             left: "50%",
             transform: "translateX(-50%)",
           }}
