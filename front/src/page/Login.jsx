@@ -3,6 +3,7 @@ import "../assets/css/login.css";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer, Bounce, Slide } from "react-toastify"; // toast추가 (찬진)
 // import "react-toastify/dist/ReactToastify.css"; // CSS import 추가
+
 function Login() {
   const navigate = useNavigate();
   const [showIntro, setShowIntro] = useState(true); // 인트로 상태 관리
@@ -66,11 +67,14 @@ function Login() {
     };
 
     try {
-      const response = await fetch("http://localhost:8080/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userInfo),
-      });
+      const response = await fetch(
+        "https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(userInfo),
+        }
+      );
       const result = await response.json();
       console.log(result);
       console.log(userInfo);

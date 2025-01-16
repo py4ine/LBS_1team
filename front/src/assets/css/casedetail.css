@@ -45,7 +45,7 @@
 /* X 버튼 before/after 가상요소 */
 .case_detail_All .case_detail_container .css-x-button1::before,
 .case_detail_All .case_detail_container .css-x-button1::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;

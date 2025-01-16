@@ -1,0 +1,78 @@
+@charset "UTF-8";
+
+.header_bgc {
+  background-color: var(--textColor);
+  padding: 14px 12px;
+  width: 375px;
+  height: 60px;
+  position: fixed;
+  /* position: absolute; */
+  /* position: relative; */
+  top: 0;
+  z-index: 1000;
+}
+
+.headerWrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* background-color: skyblue; */
+}
+
+.hamburger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  height: 25px;
+  /* background-color: #fff; */
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.hamburger span,
+.hamburger span:before,
+.hamburger span:after {
+  display: block;
+  position: absolute;
+  width: 35px;
+  height: 4px;
+  background: var(--mainColor);
+  transition: all 0.3s;
+}
+
+.hamburger span {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.hamburger span:before,
+.hamburger span:after {
+  content: "";
+  left: 0;
+}
+
+.hamburger span:before {
+  top: -10px;
+}
+
+.hamburger span:after {
+  top: 10px;
+}
+
+/* x버튼으로 스타일 바꾸기 */
+.hamburger.click span {
+  background: transparent;
+}
+
+.hamburger.click span::before {
+  top: 0;
+  transform: rotate(-45deg);
+}
+
+.hamburger.click span:after {
+  top: 0;
+  transform: rotate(45deg);
+}

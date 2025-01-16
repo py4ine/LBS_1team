@@ -76,7 +76,8 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
       console.log("loadGeoJson 호출:", { longitude, latitude });
       try {
         const response = await fetch(
-          `http://localhost:8080/around?longitude=${longitude}&latitude=${latitude}`
+          // `http://localhost:8080/around?longitude=${longitude}&latitude=${latitude}`
+          `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/around?longitude=${longitude}&latitude=${latitude}`
         );
         console.log("API 요청 완료");
 
@@ -133,7 +134,8 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
       console.log("loadWaterJson 호출:", { polygon });
       try {
         const response = await fetch(
-          `http://localhost:8080/waters?polygon=${polygon}`
+          // `http://localhost:8080/waters?polygon=${polygon}`
+          `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/waters?polygon=${polygon}`
         );
         console.log("API 요청 완료");
 
@@ -147,12 +149,30 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
         }
 
         const images = [
-          { id: "water-type-1-icon", src: "/water/icon_water1.png" },
-          { id: "water-type-2-icon", src: "/water/icon_water2.png" },
-          { id: "water-type-3-icon", src: "/water/icon_water3.png" },
-          { id: "water-type-4-icon", src: "/water/icon_water4.png" },
-          { id: "water-type-5-icon", src: "/water/icon_water5.png" },
-          { id: "water-type-6-icon", src: "/water/icon_water6.png" },
+          {
+            id: "water-type-1-icon",
+            src: "/assets/images/map_icons/water/icon_water1.png",
+          },
+          {
+            id: "water-type-2-icon",
+            src: "/assets/images/map_icons/water/icon_water2.png",
+          },
+          {
+            id: "water-type-3-icon",
+            src: "/assets/images/map_icons/water/icon_water3.png",
+          },
+          {
+            id: "water-type-4-icon",
+            src: "/assets/images/map_icons/water/icon_water4.png",
+          },
+          {
+            id: "water-type-5-icon",
+            src: "/assets/images/map_icons/water/icon_water5.png",
+          },
+          {
+            id: "water-type-6-icon",
+            src: "/assets/images/map_icons/water/icon_water6.png",
+          },
         ];
 
         images.forEach(({ id, src }) => {
@@ -213,7 +233,8 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
       console.log("loadDangerJson 호출:", { polygon });
       try {
         const response = await fetch(
-          `http://localhost:8080/danger?polygon=${polygon}`
+          // `http://localhost:8080/danger?polygon=${polygon}`
+          `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/danger?polygon=${polygon}`
         );
         console.log("API 요청 완료");
 
@@ -236,11 +257,11 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
           const images = [
             {
               id: "harmfulness-type-1-icon",
-              src: "/harmfulness/icon_harmfulness1.png",
+              src: "/assets/images/map_icons/harmfulness/icon_harmfulness1.png",
             },
             {
               id: "harmfulness-type-2-icon",
-              src: "/harmfulness/icon_harmfulness2.png",
+              src: "/assets/images/map_icons/harmfulness/icon_harmfulness2.png",
             },
           ];
 
@@ -315,7 +336,7 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
     loadWaterJsonRef,
     loadDangerJsonRef,
     removePointLayersRef,
-    mapLoaded
+    mapLoaded,
   };
 };
 

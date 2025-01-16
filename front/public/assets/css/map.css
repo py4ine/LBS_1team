@@ -208,30 +208,3 @@
     height: 36px;
   }
 }
-
-.mapboxgl-ctrl-geolocate {
-  display: none !important;
-}
-
-/* 컨트롤 컨테이너 자체도 숨기기 */
-.mapboxgl-ctrl-top-right {
-  display: none !important;
-}
-
-/* 파란색 위치 표시 마커를 검정색으로 변경 */
-.mapboxgl-user-location-dot {
-  background-color: black !important;
-}
-
-.mapboxgl-user-location-dot::before {
-  background-color: black !important;
-}
-
-.mapboxgl-user-location-dot::after {
-  background-color: black !important;
-}
-
-/* 정확도를 나타내는 하늘색 원 제거 */
-.mapboxgl-user-location-accuracy-circle {
-  display: none !important;
-}
