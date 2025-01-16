@@ -111,17 +111,13 @@ function CaseDetail() {
   return (
     <>
       <Header />
-      <div className="main_container">
+      <div className="main_container case_detail_All">
         <div className="case_detail_container">
-          {/* <div className="css-x-button" onClick={handleClick2}></div> */}
-          <div className="caseDetail_header">
-            <button className="css-x-button" onClick={handleClick2}></button>
-            <h2>
+          <div className="css-x-button1" onClick={handleClick2}></div>
+          <h2>
               <strong>출동 정보</strong>
-            </h2>
-          </div>
-
-          <div className="case_detail_container2">
+          </h2>
+          <div className="case_detail_wrap">
             <div className="flex-container">
               <div className="flex-container1">
                 <p>

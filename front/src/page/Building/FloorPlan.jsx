@@ -284,10 +284,10 @@ function FloorPlan() {
   return (
     <>
       <Header />
-      <div className="main_container">
+      <div className="main_container floorplan_main_wrap">
         <div className="floorplan_main_container">
           {/* 닫기 버튼 */}
-          <div className="css-x-button" onClick={handleClick}></div>
+          <div className="css-x-button2" onClick={handleClick}></div>
 
           {/* 층 선택 */}
           {/* <div className="floorplan-header"> */}
