@@ -1,58 +1,36 @@
-// import React, { useRef, useEffect } from "react";
-// import Hls from "hls.js";
-
-// function Cctv() {
-//     const videoRef = useRef(null);
-
-//     useEffect(() => {
-//         if (Hls.isSupported()) {
-//             const hls = new Hls();
-//             hls.loadSource("http://localhost:8080/hls/output.m3u8");
-//             hls.attachMedia(videoRef.current);
-//         } else if (videoRef.current.canPlayType("application/vnd.apple.mpegurl")) {
-//             videoRef.current.src = "http://localhost:8080/hls/output.m3u8";
-//         }
-//     }, []);
-
-//     return (
-//         <div>
-//             <h1>Live CCTV Stream</h1>
-//             <video ref={videoRef} controls autoPlay muted style={{ width: "100%", height: "auto" }} />
-//         </div>
-//     );
-// }
-
-// export default Cctv;
-import React, { useEffect, useRef } from "react";
-import Hls from "hls.js";
+import React, { useRef, useState, useEffect } from "react";
+import { setActivePage } from "../websocketManager";
 
 function Cctv() {
-  const videoRef = useRef(null);
+    const videoRef = useRef(null);  // 비디오를 렌더링할 <img> 태그 참조
+    const [count, setCount] = useState(0);
 
-  useEffect(() => {
-    if (Hls.isSupported()) {
-      const hls = new Hls();
-      // hls.loadSource("http://localhost:8888/mypath/index.m3u8"); // 개인 휴대폰 ip webcam URL
-      hls.loadSource(
-        "http://210.99.70.120:1935/live/cctv092.stream/playlist.m3u8"
-      );
-      // 도로 상황 cctv
-      hls.attachMedia(videoRef.current);
-    }
-  }, []);
+    useEffect(() => {
 
-  return (
-    <div>
-      <h1>Live CCTV Stream (HLS)</h1>
-      <video
-        ref={videoRef}
-        controls
-        autoPlay
-        muted
-        style={{ width: "100%", height: "auto" }}
-      />
-    </div>
-  );
+        setActivePage("cctv");
+        
+        const handleCctvUpdate = (event) => {
+            const blob = new Blob([event.detail.frame], { type: "image/jpeg" });
+            const url = URL.createObjectURL(blob);
+            if (videoRef.current) {
+                videoRef.current.src = url; // 이미지 URL로 비디오 프레임 업데이트
+            }
+        };
+
+        window.addEventListener("cctvUpdate", handleCctvUpdate);
+
+        return () => {
+            setActivePage(null);  // 페이지 비활성화
+            window.removeEventListener("cctvUpdate", handleCctvUpdate);
+        };
+    }, []);
+
+    return (
+        <div>
+            <h1>Live Video Stream</h1>
+            <img ref={videoRef} alt="Live Stream" style={{ width: '100%', height: 'auto' }} />
+        </div>
+    )
 }
 
 export default Cctv;
