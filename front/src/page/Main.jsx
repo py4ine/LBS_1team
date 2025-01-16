@@ -12,11 +12,18 @@ function Main() {
   const [loading, setLoading] = useState(true); // 로딩 상태 관리
   const [error, setError] = useState(null); // 에러 상태 관리
   const location = useLocation();
-  const fs_code = location.state?.fs_code;
+  const fs_code = location.state?.fs_code; // 소방서 코드
 
   // useEffect
   useEffect(() => {
     console.log(fs_code);
+
+    // 소방서 코드 없을때 로그인페이지 이동
+    if (!fs_code) {
+      navigate("/login");
+      return;
+    }
+
     const fetchCaseData = async () => {
       try {
         // API 호출
@@ -43,7 +50,7 @@ function Main() {
     };
 
     fetchCaseData();
-  }, []);
+  }, [fs_code]);
 
   // 사건 클릭시 지도페이지 이동
   const handleCaseClick = (data) => {

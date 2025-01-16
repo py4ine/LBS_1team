@@ -600,6 +600,7 @@ function Map() {
         onremovePointLayers={handleRemovePointLayers}
         map={map}
         removeCaseMarker={removeCaseMarker} // footer 에 마커 제거함수 전달 (찬진)
+        fs_code={fs_code} // 소방서 코드 전달
       />
     </>
   );
