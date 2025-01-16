@@ -37,6 +37,7 @@ const Footer = forwardRef(
       isPin1Active,
       removeCaseMarker,
       map,
+      fs_code,
     },
     ref
   ) => {
@@ -646,7 +647,11 @@ const Footer = forwardRef(
                     );
                   } else if (icon.id === 3) {
                     content = (
-                      <Link to="/main" className="footer_link">
+                      <Link
+                        to="/main"
+                        state={{ fs_code: fs_code }}
+                        className="footer_link"
+                      >
                         <div className={iconClass}>
                           <img src={icon.src} alt={icon.alt} />
                           <p className="footer_text">{icon.title}</p>
