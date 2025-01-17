@@ -59,11 +59,11 @@ class StreamCounging:
             return
         
         frame_count = 0  # 프레임 카운트
-        skip_frames = 1  # 프레임 건너뛰기 설정 (필요에 따라 조정 가능)
+        skip_frames = 5  # 프레임 건너뛰기 설정 (필요에 따라 조정 가능)
 
         try:
             while True:
-                await asyncio.sleep(0.03)  # 루프주기(30 FPS 기준)
+                await asyncio.sleep(0.003)  # 루프주기(30 FPS 기준)
 
                 ret, frame = cap.read()
                 if not ret:
@@ -93,7 +93,6 @@ class StreamCounging:
 
     # 객체 탐지
     def detect_and_track(self, frame, stream):
-
         results = stream['model'](frame)
         detections = []
         
@@ -104,6 +103,7 @@ class StreamCounging:
                 class_id = int(box.cls[0])
                 if confidence > 0.5 and class_id in stream['target_class']:
                     detections.append([x1, y1, x2, y2, confidence])
+                    # frame = self.blur_face(frame, x1, y1, x2, y2)  # 얼굴 블러 처리
 
         # ByteTrack으로 객체 추적
         img_info = (frame.shape[0], frame.shape[1])  # 이미지 정보
@@ -116,6 +116,41 @@ class StreamCounging:
 
         return frame
     
+    # 얼굴부위 블러 처리
+    def blur_face(self, frame, x1, y1, x2, y2):
+        # 얼굴 영역만 블러 처리 추가 (원형 블러)
+        face_x1 = max(0, int(x1))
+        face_x2 = min(frame.shape[1], int(x2))
+        face_y1 = max(0, int(y1))
+        face_y2 = min(frame.shape[0], int(y2))
+
+        # 얼굴의 상단 40% 영역만 블러 처리
+        top_height = int((y2 - y1) * 0.3)
+        face_y2 = face_y1 + top_height
+
+        if face_x2 > face_x1 and face_y2 > face_y1:
+            face_region = frame[face_y1:face_y2, face_x1:face_x2]
+
+            # 원형 마스크 생성
+            mask = np.zeros_like(face_region, dtype=np.uint8)
+            center = ((face_x2 - face_x1) // 2, top_height // 2)  # 상단 중심
+            radius = min((face_x2 - face_x1) // 2, (face_y2 - face_y1) // 2)
+            cv2.circle(mask, center, radius, (255, 255, 255), -1)
+
+            # 블러 처리
+            blurred_face = cv2.GaussianBlur(face_region, (31, 31), 15)
+
+            # 원형 마스크 적용
+            masked_blur = cv2.bitwise_and(blurred_face, mask)
+            inverse_mask = cv2.bitwise_not(mask)
+            original_face = cv2.bitwise_and(face_region, inverse_mask)
+
+            # 블러와 원본 결합
+            face_region = cv2.add(masked_blur, original_face)
+            frame[face_y1:face_y2, face_x1:face_x2] = face_region
+
+        return frame
+
     # 객체 카운트 업데이트 및 프레임에 그리기
     def update_count_and_draw(self, online_targets, stream, frame):
         mid_y = frame.shape[0] // 2  # 프레임 중앙선

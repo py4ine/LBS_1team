@@ -16,14 +16,15 @@ app.add_middleware(
 
 url_1 = 'rtsp://210.99.70.120:1935/live/cctv002.stream'
 url_2 = 'rtsp://210.99.70.120:1935/live/cctv003.stream'
+url_3 = 'rtsp://192.168.0.108'
 model = './yolov8n.pt'
-target_class = [2, 5, 7]
+target_class = [0] #[2, 5, 7]
 
 # StreamCountin 인스턴스 생성
 stream_manager = StreamCounging()
 
 # 스트림 추가
-stream_manager.add_stream('stream1', url_1, model, target_class)
+stream_manager.add_stream('stream1', url_3, model, target_class)
 stream_manager.add_stream("stream2", url_2, model, target_class)
 
 @app.on_event('startup')
@@ -52,7 +53,7 @@ async def websocket_endpoint(websocket: WebSocket, stream_id: str):
             # 웹소켓을 통해 프레임 전송
             await websocket.send_bytes(frame)
             # await websocket.send_text(str(frame))
-            await asyncio.sleep(0.03)
+            await asyncio.sleep(0.003)
     except WebSocketDisconnect:
         print(f"WebSocket disconnected for stream {stream_id}")
     except Exception as e:
