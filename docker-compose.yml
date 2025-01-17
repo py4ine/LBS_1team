@@ -1,0 +1,50 @@
+# version: "3"
+services:
+  frontend:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    expose:
+      - "5173"
+    environment:
+      - VITE_MAPBOX_ACCESS_TOKEN=${VITE_MAPBOX_ACCESS_TOKEN}
+      - VITE_KAKAO_REST_API_KEY=${VITE_KAKAO_REST_API_KEY}
+    env_file:
+      - .env.production
+    # depends_on:
+    #   - backend
+    # - fastapi
+
+  backend:
+    build:
+      context: ./Server
+      dockerfile: Dockerfile
+    expose:
+      - "8080"
+    environment:
+      - dbPass=${dbPass}
+    env_file:
+      - .env.production
+
+    # fastapi:
+    #   build:
+    #     context: ./fastAPI
+    #     dockerfile: Dockerfile
+    #   ports:
+    #    - "8000:8000" # FastAPI 기본 포트
+
+  nginx:
+    # image: nginx:alipine
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./ssl:/etc/nginx/ssl
+      - ./front/dist:/usr/share/nginx/html
+    depends_on:
+      - frontend
+      - backend
