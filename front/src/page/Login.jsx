@@ -2,15 +2,34 @@ import React, { useState, useEffect } from "react";
 import "../assets/css/login.css";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer, Bounce, Slide } from "react-toastify"; // toast추가 (찬진)
+import { useDispatch, useSelector } from "react-redux";
 // import "react-toastify/dist/ReactToastify.css"; // CSS import 추가
 
 function Login() {
   const navigate = useNavigate();
+  const dispatch = useDispatch(); // 추가(찬진)
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated); // redux store 에서 인증상태 가져오기
   const [showIntro, setShowIntro] = useState(true); // 인트로 상태 관리
   const [loginInfo, setLoginInfo] = useState({
     firestationCode: "",
     password: "",
   });
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowIntro(false); // 1초 후 인트로를 숨김
+    }, 1000); // 1초 설정
+    return () => clearTimeout(timer);
+  }, []);
+
+  // 인증 상태 감시
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/main");
+    }
+  }, [isAuthenticated, navigate]);
+
+  // 토스트 메시지 설정 (찬진)
   const successToast = () =>
     toast.success("로그인에 성공하였습니다", {
       position: "top-center",
@@ -46,13 +65,6 @@ function Login() {
         color: "white",
       },
     });
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowIntro(false); // 1초 후 인트로를 숨김
-    }, 1000); // 1초 설정
-    return () => clearTimeout(timer);
-  }, []);
 
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
