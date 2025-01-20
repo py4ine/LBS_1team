@@ -15,6 +15,7 @@ class StreamCounging:
     def __init__(self):
         self.streams = {}  # 스트림 ID와 관련 정보를 저장
         self.queues = defaultdict(asyncio.Queue)  # 스트림별 프레임큐
+        self.text_queues = defaultdict(asyncio.Queue)  # 스트림별 텍스트큐
     
     # 스트림 추가 함수
     def add_stream(self, stream_id, url, model_path, target_class):
@@ -88,6 +89,12 @@ class StreamCounging:
                     await self.queus[stream_id].get()
                 _, buffer = cv2.imencode('.jpg', frame)
                 await self.queues[stream_id].put(buffer.tobytes())
+
+                # 텍스트를 큐에 저장
+                if self.text_queues[stream_id].full():
+                    await self.text_queues[stream_id].get()
+                await self.text_queues[stream_id].put(str(stream['in_count']))
+
         finally:
             cap.release()
 
