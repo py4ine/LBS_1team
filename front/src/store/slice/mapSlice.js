@@ -4,6 +4,7 @@ const initialState = {
   center: null, // 지도 중심 좌표
   zoom: 15, // 줌 레벨
   markers: [], // 마커들
+  selectedBuilding: null, // 선택된 건물
   waterFacilities: [], // 용수시설 목록
   dangerFacilities: [], // 위험시설 목록
 };
@@ -21,6 +22,9 @@ const mapSlice = createSlice({
     setMarkers: (state, action) => {
       state.markers = action.payload;
     },
+    setSelectedBuilding: (state, action) => {
+      state.selectedBuilding = action.payload;
+    },
     setWaterFacilities: (state, action) => {
       state.waterFacilities = action.payload;
     },
@@ -34,6 +38,7 @@ export const {
   setMapCenter,
   setMapZoom,
   setMarkers,
+  setSelectedBuilding,
   setWaterFacilities,
   setDangerFacilities,
 } = mapSlice.actions;
