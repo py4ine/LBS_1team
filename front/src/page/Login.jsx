@@ -3,6 +3,8 @@ import "../assets/css/login.css";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer, Bounce, Slide } from "react-toastify"; // toast추가 (찬진)
 import { useDispatch, useSelector } from "react-redux";
+import { loginFail, loginSuccess } from "../store/slice/authSlice";
+import { setLoading } from "../store/slice/uiSlice";
 // import "react-toastify/dist/ReactToastify.css"; // CSS import 추가
 
 function Login() {
@@ -73,6 +75,9 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // 로딩 상태 설정
+    dispatch(setLoading(true));
+
     const userInfo = {
       fs_code: parseInt(e.target.firestationCode.value, 10),
       password: e.target.password.value,
@@ -93,16 +98,26 @@ function Login() {
 
       if (result.success === true) {
         // alert("로그인에 성공하였습니다.");
+        // 로그인 성공시 redux 상태 업데이트
+        dispatch(loginSuccess({ fs_code: userInfo.fs_code }));
+
+        // 로그인 성공 toast
         successToast();
         setTimeout(() => {
           navigate("/main", { state: { fs_code: userInfo.fs_code } });
         }, 1500);
       } else {
         // alert("소방서 코드와 비밀번호가 일치하지 않습니다.");
+        // 로그인 실패시 redux 상태 업데이트
+        dispatch(loginFail(error.message));
         errToast();
       }
     } catch (error) {
       console.error("Fetch error:", error);
+      // dispatch(loginFail(error.message));
+    } finally {
+      // 로딩 상태 해제
+      dispatch(setLoading(false));
     }
   };
 

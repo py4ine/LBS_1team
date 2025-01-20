@@ -4,22 +4,33 @@ import Header from "../components/Layout/Header";
 import main_img from "../assets/images/img/main.png";
 import arrow_G from "../assets/images/button_icons/icon_leftarrow_G.png";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setCases, setCurrentCase, setError } from "../store/slice/caseSlice";
 
 function Main() {
   const navigate = useNavigate(); // 네비게이션 훅
+  const dispatch = useDispatch();
+  const { cases, loading, error } = useSelector((state) => state.cases);
+  const { fs_code, isAuthenticated } = useSelector((state) => state.auth);
 
-  const [caseData, setCaseData] = useState(); // 사건 데이터 저장
-  const [loading, setLoading] = useState(true); // 로딩 상태 관리
-  const [error, setError] = useState(null); // 에러 상태 관리
-  const location = useLocation();
-  const fs_code = location.state?.fs_code; // 소방서 코드
+  // const [caseData, setCaseData] = useState(); // 사건 데이터 저장
+  // const [loading, setLoading] = useState(true); // 로딩 상태 관리
+  // const [error, setError] = useState(null); // 에러 상태 관리
+  // const location = useLocation();
+  // const fs_code = location.state?.fs_code; // 소방서 코드
 
   // useEffect
   useEffect(() => {
     console.log(fs_code);
 
-    // 소방서 코드 없을때 로그인페이지 이동
-    if (!fs_code) {
+    // 소방서 코드 없을때 로그인페이지 이동 (전)
+    // if (!fs_code) {
+    //   navigate("/login");
+    //   return;
+    // }
+
+    // 소방서 코드 없을때 로그인페이지 이동 (후)
+    if (!isAuthenticated) {
       navigate("/login");
       return;
     }
@@ -39,33 +50,42 @@ function Main() {
 
         // JSON 데이터
         const data = await res.json();
+        dispatch(setCases(data.data)); // 데이터 저장 (후)
 
-        // 백엔드 데이터 저장
-        setCaseData(data.data);
+        // 백엔드 데이터 저장 (전)
+        // setCaseData(data.data);
       } catch (error) {
-        setError(error.message);
+        // setError(error.message); (전)
+        dispatch(setError(error.message)); // 에러 상태 저장
         console.error("Error fetching case data:", err);
-      } finally {
-        setLoading(false);
       }
+      // finally {
+      //   setLoading(false);
+      // } // (전)
     };
 
     fetchCaseData();
-  }, [fs_code]);
+  }, [dispatch, fs_code, isAuthenticated, navigate]);
 
-  // 사건 클릭시 지도페이지 이동
+  // 사건 클릭시 지도페이지 이동 (전)
+  // const handleCaseClick = (data) => {
+  //   navigate("/map", {
+  //     state: {
+  //       caseData: data,
+  //       fs_code: fs_code,
+
+  //       // coordinates: {
+  //       //   lat: data.latitude,
+  //       //   lng: data.longitude,
+  //       // },
+  //     },
+  //   });
+  // };
+
+  // 사건 클릭시 지도페이지 이동 (후)
   const handleCaseClick = (data) => {
-    navigate("/map", {
-      state: {
-        caseData: data,
-        fs_code: fs_code,
-
-        // coordinates: {
-        //   lat: data.latitude,
-        //   lng: data.longitude,
-        // },
-      },
-    });
+    dispatch(setCurrentCase(data)); // 선택된 사건 정보 저장
+    navigate("/map");
   };
 
   // 출동 현장 데이터
@@ -145,9 +165,12 @@ function Main() {
 
           {/* 메인 컨텐츠 */}
           <div className="main_contentWrap">
-            {caseData.map((item) => (
+            {/* (전) */}
+            {/* {caseData.map((item) => (
               <CaseItem key={item.case_id} data={item} />
-            ))}
+            ))} */}
+            {cases &&
+              cases.map((item) => <CaseItem key={item.case_id} data={item} />)}
           </div>
 
           {/* 메인 이미지 */}
