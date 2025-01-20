@@ -12,7 +12,7 @@ const createWebSocket = (url, pageKey) => {
     }
     ws.onmessage = (event) => {
         if (activePage === pageKey) {
-            handleWebSocketMessage(event, pageKey);
+            handleWebSocketMessage(event, pageKey);  // pageKey가 source로 전달
         }
     };
     ws.onclose = () => {
@@ -24,16 +24,17 @@ const createWebSocket = (url, pageKey) => {
         console.error(`WebSocket error for ${pageKey}:`, error);
         ws.close();
     };
+
     return ws;
 };
 
 export const connectWebSocket = () => {
     
     if (!ws1 || ws1.readyState !== WebSocket.OPEN) {
-        ws1 = createWebSocket('ws://localhost:8000/stream/stream1', 'cctv');
+        ws1 = createWebSocket('ws://localhost:8000/stream/stream1', 'cctv');  // url, pageKey=source
     }
     if (!ws2 || ws2.readyState !== WebSocket.OPEN) {
-        ws2 = createWebSocket('ws://localhost:8000/stream/stream2', 'cctv_2');
+        ws2 = createWebSocket('ws://localhost:8000/stream/stream2', 'cctv_2');  // url, pageKey=source
     }
 
     // if (ws && ws.readyState === WebSocket.OPEN) return;  // 이미 연결되어 있으면 중복 연결 방지
@@ -63,6 +64,7 @@ export const connectWebSocket = () => {
 };
 
 const handleWebSocketMessage = (event, source) => {
+    // console.log("이벤트데이타:", typeof event.data)
     if (!activePage) return;
     if (typeof event.data === "string") {
         handleTextMessage(event.data, source);
