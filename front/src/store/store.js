@@ -7,7 +7,7 @@ import mapReducer from "./slice/mapSlice";
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    case: caseReducer,
+    cases: caseReducer,
     ui: uiReducer,
     map: mapReducer,
   },
