@@ -360,8 +360,9 @@ function Map() {
     }
   };
 
-  // Footer 모달 상태 관리
+  // Footer 모달 상태 관리(서현)
   const handleModalOrSearchChange = (isOpen, modalType = null) => {
+    // Pin1 모달이 열려있을 때 Footer 모달을 열려고 하면 Pin1 모달 닫기
     if (isOpen && isPin1ModalOpen) {
       setIsPin1ModalOpen(false);
       setActivePin(null);
@@ -371,11 +372,11 @@ function Map() {
     setActiveModalType(modalType);
   };
 
-  // Pin 클릭 핸들러
+  // Pin 클릭 핸들러 관리하는 함수(서현)
   const handlePinClick = (pinType) => {
     if (pinType === "pin1") {
       const newModalState = !isPin1ModalOpen;
-
+      // Footer 모달이 열려있을 때 Pin1을 열려고 하면 Footer 모달 닫기
       if (isElementsShifted) {
         setIsElementsShifted(false);
         setActiveModalType(null);
@@ -385,8 +386,9 @@ function Map() {
         }
       }
 
-      // footer의 currentMarker 제거하기 위한 함수
+      // footer의 currentMarker 제거하기 위한 함수(서현)
       const removeSearchMarker = () => {
+        // Footer 컴포넌트의 상태도 리셋
         if (footerRef.current) {
           footerRef.current.removeSearchMarker();
         }
@@ -398,6 +400,7 @@ function Map() {
       handleModalOrSearchChange(newModalState, "pin1");
     }
     if (pinType === "pin2") {
+      // 이미 마커가 있다면 제거하고 위치 추적 중지
       if (currentLocationMarker) {
         currentLocationMarker.remove();
         setCurrentLocationMarker(null);
@@ -410,7 +413,7 @@ function Map() {
         return;
       }
 
-      // 현재 위치 마커 생성 및 위치 추적 로직
+      // 현재 위치 마커 생성 및 위치 추적 로직(서현)
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
@@ -418,12 +421,13 @@ function Map() {
             const lng = position.coords.longitude;
 
             if (map) {
+              // 현재 나의 위치로 지도 이동(서현)
               map.flyTo({
                 center: [lng, lat],
                 zoom: 15,
                 essential: true,
               });
-
+              // 현재 나의 위치 마커 생성(서현)
               const el = document.createElement("div");
               el.className = "current-location-marker";
               el.style.width = "20px";
@@ -437,6 +441,7 @@ function Map() {
                 element: el,
                 anchor: "center",
                 offset: [0, 0],
+                // 마커의 움직임을 부드럽게 하지 않음(서현)
                 animate: false,
               })
                 .setLngLat([lng, lat])
@@ -444,10 +449,12 @@ function Map() {
 
               setCurrentLocationMarker(marker);
 
+              // 실시간 위치 추적 시작 (뷰포트 이동 없이)(서현)
               const id = navigator.geolocation.watchPosition(
                 (newPosition) => {
                   const newLat = newPosition.coords.latitude;
                   const newLng = newPosition.coords.longitude;
+                  // 마커의 위치 조용히 업데이트(서현)
                   marker.setLngLat([newLng, newLat]);
 
                   // 위치가 업데이트될 때마다 날씨 정보도 업데이트
@@ -489,16 +496,18 @@ function Map() {
   };
 
   const getPinAreaClassName = () => {
+    // Pin1 모달이 활성화되어 있으면 항상 pin1-modal-active 클래스 반환(서현)
     if (isPin1ModalOpen) {
       return "pinArea pin1-modal-active";
     }
+     // 그 외의 경우 기존 로직 유지(서현)
     if (!isElementsShifted) return "pinArea";
     if (activeModalType) {
       return `pinArea ${activeModalType}-modal-active`;
     }
     return "pinArea search-active";
   };
-
+  //핀을 눌렀을때 이미지가 변경되게 할 경로 지정 함수(서현)
   const getIconSource = (pinType) => {
     switch (pinType) {
       case "pin1":
@@ -510,7 +519,7 @@ function Map() {
     }
   };
 
-  // 컴포넌트 언마운트 시 위치 추적 중지
+  // 컴포넌트 언마운트 시 위치 추적 중지(서현)
   useEffect(() => {
     return () => {
       if (watchId) {
