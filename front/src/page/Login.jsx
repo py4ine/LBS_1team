@@ -68,7 +68,9 @@ function Login() {
 
     try {
       const response = await fetch(
+        // "https://lbsteam1.duckdns.org/api/login",
         "https://lbsteam1.duckdns.org/api/login",
+
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
