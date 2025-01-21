@@ -225,11 +225,37 @@ const Footer = forwardRef(
         onStateChange(true, getModalType(modalId));
       }
     };
-
+    // 검색 모달 토글(서현)
     const toggleSearch = () => {
       const newSearchState = !isSearchVisible;
+      // 검색창이 닫힐 때 (newSearchState가 false일 때)
+      if (!newSearchState) {
+      // 폴리곤 레이어들 제거
+      if (window.mapInstance) {
+        // 모든 팝업 제거 전에 포커스 제거
+        const closeButtons = document.getElementsByClassName('mapboxgl-popup-close-button');
+        Array.from(closeButtons).forEach(button => {
+          button.blur(); // 포커스 제거
+        });
+        // 모든 팝업 제거(폴리곤을 누르면 나오는 건물정보 팝업 숨김)
+        const popups = document.getElementsByClassName('mapboxgl-popup');
+        while(popups[0]) {
+          popups[0].remove();
+        }
+        // 폴리곤 레이어와 소스 제거(폴리곤 스타일 숨김)
+        if (window.mapInstance.getLayer("polygon-layer")) {
+          window.mapInstance.removeLayer("polygon-layer");
+        }
+        if (window.mapInstance.getLayer("polygon-outline-layer")) {
+          window.mapInstance.removeLayer("polygon-outline-layer");
+        }
+        if (window.mapInstance.getSource("polygons")) {
+          window.mapInstance.removeSource("polygons");
+        }
+    }
+  }
+      // 데이터 제거
       if (isDangerVisible) {
-        // 데이터 제거
         onremovePointLayers("points");
         setIsDangerVisible(false); // 상태 초기화
       } else if (isWaterVisible) {
@@ -237,16 +263,18 @@ const Footer = forwardRef(
         setIsWaterVisible(false);
         // 데이터 로드
       }
+      // 모달 닫기(서현)
       if (isModalOpen) {
         setIsModalOpen(false);
         setActiveModal(null);
       }
-
+      // 검색 모달 토글(서현)
       setIsSearchVisible(newSearchState);
       setActiveIcon(newSearchState ? 5 : null);
       onStateChange(newSearchState, null);
     };
 
+    // 모달 닫기(서현)
     const closeModal = () => {
       setIsModalOpen(false);
       setActiveModal(null);
@@ -255,14 +283,15 @@ const Footer = forwardRef(
       onStateChange(false, null);
     };
 
+    // 검색 입력 핸들러(서현)
     const handleChange = async (e) => {
       setText(e.target.value);
-
+      // 검색 입력 값이 비어있지 않은 경우에만 검색 결과를 초기화(서현)
       if (!e.target.value.trim()) {
         setSearchResults([]);
         return;
       }
-
+      // 카카오 API 키 가져오기(서현)
       try {
         const kakaoApiKey = import.meta.env.VITE_KAKAO_REST_API_KEY;
 
@@ -276,7 +305,7 @@ const Footer = forwardRef(
             },
           }
         );
-
+        // 주소 검색 API 호출(서현)
         const addressResponse = await fetch(
           `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(
             e.target.value.trim()
@@ -295,6 +324,7 @@ const Footer = forwardRef(
 
         let processedResults = [];
 
+        // 키워드 검색 API 호출(서현)
         if (keywordData && keywordData.documents) {
           const keywordResults = keywordData.documents.map((place) => ({
             center: [parseFloat(place.x), parseFloat(place.y)],
@@ -305,7 +335,7 @@ const Footer = forwardRef(
           }));
           processedResults = [...processedResults, ...keywordResults];
         }
-
+        // 주소 검색 API 호출(서현)
         if (addressData && addressData.documents) {
           const addressResults = addressData.documents.map((place) => ({
             center: [parseFloat(place.x), parseFloat(place.y)],
@@ -315,22 +345,23 @@ const Footer = forwardRef(
           }));
           processedResults = [...processedResults, ...addressResults];
         }
-
+        // 검색 입력 값 처리(서현)
         const query = e.target.value.trim().toLowerCase();
         const isAddressQuery =
           query.includes("동") || query.includes("로") || query.includes("길");
-
+        // 검색 결과 업데이트(서현)
         const filteredResults = isAddressQuery
           ? processedResults.filter((result) => result.type === "address")
           : processedResults.filter((result) => result.type === "place");
 
         setSearchResults(filteredResults);
       } catch (error) {
+        // 검색 오류 처리(서현)
         console.error("Search error details:", error);
         setSearchResults([]);
       }
     };
-
+    // 검색 제출 핸들러(서현)
     const handleSubmit = (e) => {
       e.preventDefault();
       if (searchResults.length > 0) {
@@ -392,7 +423,7 @@ const Footer = forwardRef(
         setCurrentMarker(null);
       }
     };
-
+    // 모달 상태 초기화(서현)
     const resetState = () => {
       setIsModalOpen(false);
       setActiveModal(null);
@@ -414,10 +445,12 @@ const Footer = forwardRef(
       },
     }));
 
+    // 아이콘 클래스 가져오기(서현)
     const getIconClass = (iconId) => {
       return `footer_icon ${activeIcon === iconId ? "active" : ""}`;
     };
 
+    // 용수시설 클릭 핸들러(서현)
     const handleWaterClick = () => {
       if (isWaterVisible) {
         // 데이터 제거
@@ -451,11 +484,11 @@ const Footer = forwardRef(
         setIsDangerVisible(true);
       }
     };
-
+    // 주변 건물 조회 핸들러(서현)
     const handleNearbyBuildings = () => {
       // const longitude = 126.87942186751448; // 테스트용 경도
       // const latitude = 37.48095295527662; // 테스트용 위도
-
+      // GeoJSON 로드 함수(서현)
       if (onLoadGeoJson) {
         console.log("onLoadGeoJson 호출:", { longitude, latitude });
         onLoadGeoJson(longitude, latitude);
