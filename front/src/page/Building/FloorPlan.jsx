@@ -314,7 +314,7 @@ function FloorPlan() {
     if (id === 1) {
       navigate("./cctv"); // 1번 아이콘 경로
     } else if (id === 2) {
-      navigate("./cctv"); // 2번 아이콘 경로
+      navigate("./cctv2"); // 2번 아이콘 경로
     }
   };
   // const handleClick = () => {
