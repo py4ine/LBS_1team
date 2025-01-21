@@ -28,10 +28,10 @@ function CaseDetail() {
 
   useEffect(() => {
     // redux store에서 현재 사건 데이터가 없으면 메인으로
-    if (!currentCase) {
-      navigate("/main");
-      return;
-    }
+    // if (!currentCase) {
+    //   navigate("/main");
+    //   return;
+    // }
 
     const fetchData = async () => {
       try {

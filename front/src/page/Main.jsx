@@ -30,10 +30,10 @@ function Main() {
     // }
 
     // 소방서 코드 없을때 로그인페이지 이동 (후)
-    if (!isAuthenticated) {
-      navigate("/login");
-      return;
-    }
+    // if (!isAuthenticated) {
+    //   navigate("/login");
+    //   return;
+    // }
 
     const fetchCaseData = async () => {
       try {

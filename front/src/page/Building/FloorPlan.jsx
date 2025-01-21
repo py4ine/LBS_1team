@@ -35,8 +35,8 @@ function FloorPlan() {
 
   // 층수 정보 상태 관리 (찬진)
   const [floorInfo, setFloorInfo] = useState({
-    gro_flo_co: bldgDetail.gro_flo_co || 1,
-    und_flo_co: bldgDetail.und_flo_co || 0,
+    gro_flo_co: bldgDetail?.gro_flo_co || 1,
+    und_flo_co: bldgDetail?.und_flo_co || 0,
   });
   // const [floorInfo, setFloorInfo] = useState({
   //   gro_flo_co: location.state?.gro_flo_co || 1,
@@ -124,12 +124,12 @@ function FloorPlan() {
   }, [bldgId, currentFloor]); // bldgId, currentFloor가 변경될때마다 실행
 
   // url , location.state가 변경될때마다 층수정보 업데이트 useEffect (찬진)
-  useEffect(() => {
-    if (!currentCase) {
-      navigate("/main");
-      return;
-    }
-  }, [currentCase, navigate]);
+  // useEffect(() => {
+  //   if (!currentCase) {
+  //     navigate("/main");
+  //     return;
+  //   }
+  // }, [currentCase, navigate]);
 
   // useEffect(() => {
   //   if (

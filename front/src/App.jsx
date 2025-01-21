@@ -13,7 +13,8 @@ import FloorPlan from "./page/Building/FloorPlan.jsx";
 import Cctv from "./page/Building/Cctv.jsx";
 import Counting from "./page/Building/Counting.jsx";
 import { Provider } from "react-redux";
-import { store } from "./store/store.js";
+import { persistor, store } from "./store/store.js";
+import { PersistGate } from "redux-persist/integration/react";
 
 function App() {
   useEffect(() => {
@@ -24,25 +25,30 @@ function App() {
     <>
       {/* Redux를 사용하기위해 Provider 추가 */}
       <Provider store={store}>
-        <Routes>
-          {/* 스타일 가이드 */}
-          {/* <Route path="/style" element={<Style />}></Route> */}
-          {/* 초기 경로 로그인으로 연결 */}
-          <Route path="/" element={<Navigate to="/login" />} />
-          {/* 로그인 페이지 */}
-          <Route path="/login" element={<Login />}></Route>
-          {/* 메인 페이지 */}
-          <Route path="/main" element={<Main />}></Route>
-          {/* 지도 페이지 */}
-          <Route path="/map" element={<Map />}></Route>
-          {/* 상세 페이지 */}
-          <Route path="/map/:bldgId" element={<CaseDetail />}></Route>
-          <Route path="/map/:bldgId/:flplanId" element={<FloorPlan />}></Route>
-          {/* CCTV 페이지 */}
-          <Route path="/cctv" element={<Cctv />}></Route>
-          {/* Counting 페이지 */}
-          <Route path="/counting" element={<Counting />}></Route>
-        </Routes>
+        <PersistGate loading={null} persistor={persistor}>
+          <Routes>
+            {/* 스타일 가이드 */}
+            {/* <Route path="/style" element={<Style />}></Route> */}
+            {/* 초기 경로 로그인으로 연결 */}
+            <Route path="/" element={<Navigate to="/login" />} />
+            {/* 로그인 페이지 */}
+            <Route path="/login" element={<Login />}></Route>
+            {/* 메인 페이지 */}
+            <Route path="/main" element={<Main />}></Route>
+            {/* 지도 페이지 */}
+            <Route path="/map" element={<Map />}></Route>
+            {/* 상세 페이지 */}
+            <Route path="/map/:bldgId" element={<CaseDetail />}></Route>
+            <Route
+              path="/map/:bldgId/:flplanId"
+              element={<FloorPlan />}
+            ></Route>
+            {/* CCTV 페이지 */}
+            <Route path="/cctv" element={<Cctv />}></Route>
+            {/* Counting 페이지 */}
+            <Route path="/counting" element={<Counting />}></Route>
+          </Routes>
+        </PersistGate>
       </Provider>
     </>
   );

@@ -660,7 +660,7 @@ const Footer = forwardRef(
                     content = (
                       <Link
                         to="/main"
-                        state={{ fs_code: fs_code }}
+                        // state={{ fs_code: fs_code }}
                         className="footer_link"
                       >
                         <div className={iconClass}>

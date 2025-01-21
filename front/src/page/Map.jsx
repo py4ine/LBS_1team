@@ -76,12 +76,12 @@ function Map() {
   } = useMap(mapContainerRef, mapConfig.defaultStyle, mapConfig);
 
   // 사건 데이터 체크 (찬진)
-  useEffect(() => {
-    if (!currentCase) {
-      navigate("/main");
-      return;
-    }
-  }, [currentCase, navigate]);
+  // useEffect(() => {
+  //   if (!currentCase) {
+  //     navigate("/main");
+  //     return;
+  //   }
+  // }, [currentCase, navigate]);
 
   useEffect(() => {
     if (mapContainerRef.current && map) {
