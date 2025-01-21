@@ -109,22 +109,28 @@ import { db, schema } from '../../config/dbConfig.js';
 const getAroundALL = async (longitude, latitude) => {
     const query = `
         WITH point_geom AS (
-            SELECT ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography AS ref_point
+                SELECT ST_SetSRID(ST_MakePoint($1, $2), 4326)::geography AS ref_point
             )
             SELECT json_build_object(
-            'type', 'Feature',
-            'geometry', ST_AsGeoJSON(bldg_geom)::json,
-            'properties', json_build_object('bldg_id', bldg_id)
+                'type', 'Feature',
+                'geometry', ST_AsGeoJSON(bldg_geom)::json,
+                'properties', json_build_object(
+                    'bldg_id', bldg_id,
+                    'bldg_nm', bldg_nm,
+                    'gro_flo_co', gro_flo_co,
+                    'road_nm_addr', road_nm_addr
+                )
             ) AS feature
             FROM ${schema}.bldg, point_geom
             WHERE bldg_geom && ST_Expand(
-            (ref_point::geometry), 0.003
+                (ref_point::geometry), 0.003
             )
             AND ST_DWithin(
-            bldg_geom::geography,
-            ref_point,
-            300
+                bldg_geom::geography,
+                ref_point,
+                300
             );
+
     `;
     try {
 

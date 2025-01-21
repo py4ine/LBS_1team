@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import MapboxLanguage from "@mapbox/mapbox-gl-language";
-
+console.log(import.meta.env);
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
 const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
@@ -26,6 +26,37 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
       setMapLoaded(true);
       console.log("Map loaded successfully.");
     });
+
+    map.on("click", "polygon-layer", (e) => {
+      if (!e.features || e.features.length === 0) return;
+
+      const clickedFeature = e.features[0];
+      
+      const properties = clickedFeature.properties;
+
+      console.log(properties)
+
+      // 팝업 좌표 및 내용 설정
+      const coordinates = e.lngLat;
+      new mapboxgl.Popup()
+        .setLngLat(coordinates)
+        .setHTML(
+          `<strong>건물명: ${properties.bldg_nm || "건물 정보 없음"}</strong><br>
+           건물주소: ${properties.road_nm_addr || "유형 정보 없음"}<br>
+           지상층수: ${properties.gro_flo_co || "유형 정보 없음"}`
+        )
+        .addTo(map);
+    });
+
+    map.on("mouseenter", "polygon-layer", () => {
+      map.getCanvas().style.cursor = "pointer";
+    });
+
+    // 이벤트: 폴리곤에서 마우스를 벗어날 때 커서 초기화
+    map.on("mouseleave", "polygon-layer", () => {
+      map.getCanvas().style.cursor = "";
+    });
+ 
 
     // GeoLocationControl 설정
     const geolocate = new mapboxgl.GeolocateControl({
@@ -76,8 +107,9 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
       console.log("loadGeoJson 호출:", { longitude, latitude });
       try {
         const response = await fetch(
-          // `http://localhost:8080/around?longitude=${longitude}&latitude=${latitude}`
-          `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/around?longitude=${longitude}&latitude=${latitude}`
+          `http://localhost:8080/around?longitude=${longitude}&latitude=${latitude}`
+          // `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/around?longitude=${longitude}&latitude=${latitude}`
+          
         );
         console.log("API 요청 완료");
 

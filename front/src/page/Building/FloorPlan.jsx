@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"; // -useEffect 추가 (찬진)
+import React, { useEffect, useState, useRef } from "react"; // -useEffect 추가 (찬진)
 import { useLocation, useNavigate, useParams } from "react-router-dom"; // -useParams 추가 (찬진)
 import Header from "../../components/Layout/Header";
 import "../../assets/css/floorplan.css";
@@ -22,6 +22,58 @@ function FloorPlan() {
 
   const [showCCTV, setShowCCTV] = useState(false); // CCTV 아이콘 표시 여부
   const [cctvIcons, setCctvIcons] = useState([]); // CCTV 아이콘 위치 관리
+
+  const imageContainerRef = useRef(null); // 이미지 컨테이너 참조
+  const [scale, setScale] = useState(1); // 확대 비율
+  const [translate, setTranslate] = useState({ x: 0, y: 0 }); // 이동 좌표
+  const lastTouchRef = useRef(null); // 마지막 터치 상태 저장
+
+
+  const handleTouchStart = (e) => {
+    if (e.touches.length === 2) {
+      // 멀티 터치: 핀치 확대 시작
+      const [touch1, touch2] = e.touches;
+      const initialDistance = Math.hypot(
+        touch2.pageX - touch1.pageX,
+        touch2.pageY - touch1.pageY
+      );
+      lastTouchRef.current = { initialDistance, scale };
+    } else if (e.touches.length === 1) {
+      // 단일 터치: 드래그 시작
+      const { pageX, pageY } = e.touches[0];
+      lastTouchRef.current = { x: pageX, y: pageY };
+    }
+  };
+
+  const handleTouchMove = (e) => {
+    if (e.touches.length === 2 && lastTouchRef.current?.initialDistance) {
+      // 멀티 터치: 핀치 확대
+      const [touch1, touch2] = e.touches;
+      const currentDistance = Math.hypot(
+        touch2.pageX - touch1.pageX,
+        touch2.pageY - touch1.pageY
+      );
+      const scaleChange =
+        currentDistance / lastTouchRef.current.initialDistance;
+      setScale(Math.min(Math.max(lastTouchRef.current.scale * scaleChange, 1), 5));
+    } else if (e.touches.length === 1 && lastTouchRef.current?.x !== undefined) {
+      // 단일 터치: 드래그
+      const { pageX, pageY } = e.touches[0];
+      const deltaX = (pageX - lastTouchRef.current.x)  * 0.5;
+      const deltaY = (pageY - lastTouchRef.current.y)  * 0.5;
+
+      setTranslate((prev) => ({
+        x: prev.x + deltaX,
+        y: prev.y + deltaY,
+      }));
+
+      lastTouchRef.current = { x: pageX, y: pageY };
+    }
+  };
+
+  const handleTouchEnd = () => {
+    lastTouchRef.current = null; // 터치 상태 초기화
+  };
 
   // location.state에서 층수정보 추출 , 없으면 기본값으로 설정 (찬진)
   // const { gro_flo_co, und_flo_co } = location.state || {
@@ -322,6 +374,9 @@ function FloorPlan() {
             className={`floorplan-image-container ${
               isFullScreen ? "fullscreen" : ""
             }`}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
           >
             {/* currentImage 추가 (찬진) */}
             {currentImage && (
@@ -330,6 +385,9 @@ function FloorPlan() {
                 // src={imageSrc}
                 alt="설계도 이미지"
                 className="floorplan-image"
+                style={{
+                  transform: `scale(${scale}) translate(${translate.x}px, ${translate.y}px)`,
+                }}
               />
             )}
             {isFullScreen && (
