@@ -28,7 +28,6 @@ function FloorPlan() {
   const [translate, setTranslate] = useState({ x: 0, y: 0 }); // 이동 좌표
   const lastTouchRef = useRef(null); // 마지막 터치 상태 저장
 
-
   const handleTouchStart = (e) => {
     if (e.touches.length === 2) {
       // 멀티 터치: 핀치 확대 시작
@@ -55,12 +54,17 @@ function FloorPlan() {
       );
       const scaleChange =
         currentDistance / lastTouchRef.current.initialDistance;
-      setScale(Math.min(Math.max(lastTouchRef.current.scale * scaleChange, 1), 5));
-    } else if (e.touches.length === 1 && lastTouchRef.current?.x !== undefined) {
+      setScale(
+        Math.min(Math.max(lastTouchRef.current.scale * scaleChange, 1), 5)
+      );
+    } else if (
+      e.touches.length === 1 &&
+      lastTouchRef.current?.x !== undefined
+    ) {
       // 단일 터치: 드래그
       const { pageX, pageY } = e.touches[0];
-      const deltaX = (pageX - lastTouchRef.current.x)  * 0.5;
-      const deltaY = (pageY - lastTouchRef.current.y)  * 0.5;
+      const deltaX = (pageX - lastTouchRef.current.x) * 0.5;
+      const deltaY = (pageY - lastTouchRef.current.y) * 0.5;
 
       setTranslate((prev) => ({
         x: prev.x + deltaX,
@@ -308,9 +312,9 @@ function FloorPlan() {
 
   const handleCCTVIconClick = (id) => {
     if (id === 1) {
-      navigate("/cctv"); // 1번 아이콘 경로
+      navigate("./cctv"); // 1번 아이콘 경로
     } else if (id === 2) {
-      navigate("/cctv"); // 2번 아이콘 경로
+      navigate("./cctv"); // 2번 아이콘 경로
     }
   };
   // const handleClick = () => {

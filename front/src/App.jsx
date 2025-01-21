@@ -15,10 +15,10 @@ import Cctv_2 from "./page/Building/Cctv_2.jsx";
 import Counting from "./page/Building/Counting.jsx";
 
 function App() {
-  useEffect(() =>{
-    connectWebSocket();  // 컴포넌트가 마운트되면 웹소켓 연결
+  useEffect(() => {
+    connectWebSocket(); // 컴포넌트가 마운트되면 웹소켓 연결
   }, []);
-  
+
   return (
     <>
       <Routes>
@@ -42,13 +42,15 @@ function App() {
         <Route path="/map/:bldgId/:flplanId" element={<FloorPlan />}></Route>
 
         {/* CCTV 페이지 */}
-        <Route path="/cctv" element={<Cctv />}></Route>
+        <Route path="/map/:bldgId/:flplanId/cctv" element={<Cctv />}></Route>
         {/* CCTV 페이지 */}
-        <Route path="/cctv_2" element={<Cctv_2 />}></Route>
+        <Route
+          path="/map/:bldgId/:flplanId/cctv_2"
+          element={<Cctv_2 />}
+        ></Route>
 
         {/* Counting 페이지 */}
         <Route path="/counting" element={<Counting />}></Route>
-
       </Routes>
     </>
   );
