@@ -157,25 +157,20 @@ function Map() {
   };
 
   const handleBackClick = () => {
-    navigate("/main", {
-      state: {
-        caseData: caseData,
-        fs_code: fs_code,
-      },
-    });
+    navigate("/main");
   };
 
   // location.state가 변경될 때 상태 업데이트를 위한 useEffect 추가
-  useEffect(() => {
-    if (location.state?.caseData) {
-      setCaseData(location.state.caseData);
-      setLongitude(location.state.caseData.longitude);
-      setLatitude(location.state.caseData.latitude);
-    }
-    if (location.state?.fs_code) {
-      setFs_code(location.state.fs_code);
-    }
-  }, [location.state]);
+  // useEffect(() => {
+  //   if (location.state?.caseData) {
+  //     setCaseData(location.state.caseData);
+  //     setLongitude(location.state.caseData.longitude);
+  //     setLatitude(location.state.caseData.latitude);
+  //   }
+  //   if (location.state?.fs_code) {
+  //     setFs_code(location.state.fs_code);
+  //   }
+  // }, [location.state]);
 
   // 날씨 데이터 관련 상태
 
