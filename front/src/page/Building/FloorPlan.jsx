@@ -4,13 +4,17 @@ import Header from "../../components/Layout/Header";
 import "../../assets/css/floorplan.css";
 import FloorPlanBtn from "../../components/Detail/FloorPlanBtn"; // 버튼 컴포넌트 추가 (찬진)
 import cctvIcon from "../../assets/images/button_icons/button_icons.png";
+import { useSelector } from "react-redux";
 
 function FloorPlan() {
   const navigate = useNavigate();
   const { bldgId, flplanId } = useParams(); // URL에서 case,flplan ID 가져오기 (찬진)
-  const location = useLocation(); // 이전 페이지에서 전달된 데이터(state) 가져오기 (찬진)
-  const caseData = location.state?.caseData; // (찬진)
-  const fs_code = location.state.fs_code; // (찬진)
+
+  // redux store에서 데이터 가져오기
+  const currentCase = useSelector((state) => state.cases.currentCase);
+  const { fs_code } = useSelector((state) => state.auth);
+  const bldgDetail = useSelector((state) => state.cases.bldgDetail);
+  // console.log("currnetCase: ", currentCase);
 
   // useState (찬진)
   const [flImages, setFlImages] = useState([]); // 모든 층의 이미지 데이터 저장
@@ -31,9 +35,13 @@ function FloorPlan() {
 
   // 층수 정보 상태 관리 (찬진)
   const [floorInfo, setFloorInfo] = useState({
-    gro_flo_co: location.state?.gro_flo_co || 1,
-    und_flo_co: location.state?.und_flo_co || 0,
+    gro_flo_co: bldgDetail.gro_flo_co || 1,
+    und_flo_co: bldgDetail.und_flo_co || 0,
   });
+  // const [floorInfo, setFloorInfo] = useState({
+  //   gro_flo_co: location.state?.gro_flo_co || 1,
+  //   und_flo_co: location.state?.und_flo_co || 0,
+  // });
 
   //  url 에서 현재 층수 가져오기 (찬진)
   const currentFloor = flplanId ? Number(flplanId) : 1;
@@ -117,16 +125,23 @@ function FloorPlan() {
 
   // url , location.state가 변경될때마다 층수정보 업데이트 useEffect (찬진)
   useEffect(() => {
-    if (
-      location.state?.gro_flo_co !== undefined &&
-      location.state?.und_flo_co !== undefined
-    ) {
-      setFloorInfo({
-        gro_flo_co: Number(location.state.gro_flo_co),
-        und_flo_co: Number(location.state.und_flo_co),
-      });
+    if (!currentCase) {
+      navigate("/main");
+      return;
     }
-  }, [location.state]);
+  }, [currentCase, navigate]);
+
+  // useEffect(() => {
+  //   if (
+  //     location.state?.gro_flo_co !== undefined &&
+  //     location.state?.und_flo_co !== undefined
+  //   ) {
+  //     setFloorInfo({
+  //       gro_flo_co: Number(location.state.gro_flo_co),
+  //       und_flo_co: Number(location.state.und_flo_co),
+  //     });
+  //   }
+  // }, [location.state]);
 
   // 주석 테스트 (찬진)
   // const [imageSrc, setImageSrc] = useState(
@@ -236,22 +251,11 @@ function FloorPlan() {
   };
 
   const handleFloorNavigation = (floor) => {
-    navigate(`/map/${bldgId}/${floor}`, {
-      state: {
-        floorInfo,
-        caseData: caseData,
-        fs_code: fs_code,
-      },
-    });
+    navigate(`/map/${bldgId}/${floor}`);
   };
 
   const handleClick = () => {
-    navigate(`/map/${bldgId}`, {
-      state: {
-        caseData: caseData,
-        fs_code: fs_code,
-      },
-    }); // 이동할 경로
+    navigate(`/map/${bldgId}`); // 이동할 경로
   };
 
   const handleCCTVIconClick = (id) => {
