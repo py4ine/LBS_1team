@@ -37,13 +37,10 @@ function CaseDetail() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          // `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/details/${bldgId}`
           // `https://lbsteam1.duckdns.org/api//details/${bldgId}`
           `http://localhost:8080/api/details/${bldgId}`
         );
-        // const responseimg = await fetch(
-        //   `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/images/${bldgId}`
-        // );
+
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
@@ -114,14 +111,14 @@ function CaseDetail() {
       console.log("카운팅요청시작");
 
       try {
-        const response1 = await fetch('http://localhost:8000/counting/stream1');
-        const response2 = await fetch('http://localhost:8000/counting/stream2');
+        const response1 = await fetch("http://localhost:8000/counting/stream1");
+        const response2 = await fetch("http://localhost:8000/counting/stream2");
 
         if (!response1.ok) {
-          throw new Error ('Failed to fetch counting1');
+          throw new Error("Failed to fetch counting1");
         }
         if (!response2.ok) {
-          throw new Error ('Failed to fetch counting2');
+          throw new Error("Failed to fetch counting2");
         }
 
         const result1 = await response1.json();
@@ -129,11 +126,9 @@ function CaseDetail() {
         setCountNum(result1.count + result2.count);
       } catch (error) {
         console.error("Fetch Counting Error:", error);
-      }      
-    }
+      }
+    };
     fetchCounting();
-
-    
   }, []);
 
   //   사건정보 내용 useEffect (찬진)
