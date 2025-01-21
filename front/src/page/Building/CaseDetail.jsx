@@ -2,48 +2,37 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Header from "../../components/Layout/Header";
 import "../../assets/css/casedetail.css";
+import { useDispatch, useSelector } from "react-redux";
+import { setBldgDetail } from "../../store/slice/caseSlice";
 
 function CaseDetail() {
-  const location = useLocation(); // (찬진)
-  const caseData = location.state?.caseData;
-  const fs_code = location.state.fs_code; // (찬진)
+  const navigate = useNavigate(); // useNavigate 훅 사용
+  const { bldgId } = useParams(); // useParams로 caseId 가져오기 (찬진)
+  const dispatch = useDispatch();
+  // const location = useLocation(); // (찬진)
+  // const caseData = location.state?.caseData;
+  // const fs_code = location.state.fs_code; // (찬진)
+
+  // redux store에서 현재 사건 정보와 인증정보 가져오기
+  const currentCase = useSelector((state) => state.cases.currentCase);
+  const { fs_code } = useSelector((state) => state.auth);
+
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // useNavigate 훅 사용
-  const { bldgId } = useParams(); // useParams로 caseId 가져오기 (찬진)
 
   // 사건정보 상태 저장소
   // const [caseData, setCaseData] = useState(null); // 사건정보 데이터 저장소 (찬진)
   // const [caseError, setCaseError] = useState(null);
   // const [caseLoading, setCaseLoading] = useState(true);
 
-  const handleClick = () => {
-    navigate(`/map/${bldgId}/1`, {
-      state: {
-        caseData: caseData,
-        gro_flo_co: data.gro_flo_co,
-        und_flo_co: data.und_flo_co,
-        fs_code: fs_code,
-      }, // 데이터 같이 이동 (찬진)
-    }); // 이동할 경로
-  };
-
-  // 닫기 버튼 클릭시 이전 데이터 다시 반환
-  const handleClick2 = () => {
-    navigate("/map", {
-      state: {
-        caseData: caseData,
-        fs_code: fs_code,
-      },
-      // state: {
-      //   gro_flo_co: data.gro_flo_co,
-      //   und_flo_co: data.und_flo_co,
-      // },
-    });
-  };
-
   useEffect(() => {
+    // redux store에서 현재 사건 데이터가 없으면 메인으로
+    // if (!currentCase) {
+    //   navigate("/main");
+    //   return;
+    // }
+
     const fetchData = async () => {
       try {
         const response = await fetch(
@@ -59,6 +48,8 @@ function CaseDetail() {
         // const resultimg = await responseimg.json();
 
         setData(result.data[0]);
+        // redux store에 저장
+        dispatch(setBldgDetail(result.data[0]));
       } catch (err) {
         setError(err.message);
       } finally {
@@ -82,7 +73,38 @@ function CaseDetail() {
     //   const img = new Image();
     //   img.src = src;
     // });
-  }, []);
+  }, [bldgId, currentCase, navigate]);
+
+  const handleClick = () => {
+    navigate(`/map/${bldgId}/1`); // 이동할 경로
+  };
+  // const handleClick = () => {
+  //   navigate(`/map/${bldgId}/1`, {
+  //     state: {
+  //       caseData: caseData,
+  //       gro_flo_co: data.gro_flo_co,
+  //       und_flo_co: data.und_flo_co,
+  //       fs_code: fs_code,
+  //     }, // 데이터 같이 이동 (찬진)
+  //   }); // 이동할 경로
+  // };
+
+  // 닫기 버튼 클릭시 이전 데이터 다시 반환
+  const handleClick2 = () => {
+    navigate("/map");
+  };
+  // const handleClick2 = () => {
+  //   navigate("/map", {
+  //     state: {
+  //       caseData: caseData,
+  //       fs_code: fs_code,
+  //     },
+  //     // state: {
+  //     //   gro_flo_co: data.gro_flo_co,
+  //     //   und_flo_co: data.und_flo_co,
+  //     // },
+  //   });
+  // };
 
   //   사건정보 내용 useEffect (찬진)
   // useEffect(() => {
@@ -117,7 +139,7 @@ function CaseDetail() {
         <div className="case_detail_container">
           <div className="css-x-button1" onClick={handleClick2}></div>
           <h2>
-              <strong>출동 정보</strong>
+            <strong>출동 정보</strong>
           </h2>
           <div className="case_detail_wrap">
             <div className="flex-container">
@@ -248,7 +270,7 @@ function CaseDetail() {
               </p>
             </div>
             <div>
-              <p>{caseData.report_phone}</p>
+              <p>{currentCase.report_phone}</p>
             </div>
           </div>
 
@@ -259,7 +281,7 @@ function CaseDetail() {
               </p>
             </div>
             <div>
-              <p>{caseData.report_type}</p>
+              <p>{currentCase.report_type}</p>
             </div>
           </div>
 
@@ -270,7 +292,7 @@ function CaseDetail() {
               </p>
             </div>
             <div>
-              <p>{caseData.disabled_person}</p>
+              <p>{currentCase.disabled_person}</p>
             </div>
           </div>
         </div>

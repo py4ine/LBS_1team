@@ -6,6 +6,15 @@ import Footer from "../components/Layout/Footer";
 import useMap from "../hooks/useMap";
 import { mapConfig } from "../config/mapConfig";
 import "../assets/css/map.css";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setMapCenter,
+  setMapZoom,
+  setMarkers,
+  setSelectedBuilding,
+} from "../store/slice/mapSlice"; // redux slice
+
+// 아이콘 import
 import backArrowIcon from "../assets/images/map_icons/bg/icon_backarrow_BG.png";
 import fireAreaIcon from "../assets/images/map_icons/bg/icon_linepin_BG.png";
 import fireAreaActiveIcon from "../assets/images/map_icons/bg/icon_linepinW_BG.png";
@@ -15,81 +24,45 @@ import leftArrowIcon from "../assets/images/button_icons/icon_leftarrow_G.png";
 import pullfinIcon from "../assets/images/map_icons/icon_pullfin.png";
 
 function Map() {
+  // 필요한 hooks 설정
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const mapContainerRef = useRef(null);
-  const [mapInstance, setMapInstance] = useState(null);
-  const [isElementsShifted, setIsElementsShifted] = useState(false);
-  const [activeModalType, setActiveModalType] = useState(null);
-  const [activePin, setActivePin] = useState(null);
-  const [isPin1ModalOpen, setIsPin1ModalOpen] = useState(false);
-  // const [mapLoaded, setMapLoaded] = useState(false);
   const footerRef = useRef(null);
+
+  // Redux store 필요한 상태들 가져오기
+  const currentCase = useSelector((state) => state.cases.currentCase);
+  const { fs_code } = useSelector((state) => state.auth);
+  // const { center, zoom, waterfacilities, dangerfacilities } = useSelector(
+  //   (state) => state.map
+  // );
+
+  // local 상태 관리
+  const [isElementsShifted, setIsElementsShifted] = useState(false);
+  const [isPin1ModalOpen, setIsPin1ModalOpen] = useState(false);
+  const [activePin, setActivePin] = useState(null);
   const [currentLocationMarker, setCurrentLocationMarker] = useState(null);
   const [watchId, setWatchId] = useState(null);
-  const location = useLocation();
-  const [caseData, setCaseData] = useState(location.state.caseData); // caseData 상태 저장소 (찬진)
-  const [fs_code, setFs_code] = useState(location.state.fsCode); // fsCode 상태저장소
-  const [longitude, setLongitude] = useState(location.state.caseData.longitude); // (추가)
-  const [latitude, setLatitude] = useState(location.state.caseData.latitude); // (추가)
-  const [center, setCenter] = useState(null); // 지도 중심점
-  // const [bound, setbound] = useState(null); // 지도 중심점
   const [caseMarker, setCaseMarker] = useState(null); // 사건 위치 마커 상태 저장소 (찬진)
+  const [activeModalType, setActiveModalType] = useState(null);
 
-  // console.log(location.state.caseData);
   // GeoJSON 관련 ref
   const loadGeoJsonRef = useRef(null);
   const loadWaterJsonRef = useRef(null);
   const loadDangerJsonRef = useRef(null);
   const removePointLayersRef = useRef(null);
 
-  const navigate = useNavigate();
+  const [mapInstance, setMapInstance] = useState(null);
+  // const [mapLoaded, setMapLoaded] = useState(false);
+  const location = useLocation();
+  // const [caseData, setCaseData] = useState(location.state.caseData); // caseData 상태 저장소 (찬진)
+  // const [fs_code, setFs_code] = useState(location.state.fsCode); // fsCode 상태저장소
+  // const [longitude, setLongitude] = useState(location.state.caseData.longitude); // (추가)
+  // const [latitude, setLatitude] = useState(location.state.caseData.latitude); // (추가)
+  // const [center, setCenter] = useState(null); // 지도 중심점
+  // const [bound, setbound] = useState(null); // 지도 중심점
 
-  const handleBackClick = () => {
-    navigate("/main", {
-      state: {
-        caseData: caseData,
-        fs_code: fs_code,
-      },
-    });
-  };
-
-  // location.state가 변경될 때 상태 업데이트를 위한 useEffect 추가
-  useEffect(() => {
-    if (location.state?.caseData) {
-      setCaseData(location.state.caseData);
-      setLongitude(location.state.caseData.longitude);
-      setLatitude(location.state.caseData.latitude);
-    }
-    if (location.state?.fs_code) {
-      setFs_code(location.state.fs_code);
-    }
-  }, [location.state]);
-
-  // 날씨 데이터 관련 상태
-
-  // localStorage caseData 관리
-  // const [caseData, setCaseData] = useState(() => {
-  //   const savedData = localStorage.getItem("caseData");
-  //   return savedData ? JSON.parse(savedData) : location.state?.caseData;
-  // });
-
-  // // location.state 변경 시 localStorage 업데이트
-  // useEffect(() => {
-  //   if (location.state?.caseData) {
-  //     // localStorage.setItem("caseData", JSON.stringify(location.state.caseData));
-  //     setCaseData(location.state.caseData);
-  //     // setLongitude(caseData.longitude);
-  //     // setLatitude(caseData.latitude);
-  //   }
-  // }, [location.state]);
-  // // location.state 변경 시 localStorage 업데이트
-
-  // useEffect(() => {
-  //   if (caseData) {
-  //     setLongitude(caseData.longitude);
-  //     setLatitude(caseData.latitude);
-  //   }
-  // }, [caseData]);
-  // console.log("data:", longitude);
+  // console.log(location.state.caseData);
 
   // useMap hook 사용
   const {
@@ -101,6 +74,40 @@ function Map() {
     loadDangerJsonRef: hookDangerJsonRef,
     removePointLayersRef: hookRemovePointLayersRef,
   } = useMap(mapContainerRef, mapConfig.defaultStyle, mapConfig);
+
+  // 사건 데이터 체크 (찬진)
+  // useEffect(() => {
+  //   if (!currentCase) {
+  //     navigate("/main");
+  //     return;
+  //   }
+  // }, [currentCase, navigate]);
+
+  useEffect(() => {
+    if (mapContainerRef.current && map) {
+      setMapInstance(map);
+      window.mapInstance = map;
+    }
+
+    return () => {
+      window.mapInstance = null;
+    };
+  }, [map]);
+
+  // useEffect에서 마커 관리
+  useEffect(() => {
+    if (!map || !mapLoaded || !currentCase || !mapboxgl) {
+      return;
+    }
+
+    const marker = createMarker();
+
+    return () => {
+      if (marker) {
+        marker.remove();
+      }
+    };
+  }, [mapLoaded, map, currentCase, mapboxgl]);
 
   // ref 설정
   useEffect(() => {
@@ -115,112 +122,10 @@ function Map() {
     hookRemovePointLayersRef,
   ]);
 
-  useEffect(() => {
-    if (mapContainerRef.current && map) {
-      setMapInstance(map);
-      window.mapInstance = map;
-    }
-
-    return () => {
-      window.mapInstance = null;
-    };
-  }, [map]);
-
-  // map 로드 완료 감지
-  // useEffect(() => {
-  //   if (map) {
-  //     map.on("load", () => {
-  //       setMapLoaded(true);
-  //     });
-  //   }
-  // }, [map]);
-
   // 마커 생성
-  // useEffect(() => {
-  //   if (!map || !mapLoaded || !caseData || !mapboxgl) {
-  //     return;
-  //   }
-
-  //   try {
-  //     console.log("Creating marker with data:", caseData);
-
-  //     const el = document.createElement("div");
-  //     el.className = "marker";
-  //     el.style.backgroundImage = `url(${pullfinIcon})`;
-  //     el.style.width = "40px";
-  //     el.style.height = "40px";
-  //     el.style.backgroundRepeat = "no-repeat";
-  //     el.style.backgroundPosition = "center";
-
-  //     const marker = new mapboxgl.Marker({
-  //       element: el,
-  //       anchor: "bottom",
-  //     })
-  //       .setLngLat([longitude, latitude])
-  //       .addTo(map);
-
-  //     setCaseMarker(marker); // 마커 상태 저장 (찬진)
-
-  //     map.flyTo({
-  //       center: [longitude, latitude],
-  //       zoom: 15,
-  //       essential: true,
-  //     });
-
-  //     return () => {
-  //       if (marker) {
-  //         marker.remove();
-  //       }
-  //     };
-  //   } catch (error) {
-  //     console.error("Error creating marker:", error);
-  //   }
-  // }, [mapLoaded, map, caseData, mapboxgl]);
-
-  // // 사건 마거 제거 (찬진)
-  // const removeCaseMarker = () => {
-  //   if (caseMarker) {
-  //     caseMarker.remove();
-  //     setCaseMarker(null);
-  //   }
-  // };
-
-  // // 사건 핀 리필 (찬진)
-  // const caseRepin = () => {
-  //   try {
-  //     console.log("Creating marker with data:", caseData);
-
-  //     const el = document.createElement("div");
-  //     el.className = "marker";
-  //     el.style.backgroundImage = `url(${pullfinIcon})`;
-  //     el.style.width = "40px";
-  //     el.style.height = "40px";
-  //     el.style.backgroundRepeat = "no-repeat";
-  //     el.style.backgroundPosition = "center";
-
-  //     const marker = new mapboxgl.Marker({
-  //       element: el,
-  //       anchor: "bottom",
-  //     })
-  //       .setLngLat([longitude, latitude])
-  //       .addTo(map);
-
-  //     setCaseMarker(marker); // 마커 상태 저장 (찬진)
-
-  //     map.flyTo({
-  //       center: [longitude, latitude],
-  //       zoom: 15,
-  //       essential: true,
-  //     });
-  //   } catch (error) {
-  //     console.error("Error creating marker:", error);
-  //   }
-  // };
-
-  // 마커 생성 코드 최적화
   const createMarker = () => {
     try {
-      console.log("Creating marker with data:", caseData);
+      // console.log("Creating marker with data:", caseData);
 
       const el = document.createElement("div");
       el.className = "marker";
@@ -234,13 +139,17 @@ function Map() {
         element: el,
         anchor: "bottom",
       })
-        .setLngLat([longitude, latitude])
+        .setLngLat([currentCase.longitude, currentCase.latitude])
         .addTo(map);
 
       setCaseMarker(marker);
 
+      // map state redux 업데이트
+      dispatch(setMapCenter([currentCase.longitude, currentCase.latitude]));
+      dispatch(setMapZoom(15));
+
       map.flyTo({
-        center: [longitude, latitude],
+        center: [currentCase.longitude, currentCase.latitude],
         zoom: 15,
         essential: true,
       });
@@ -259,34 +168,26 @@ function Map() {
     }
   };
 
-  // useEffect에서 마커 관리
-  useEffect(() => {
-    if (!map || !mapLoaded || !caseData || !mapboxgl) {
-      return;
-    }
-
-    const marker = createMarker();
-
-    return () => {
-      if (marker) {
-        marker.remove();
-      }
-    };
-  }, [mapLoaded, map, caseData, mapboxgl]);
-
-  // 날씨 데이터 가져오기
-
   // 데이터 핸들러 함수들
   const handleLoadGeoJson = () => {
     if (map) {
       const mapCenter = map.getCenter(); // 현재 지도의 중심점을 직접 가져옴
 
       // 상태 업데이트
-      setCenter(mapCenter);
+      // setCenter(mapCenter);
+      dispatch(setMapCenter([mapCenter.lng, mapCenter.lat]));
 
       // 중심점 좌표를 직접 사용
       if (loadGeoJsonRef.current) {
-        loadGeoJsonRef.current(mapCenter.lng, mapCenter.lat);
+        loadGeoJsonRef
+          .current(mapCenter.lng, mapCenter.lat)
+          .then((data) => {
+            // 건물 데이터를 redux store에 저장
+            dispatch(setMarkers(data));
+          })
+          .catch((error) => {
+            console.error("Error loading building data:", error);
+          });
       }
     }
   };
@@ -358,6 +259,11 @@ function Map() {
     if (removePointLayersRef.current) {
       removePointLayersRef.current(pointType);
     }
+  };
+
+  // UI 관련 핸들러
+  const handleBackClick = () => {
+    navigate("/main");
   };
 
   // Footer 모달 상태 관리(서현)
@@ -500,7 +406,7 @@ function Map() {
     if (isPin1ModalOpen) {
       return "pinArea pin1-modal-active";
     }
-     // 그 외의 경우 기존 로직 유지(서현)
+    // 그 외의 경우 기존 로직 유지(서현)
     if (!isElementsShifted) return "pinArea";
     if (activeModalType) {
       return `pinArea ${activeModalType}-modal-active`;
@@ -563,7 +469,7 @@ function Map() {
         </div>
 
         {/* Pin1 Modal */}
-        {isPin1ModalOpen && caseData && (
+        {isPin1ModalOpen && currentCase && (
           <div className="pin1_modal_container">
             <div
               className="pin1_modal_overlay"
@@ -579,10 +485,10 @@ function Map() {
               </div>
               <div className="pin1_modal_inner">
                 <div className="modal_header">
-                  <h2>건물명 : {caseData.bldg_nm}</h2>
+                  <h2>건물명 : {currentCase.bldg_nm}</h2>
                   <Link
-                    to={`/map/${caseData.bldg_id}`}
-                    state={{ caseData: caseData, fs_code: fs_code }}
+                    to={`/map/${currentCase.bldg_id}`}
+                    // state={{ caseData: caseData, fs_code: fs_code }}
                     className="more_details"
                   >
                     <p className="more_icon_text">더보기</p>
@@ -593,7 +499,7 @@ function Map() {
                     />
                   </Link>
                 </div>
-                <p>{caseData.road_nm_addr}</p>
+                <p>{currentCase.road_nm_addr}</p>
               </div>
             </div>
           </div>
