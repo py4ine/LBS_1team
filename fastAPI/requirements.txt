@@ -1,0 +1,39 @@
+# FastAPI 및 서버 실행에 필요한 라이브러리
+fastapi                      # FastAPI 웹 프레임워크
+uvicorn                      # ASGI 서버: FastAPI 애플리케이션 실행
+websockets
+
+# 데이터 처리 및 과학 계산 라이브러리
+numpy                        # 다차원 배열 및 과학 계산 (최신 버전 설치)
+scikit-image                 # 이미지 처리 및 컴퓨터 비전용 라이브러리
+scipy                        # 과학 계산 및 수학 함수 모음 (NumPy와 함께 사용)
+
+# 머신러닝 및 딥러닝 관련 라이브러리
+torch>=1.7                   # PyTorch 딥러닝 프레임워크
+torchvision>=0.10.0          # PyTorch 모델 및 이미지 관련 유틸리티
+thop                         # PyTorch 모델의 FLOPs 및 파라미터 계산
+Pillow                       # 이미지 처리 라이브러리 (PIL의 대체)
+ultralytics                  # YOLOv8 실행을 위한 패키지 추가
+
+# 컴퓨터 비전 및 동영상 처리
+opencv-python-headless       # OpenCV의 GUI 없는 서버 환경용 버전 (이미지 및 비디오 처리)
+
+# 로깅 및 디버깅
+loguru                       # 간편한 로그 출력 및 관리
+
+# 개발 및 디버깅 편의
+tqdm                         # 터미널에 진행률 표시를 위한 라이브러리
+tabulate                     # 데이터를 표 형식으로 출력
+
+# 모델 성능 평가 및 시각화
+tensorboard                  # 딥러닝 모델 학습 로그 및 시각화 도구
+motmetrics                   # MOT(Multi-Object Tracking) 평가 도구
+lap                          # Linear Assignment Problem 해결 라이브러리 (ByteTrack 종속성)
+
+# 필터링 및 수학적 계산
+filterpy                     # 칼만 필터 구현을 위한 라이브러리
+h5py                         # HDF5 데이터 파일 읽기/쓰기
+cython_bbox                  # Bounding Box 처리 속도를 높이기 위한 Cython 확장
+
+# 기타
+loguru                       # 편리한 로그 출력을 위한 라이브러리
