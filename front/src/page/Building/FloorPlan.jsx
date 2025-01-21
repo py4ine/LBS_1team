@@ -299,19 +299,21 @@ function FloorPlan() {
 
   const handleCCTVIconClick = (id) => {
     if (id === 1) {
-      navigate("./cctv", {
-        state: {
-          caseData: caseData,
-          fs_code: fs_code,
-        },
-      });
+      navigate("./cctv");
+      // navigate("./cctv", {
+      //   state: {
+      //     caseData: caseData,
+      //     fs_code: fs_code,
+      //   },
+      // });
     } else if (id === 2) {
-      navigate("./cctv2", {
-        state: {
-          caseData: caseData,
-          fs_code: fs_code,
-        },
-      });
+      navigate("./cctv2");
+      // navigate("./cctv2", {
+      //   state: {
+      //     caseData: caseData,
+      //     fs_code: fs_code,
+      //   },
+      // });
     }
   };
 

@@ -109,8 +109,7 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
       try {
         const response = await fetch(
           `http://localhost:8080/api/around?longitude=${longitude}&latitude=${latitude}`
-          // `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/around?longitude=${longitude}&latitude=${latitude}`
-          // `https://lbsteam1.duckdns.org/api//around?longitude=${longitude}&latitude=${latitude}`
+          // `https://lbsteam1.duckdns.org/api/around?longitude=${longitude}&latitude=${latitude}`
         );
         console.log("API 요청 완료");
 

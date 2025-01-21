@@ -4,22 +4,28 @@ import Header from "../../components/Layout/Header";
 import backArrowIcon from "../../assets/images/map_icons/bg/icon_backarrow_BG.png";
 import "../../assets/css/cctv.css";
 import { setActivePage } from "../websocketManager";
+import { useSelector } from "react-redux";
 
 function Cctv() {
-
   const navigate = useNavigate();
   const { bldgId, flplanId } = useParams();
-  const location = useLocation(); // 이전 페이지에서 전달된 데이터(state) 가져오기 (찬진)
-  const caseData = location.state?.caseData; // (찬진)
-  const fs_code = location.state.fs_code; // (찬진)
+
+  // redux store에서 데이터 가져오기
+  const currentCase = useSelector((state) => state.cases.currentCase);
+  const { fs_code } = useSelector((state) => state.auth);
+
+  // const location = useLocation(); // 이전 페이지에서 전달된 데이터(state) 가져오기 (찬진)
+  // const caseData = location.state?.caseData; // (찬진)
+  // const fs_code = location.state.fs_code; // (찬진)
   const handleBackClick = () => {
-    navigate(`/map/${bldgId}/${flplanId}`, {
-        state: {
-            caseData: caseData,
-            fs_code: fs_code,
-        },
-    });
-    };
+    navigate(`/map/${bldgId}/${flplanId}`);
+    // navigate(`/map/${bldgId}/${flplanId}`, {
+    //   state: {
+    //     caseData: caseData,
+    //     fs_code: fs_code,
+    //   },
+    // });
+  };
   const videoRef = useRef(null); // 비디오를 렌더링할 <img> 태그 참조
   const [count, setCount] = useState(0);
 
@@ -65,12 +71,12 @@ function Cctv() {
       <Header />
       <div>
         <div className="backArea">
-            <img
+          <img
             src={backArrowIcon}
             alt="뒤로가기"
             className="back-icon"
             onClick={handleBackClick}
-            />
+          />
         </div>
         <div className="streaming">
           <h1>Live Video Stream</h1>
@@ -79,7 +85,9 @@ function Cctv() {
             alt="Live Stream"
             style={{ width: "100%", height: "auto" }}
           />
-          <p style={{ fontSize: "1.5rem", fontWeight: "bold" }}>Count: {count}</p>
+          <p style={{ fontSize: "1.5rem", fontWeight: "bold" }}>
+            Count: {count}
+          </p>
         </div>
       </div>
     </div>
