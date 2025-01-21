@@ -8,7 +8,7 @@ COPY package*.json ./
 RUN npm install 
 
 # 환경 변수 파일 복사
-COPY .env.production ./
+COPY .env ./
 
 # 소스 복사 및 빌드
 COPY . .

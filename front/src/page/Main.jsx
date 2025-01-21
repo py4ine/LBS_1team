@@ -40,7 +40,9 @@ function Main() {
         // API 호출
         const res = await fetch(
           // "http://localhost:8080/cases?dispatch_fire_station=101"
-          `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/cases?dispatch_fire_station=${fs_code}`
+          // `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/cases?dispatch_fire_station=${fs_code}`
+          `https://lbsteam1.duckdns.org/api//cases?dispatch_fire_station=${fs_code}`
+
         );
 
         // 응답 상태 확인

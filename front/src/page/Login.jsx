@@ -106,7 +106,7 @@ function Login() {
 
     try {
       const response = await fetch(
-        "https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/login",
+        "https://lbsteam1.duckdns.org/api/login",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
