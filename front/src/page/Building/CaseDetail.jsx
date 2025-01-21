@@ -18,6 +18,7 @@ function CaseDetail() {
   const { fs_code } = useSelector((state) => state.auth);
 
   const [data, setData] = useState(null);
+  const [countNum, setCountNum] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -107,6 +108,33 @@ function CaseDetail() {
   //     // },
   //   });
   // };
+
+  useEffect(() => {
+    const fetchCounting = async () => {
+      console.log("카운팅요청시작");
+
+      try {
+        const response1 = await fetch('http://localhost:8000/counting/stream1');
+        const response2 = await fetch('http://localhost:8000/counting/stream2');
+
+        if (!response1.ok) {
+          throw new Error ('Failed to fetch counting1');
+        }
+        if (!response2.ok) {
+          throw new Error ('Failed to fetch counting2');
+        }
+
+        const result1 = await response1.json();
+        const result2 = await response2.json();
+        setCountNum(result1.count + result2.count);
+      } catch (error) {
+        console.error("Fetch Counting Error:", error);
+      }      
+    }
+    fetchCounting();
+
+    
+  }, []);
 
   //   사건정보 내용 useEffect (찬진)
   // useEffect(() => {
@@ -250,7 +278,7 @@ function CaseDetail() {
                 </p>
               </div>
               <div>
-                <p>준비중</p>
+                <p>{countNum}</p>
               </div>
             </div>
 

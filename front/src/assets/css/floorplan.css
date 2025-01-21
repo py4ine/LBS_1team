@@ -148,3 +148,15 @@
   /* border: 1px solid #000; */
   border-radius: 00%; /* 동그랗게 */
 }
+
+.person-count {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background-color: green;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}

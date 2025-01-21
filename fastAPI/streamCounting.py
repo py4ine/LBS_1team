@@ -160,7 +160,14 @@ class StreamCounging:
 
     # 객체 카운트 업데이트 및 프레임에 그리기
     def update_count_and_draw(self, online_targets, stream, frame):
-        mid_y = frame.shape[0] // 2  # 프레임 중앙선
+        
+        # mid_x = frame.shape[1] // 2 - 28  # 프레임 가로 중앙
+        # mid_y = frame.shape[0] // 2  # 프레임 세로 중앙
+        # start_y = 0  # 세로선 시작점 (화면 중간 기준 위쪽)
+        # end_y = 370    # 세로선 끝점
+
+        mid_x = frame.shape[1] // 2  # 프레임 가로 중앙
+        mid_y = frame.shape[0] // 2  # 프레임 세로 중앙
         object_tracks = stream['object_tracks']
         in_count = stream['in_count']
 
@@ -170,6 +177,7 @@ class StreamCounging:
             x1, y1, x2, y2 = int(x1), int(y1), int(x1 + w), int(y1 + h)  # 박스 좌표 변환
             center_x = int(x1 + (x2 - x1) // 2)  # 객체 중심 X 좌표
             center_y = int(y1 + (y2 - y1) // 2)  # 객체 중심 Y 좌표
+            
 
             # 객체가 중간선을 넘어갔는지 확인
             if track_id in object_tracks:
@@ -178,18 +186,31 @@ class StreamCounging:
                     in_count += 1  # 카운트 증가
                 elif prev_y > mid_y >= center_y:  # 아래 -> 위로 이동
                     in_count -= 1  # 카운트 감소
-
+            
             # 현재 객체 위치 저장
             object_tracks[track_id] = (center_x, center_y)
+
+            # # 사람 발 기준
+            # foot_x = int(x1 + (x2 - x1) / 2)  # x좌표 (바운딩 박스 중앙)
+            # foot_y = int(y2 - 5)  # y좌표 y1=최상단 y2=최하단
+            # if start_y <= foot_y <= end_y:  # 기준점이 세로선 범위 내에 있는 경우
+            #     if track_id in object_tracks:
+            #         prev_x, prev_y = object_tracks[track_id]  # 이전 프레임의 중심 좌표
+            #         if prev_x < mid_x and foot_x >= mid_x:
+            #             in_count += 1  # 카운트 증가
+            #         elif prev_x > mid_x and foot_x <= mid_x:
+            #             in_count -= 1  # 카운트 감소
+            # object_tracks[track_id] = (foot_x, foot_y)
 
             # 디텍션 박스 그리기
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
             cv2.putText(frame, f"ID: {track_id}", (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
             cv2.circle(frame, (center_x, center_y), 5, (0, 0, 255), -1)
 
-        # 영상 중간 부분에 가로선 그리기
+        # 영상 중간 부분에 기준선 그리기
         cv2.line(frame, (0, mid_y), (frame.shape[1], mid_y), (255, 0, 0), 1)
+        # cv2.line(frame, (mid_x, start_y), (mid_x, end_y), (255, 0, 0), 2)
         # 현재 카운팅 값을 화면에 표시
-        cv2.putText(frame, f"Count: {in_count}", (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+        # cv2.putText(frame, f"Count: {in_count}", (30, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
         return in_count

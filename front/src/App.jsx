@@ -51,7 +51,7 @@ function App() {
             ></Route>
             {/* CCTV 페이지 */}
             <Route
-              path="/map/:bldgId/:flplanId/cctv_2"
+              path="/map/:bldgId/:flplanId/cctv2"
               element={<Cctv_2 />}
             ></Route>
             {/* Counting 페이지 */}
