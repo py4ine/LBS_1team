@@ -45,9 +45,7 @@ function App() {
         <Route path="/map/:bldgId/:flplanId/cctv" element={<Cctv />}></Route>
         {/* CCTV 페이지 */}
         <Route
-          path="/map/:bldgId/:flplanId/cctv_2"
-          element={<Cctv_2 />}
-        ></Route>
+          path="/map/:bldgId/:flplanId/cctv2" element={<Cctv_2 />}></Route>
 
         {/* Counting 페이지 */}
         <Route path="/counting" element={<Counting />}></Route>
