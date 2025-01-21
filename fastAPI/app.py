@@ -15,7 +15,7 @@ app.add_middleware(
 )
 
 url_1 = 'rtsp://210.99.70.120:1935/live/cctv002.stream'
-url_2 = 'rtsp://210.99.70.120:1935/live/cctv007.stream'  # 5
+url_2 = 'rtsp://210.99.70.120:1935/live/cctv015.stream'  # 6,15,31
 url_3 = 'rtsp://192.168.0.108'
 model = './yolov8n.pt'
 target_class = [2, 5, 7]
