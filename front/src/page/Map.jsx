@@ -400,7 +400,7 @@ function Map() {
       handleModalOrSearchChange(newModalState, "pin1");
     }
     if (pinType === "pin2") {
-      // 이미 마커가 있다면 제거하고 위치 추적 중지
+      // 이미 마커가 있다면 제거하고 위치 추적 중지(서현)
       if (currentLocationMarker) {
         currentLocationMarker.remove();
         setCurrentLocationMarker(null);
@@ -409,7 +409,6 @@ function Map() {
           setWatchId(null);
         }
         setActivePin(null);
-
         return;
       }
 

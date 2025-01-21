@@ -188,50 +188,23 @@
 .current-location-marker:hover {
   transform: none;
 }
+/* 폴리곤을 눌렀을때 건물 정보 팝업 스타일 조정(mapbox고유 스타일을 수정하여 커스터마이징한 내용) */
+.mapboxgl-popup-content{
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: Noto Sans KR,sans-serif;
+  padding: 20px 15px;
+}
+.mapboxgl-popup-close-button{
+  right: 4px;
+  top: 4px;
+}
 
 /* mobile pinArea모달 위치 조정 */
-/* 아이폰 Safari에서의 safe-area 고려 */
+/* 아이폰 Safari 및 모든 환경에서의 하단 여백 고려 */
 @supports (padding: max(0px)) {
   .pinArea {
     padding-right: max(16px, env(safe-area-inset-right));
+    padding-bottom: max(30px, calc(30px + env(safe-area-inset-bottom)));
   }
-}
-
-/* viewport 높이가 매우 작은 경우 (가로모드 등) */
-@media screen and (max-height: 500px) {
-  .pinArea {
-    bottom: calc(50vh - 300px);
-  }
-
-  .pin-icon {
-    width: 36px;
-    height: 36px;
-  }
-}
-
-.mapboxgl-ctrl-geolocate {
-  display: none !important;
-}
-
-/* 컨트롤 컨테이너 자체도 숨기기 */
-.mapboxgl-ctrl-top-right {
-  display: none !important;
-}
-
-/* 파란색 위치 표시 마커를 검정색으로 변경 */
-.mapboxgl-user-location-dot {
-  background-color: black !important;
-}
-
-.mapboxgl-user-location-dot::before {
-  background-color: black !important;
-}
-
-.mapboxgl-user-location-dot::after {
-  background-color: black !important;
-}
-
-/* 정확도를 나타내는 하늘색 원 제거 */
-.mapboxgl-user-location-accuracy-circle {
-  display: none !important;
 }
