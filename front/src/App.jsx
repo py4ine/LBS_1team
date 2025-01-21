@@ -11,6 +11,7 @@ import Map from "./page/Map.jsx";
 import CaseDetail from "./page/Building/CaseDetail.jsx";
 import FloorPlan from "./page/Building/FloorPlan.jsx";
 import Cctv from "./page/Building/Cctv.jsx";
+import Cctv_2 from "./page/Building/Cctv_2.jsx";
 import Counting from "./page/Building/Counting.jsx";
 
 function App() {
@@ -42,6 +43,8 @@ function App() {
 
         {/* CCTV 페이지 */}
         <Route path="/cctv" element={<Cctv />}></Route>
+        {/* CCTV 페이지 */}
+        <Route path="/cctv_2" element={<Cctv_2 />}></Route>
 
         {/* Counting 페이지 */}
         <Route path="/counting" element={<Counting />}></Route>
