@@ -37,7 +37,8 @@ function CaseDetail() {
       try {
         const response = await fetch(
           // `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/details/${bldgId}`
-          `https://lbsteam1.duckdns.org/api//details/${bldgId}`
+          // `https://lbsteam1.duckdns.org/api//details/${bldgId}`
+          `http://localhost:8080/api/details/${bldgId}`
         );
         // const responseimg = await fetch(
         //   `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/images/${bldgId}`

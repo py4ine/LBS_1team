@@ -39,10 +39,9 @@ function Main() {
       try {
         // API 호출
         const res = await fetch(
-          // "http://localhost:8080/cases?dispatch_fire_station=101"
-          // `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/cases?dispatch_fire_station=${fs_code}`
-          `https://lbsteam1.duckdns.org/api//cases?dispatch_fire_station=${fs_code}`
-
+          // `http://localhost:8080/api/cases?dispatch_fire_station=${fs_code}`
+          `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/cases?dispatch_fire_station=${fs_code}`
+          // `https://lbsteam1.duckdns.org/api//cases?dispatch_fire_station=${fs_code}`
         );
 
         // 응답 상태 확인
@@ -153,7 +152,7 @@ function Main() {
   if (loading) return <div>Loading...</div>;
 
   // 에러 발생시 표시할 내용
-  if (error) return <div>Error: {error}</div>;
+  // if (error) return <div>Error: {error}</div>;
 
   return (
     <>

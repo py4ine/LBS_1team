@@ -31,17 +31,19 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
       if (!e.features || e.features.length === 0) return;
 
       const clickedFeature = e.features[0];
-      
+
       const properties = clickedFeature.properties;
 
-      console.log(properties)
+      console.log(properties);
 
       // 팝업 좌표 및 내용 설정
       const coordinates = e.lngLat;
       new mapboxgl.Popup()
         .setLngLat(coordinates)
         .setHTML(
-          `<strong>건물명: ${properties.bldg_nm || "건물 정보 없음"}</strong><br>
+          `<strong>건물명: ${
+            properties.bldg_nm || "건물 정보 없음"
+          }</strong><br>
            건물주소: ${properties.road_nm_addr || "유형 정보 없음"}<br>
            지상층수: ${properties.gro_flo_co || "유형 정보 없음"}`
         )
@@ -56,7 +58,6 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
     map.on("mouseleave", "polygon-layer", () => {
       map.getCanvas().style.cursor = "";
     });
- 
 
     // GeoLocationControl 설정
     const geolocate = new mapboxgl.GeolocateControl({
@@ -107,11 +108,9 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
       console.log("loadGeoJson 호출:", { longitude, latitude });
       try {
         const response = await fetch(
-          // `http://localhost:8080/around?longitude=${longitude}&latitude=${latitude}`
+          `http://localhost:8080/api/around?longitude=${longitude}&latitude=${latitude}`
           // `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/around?longitude=${longitude}&latitude=${latitude}`
-          `https://lbsteam1.duckdns.org/api//around?longitude=${longitude}&latitude=${latitude}`
-
-          
+          // `https://lbsteam1.duckdns.org/api//around?longitude=${longitude}&latitude=${latitude}`
         );
         console.log("API 요청 완료");
 
@@ -168,9 +167,9 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
       console.log("loadWaterJson 호출:", { polygon });
       try {
         const response = await fetch(
-          // `http://localhost:8080/waters?polygon=${polygon}`
+          `http://localhost:8080/api/waters?polygon=${polygon}`
           // `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/waters?polygon=${polygon}`
-          `https://lbsteam1.duckdns.org/api//waters?polygon=${polygon}`
+          // `https://lbsteam1.duckdns.org/api//waters?polygon=${polygon}`
         );
         console.log("API 요청 완료");
 
@@ -268,9 +267,9 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
       console.log("loadDangerJson 호출:", { polygon });
       try {
         const response = await fetch(
-          // `http://localhost:8080/danger?polygon=${polygon}`
+          `http://localhost:8080/api/danger?polygon=${polygon}`
           // `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/danger?polygon=${polygon}`
-          `https://lbsteam1.duckdns.org/api//danger?polygon=${polygon}`
+          // `https://lbsteam1.duckdns.org/api//danger?polygon=${polygon}`
         );
         console.log("API 요청 완료");
 
