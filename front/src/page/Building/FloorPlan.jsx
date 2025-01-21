@@ -97,7 +97,8 @@ function FloorPlan() {
       try {
         // api 이미지 데이터 가져오기
         const res = await fetch(
-          `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/images/${bldgId}`
+          // `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/images/${bldgId}`
+          `https://lbsteam1.duckdns.org/api//images/${bldgId}`
         );
         if (!res.ok) {
           throw new Error("Failed to fetch fl images");

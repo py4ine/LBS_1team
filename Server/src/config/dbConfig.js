@@ -27,7 +27,7 @@
 import pg from 'pg'
 
 const dbConfig = {
-    host : '34.64.248.193',
+    host : '1.230.106.16',
     port : 5432,
     database : 'postgres',
     user : 'codelab',

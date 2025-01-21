@@ -107,8 +107,10 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
       console.log("loadGeoJson 호출:", { longitude, latitude });
       try {
         const response = await fetch(
-          `http://localhost:8080/around?longitude=${longitude}&latitude=${latitude}`
+          // `http://localhost:8080/around?longitude=${longitude}&latitude=${latitude}`
           // `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/around?longitude=${longitude}&latitude=${latitude}`
+          `https://lbsteam1.duckdns.org/api//around?longitude=${longitude}&latitude=${latitude}`
+
           
         );
         console.log("API 요청 완료");
@@ -167,7 +169,8 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
       try {
         const response = await fetch(
           // `http://localhost:8080/waters?polygon=${polygon}`
-          `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/waters?polygon=${polygon}`
+          // `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/waters?polygon=${polygon}`
+          `https://lbsteam1.duckdns.org/api//waters?polygon=${polygon}`
         );
         console.log("API 요청 완료");
 
@@ -239,13 +242,13 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
                 2,
                 "water-type-2-icon",
                 3,
-                "water-type-2-icon",
+                "water-type-3-icon",
                 4,
-                "water-type-2-icon",
+                "water-type-4-icon",
                 5,
-                "water-type-2-icon",
+                "water-type-5-icon",
                 6,
-                "water-type-2-icon",
+                "water-type-6-icon",
                 "water-type-1-icon",
               ],
               "icon-size": 1.0,
@@ -266,7 +269,8 @@ const useMap = (mapContainerRef, defaultStyle, mapConfig) => {
       try {
         const response = await fetch(
           // `http://localhost:8080/danger?polygon=${polygon}`
-          `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/danger?polygon=${polygon}`
+          // `https://node-kimhojun-dot-winged-woods-442503-f1.du.r.appspot.com/danger?polygon=${polygon}`
+          `https://lbsteam1.duckdns.org/api//danger?polygon=${polygon}`
         );
         console.log("API 요청 완료");
 
