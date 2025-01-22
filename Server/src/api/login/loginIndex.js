@@ -1,7 +1,7 @@
-import express from 'express'
-import ctrl from './loginCtrl.js'
+import express from "express";
+import ctrl from "./login.ctrl.js";
 
 const router = express.Router();
-router.post('/', ctrl.login);
+router.post("/", ctrl.login);
 
 export default router;
