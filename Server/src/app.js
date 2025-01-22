@@ -13,12 +13,12 @@ const options = {
     info: {
       title: "소방 RG API",
       version: "1.0.0",
-      description: "소방 RG Documentation",
+      description: "소방 RG 명세서",
     },
     servers: [
       {
-        url: "http://localhost:8080",
-        description: "Development server",
+        url: "https://lbsteam1.duckdns.org",
+        description: "소방RG",
       },
     ],
   },
