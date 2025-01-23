@@ -1,30 +1,145 @@
-# LBS_1team
- 
-# 프로젝트 - 소방RG
+2024.12.16 ~ 2025.01.22 (5주)
 
-*@miny*
+# 소방RG
+# 프로젝트 개요
+## 1.1 프로젝트 제목
+### 소방RG 소방관분들을 위한 데이터 플랫폼
+url(https://lbsteam1.duckdns.org/)
 
-2024.12.16 ~ 2025.01
+## 1.2 프로젝트 로고
 
----
+이미지
 
-## 👯팀원소개
+## 1.3 프로젝트 정보
+### 1.3.1 소개
+#### 1.3.1.1 배경
+- 일평균 100건의 화재사건, 10건의 인명피해
+- 건물 내 인원 파악의 어려움 
+- 사건 데이터 통합 플랫폼의 부재
 
-[김준우 (팀장)](https://www.notion.so/15fe53d1ead5800aba97e53b21af92bd?pvs=21)
 
-[김호준 (팀원)](https://www.notion.so/15fe53d1ead580d5a70bcdff96731580?pvs=21)
+#### 1.3.1.2 기획 의도
+- **소방관 분들에게 도움을 줄수있는 서비스가 뭐가있을까?** 라는 아이디어를 통해,
 
-[배찬진 (팀원)](https://www.notion.so/15fe53d1ead580b98214dcb87f8e1ef2?pvs=21)
+   **화재사건 중심의 주변 데이터와 실시간 영상을통한 인원관제 통합 플랫폼** 개발 프로젝트를 기획하였습니다.
 
-[김서현 (팀원)](https://www.notion.so/15fe53d1ead5805eaaaffe4b1ae74e3b?pvs=21)
 
-## 📄 Common
+#### 1.3.1.3 프로젝트 요약
+- 사건 주변의 소방용수, 유해시설, 기상정보, 건물의 상세정보, 실시간 인원 관제 등을 한 플렛폼에 통합하였습니다. 
+- AI기술을 통해 실시간 인원 관제 시스템의 정확성을 향상시켰습니다.
 
-[프로젝트 주제 제안](https://www.notion.so/15fe53d1ead580249d05f4d2d781ab78?pvs=21)
+### 1.3.2 개발 기간 (총 13주)
+⏰ 2024년 12월 16일 ~ 2025년 1월 22일
 
-[자료공유 (06-12작성) (1)](https://www.notion.so/06-12-1-15fe53d1ead5802a9645f52cf5bb1621?pvs=21)
 
-[레퍼런스 (1)](https://www.notion.so/1-15fe53d1ead580939457d7d5dc4630c3?pvs=21)
+### 1.3.3 주요 기능
+#### 가. 실시간 인원관제
+- 실시간 CCTV영상, AI기반 인원관제
+#### 나. 사건위치 기반 정보제공
+- 소방용수, 유해시설, 기상정보 제공
+#### 다. 검색기능 및 주변 건물 정보
+- 위치기반 주변 건물 폴리곤 제공, 건물명 기반 검색 제공 
+
+
+
+## 1.4 팀 소개
+#### 👩‍💻 [김준우] (팀장)
+#### 👩‍💻 [김서현] (Frontend)
+#### 👩‍💻 [배찬진] (Fullstack)
+#### 👩‍💻 [김호준] (Backend)
+
+
+## 1.5 시연 영상 링크
+🎞 1차 시연 영상 [보러가기]().
+
+
+# 2. 프로젝트 아키텍처
+
+## 2.3 ETE flow chart (End to End)
+이미지
+## 2.2 시스템 구성도
+이미지
+
+
+
+## 2.3 ERD (Entity Relationship Diagram)
+이미지
+
+# 4. 기술 스택
+
+
+<div style="display:flex; flex-direction:column; align-items:flex-start;">
+
+    
+### <div align="center"> Package Manager </div>
+<div align="center" >
+<img src="https://img.shields.io/badge/Node.js-5FA04E?style=for-the-badge&logo=node.js&logoColor=white">
+<img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white">
+<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
+<img src="https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=css3&logoColor=white">
+<img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black">
+</div>
+
+
+### <div align="center"> Cooperation Tools </div>
+<div align="center">
+<img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white">
+<img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white">
+<img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white">
+<img src="https://img.shields.io/badge/Google Chrome-4285F4?style=for-the-badge&logo=Google Chrome&logoColor=white">
+<img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white">
+</div>
+
+
+### <div align="center"> IDE </div>
+<div align="center">
+<img src="https://img.shields.io/badge/Visual Studio Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white">
+<img src="https://img.shields.io/badge/Jupyter-F37626?style=for-the-badge&logo=jupyter&logoColor=white">
+<img src="https://img.shields.io/badge/Google Colab-F9AB00?style=for-the-badge&logo=Google Colab&logoColor=black">
+<img src="https://img.shields.io/badge/Anaconda-44A833?style=for-the-badge&logo=Anaconda&logoColor=white">
+</div>
+
+
+### <div align="center"> Database </div>
+<div align="center"> 
+<img src="https://img.shields.io/badge/MariaDB-F80000?style=for-the-badge&logo=mariadb&logoColor=white">
+<img src="https://img.shields.io/badge/Redis-FF4438?style=for-the-badge&logo=redis&logoColor=white">
+</div>
+
+### <div align="center"> Deployment </div>
+<div align="center">
+<img src="https://img.shields.io/badge/AWS EC2-FF9900?style=for-the-badge&logo=amazon ec2&logoColor=white">
+<img src="https://img.shields.io/badge/AWS VPC-232F3E?style=for-the-badge&logo=amazon&logoColor=white">
+<img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white">
+<img src="https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=Ubuntu&logoColor=white">
+</div>
+</div>
+
+
+# 5. 화면
+| **메인화면**  | **회원가입** |
+|:------------:|:------------:|
+| ![Main Page](./readme_image/main.png) | ![Sign Up](./readme_image/signUp.png) |
+| **로그인**    | **마이페이지** |
+| ![Login Page](./readme_image/login.png) | ![MyPage](./readme_image/mypage.png) |
+| **MAP**        | **가계부** |
+| ![MAP](./readme_image/map.png)  | ![Household](./readme_image/household.png) |
+| **주식 비교** | **주식 예측** |
+| ![Stock Compare](./readme_image/compareStock.png)  | ![Stock Prediction](./readme_image/predicStock.png) |
+| **뉴스**     | **통합 채팅방** |
+| ![News Page](./readme_image/news.png)  | ![News Talk](./readme_image/newsTalk.png) |
+| **FAQ**   | **관리자 화면** |
+| ![FAQ](./readme_image/FAQ.png) | ![Adim](./readme_image/admin.png) |
+| **챗봇**    | **챗봇 모달** |
+| ![Chatbot](./readme_image/chatbot.png) | ![Chatbot modal](./readme_image/Chatbot-modal.png)|
+
+
+
+# 6. 데이터
+- 데이터는 소방청 국토부 행안부 등 공공데이터를 최대한 활용 했습니다.
+
+이미지
+
 
 ## 📑기획 및 설계
 
@@ -32,74 +147,12 @@
 
 [ 피그마](https://www.notion.so/15fe53d1ead58072b8eac135a5885668?pvs=21)
 
-[페르소나 (1)](https://www.notion.so/1-15fe53d1ead580d89e7fdc8ea7817404?pvs=21)
-
 [ERD](https://www.notion.so/ERD-15fe53d1ead58066a508c7b4b22a065e?pvs=21)
 
 [API 명세서](https://www.notion.so/API-15fe53d1ead580fbad80d353d133fc0b?pvs=21)
 
-[요구 사항 명세서 (1)](https://www.notion.so/1-15fe53d1ead5803abaacc0ac2e6fffb2?pvs=21)
-
 ## 📄기록
-
-[전체 회의록](https://www.notion.so/15fe53d1ead580708142c58271e503ff?pvs=21)
 
 [구로 소방서 인터뷰 - 12월 27일](https://www.notion.so/12-27-168e53d1ead5804fade6c4839acf15e4?pvs=21)
 
-## Live Demo
 
-[배포 링크](https://lbsteam1.duckdns.org/)
-
-[https://lbsteam1.duckdns.org/](https://lbsteam1.duckdns.org/)
-
-https://lbsteam1.duckdns.org/
-
-## GitHub Repo
-
-[깃허브 저장소 링크](https://github.com/py4ine/LBS_1team)
-
-[https://github.com/py4ine/LBS_1team](https://github.com/py4ine/LBS_1team)
-
-https://github.com/py4ine/LBS_1team
-
----
-
-<aside>
-💬
-
-소방 프로젝트에 대한 간단한 소개 표시
-
-</aside>
-
-### 주요 기능
-
-- 주변 정보 (용수시설, 유해시설)
-- 건물의 정보 (용도, 구조, 설계도)
-- 인원 수 체크
-
-### 구현 예정 기능
-
-- 내부 소방관 위치 확인
-- 다크모드
-- 즐겨찾기 기능
-
----
-
-### 기술 스택
-
-| Programming Languages | JavaScript |
-| --- | --- |
-| Skils | React, Node.js |
-| Databases | PostgreSQL |
-| Version Control | Git |
-| Cloud Services | GCP (Goolge Cloud Platfrom) |
-| Deployment Tools | App Engine, Docker |
-| API | RESTful API |
-
----
-
-### 프로젝트 보드
-
-[칸반 보드](%E1%84%8F%E1%85%A1%E1%86%AB%E1%84%87%E1%85%A1%E1%86%AB%20%E1%84%87%E1%85%A9%E1%84%83%E1%85%B3%2015ee53d1ead580d58cf7e05702a4f201.csv)
-
-[ 포트폴리오 (1)](https://www.notion.so/1-182e53d1ead580d38bfdcc7da97e04ec?pvs=21)
