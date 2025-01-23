@@ -2,8 +2,40 @@ import express from "express";
 import compression from "compression";
 import cors from "cors";
 import mountRouters from "./api/routes.js";
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
 
 const app = express();
+
+const options = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "소방 RG API",
+      version: "1.0.0",
+      description: "소방 RG 명세서",
+    },
+    servers: [
+      {
+        url: "https://lbsteam1.duckdns.org",
+        description: "소방RG",
+      },
+    ],
+  },
+  apis: [
+    // "./src/api/**/*.js", // api 파일들의 경로
+    // 또는 현재 구조에 맞는 경로
+    "./src/api/**/*.js", // 모든 API 파일
+    "./src/api/*/*.ctrl.js", // 특정 컨트롤러 파일들
+    "./src/api/*/*.router.js", // 라우터 파일들, // 또는 현재 구조에 맞는 경로
+    // "./api/**/*.js", // 모든 API 파일
+    // "./api/details/details.ctrl.js", // details controller
+    // "./api/*/detailsIndex.js", // index 파일
+  ],
+};
+
+const specs = swaggerJsdoc(options);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use(express.json());
 app.use(compression());

@@ -1,8 +1,7 @@
-import express from 'express'
-import ctrl from './aroundctrl.js'
+import express from "express";
+import ctrl from "./around.ctrl.js";
 
 const router = express.Router();
-router.get('/', ctrl.getAroundALL);
+router.get("/", ctrl.getAroundALL);
 
-
-export default router
+export default router;

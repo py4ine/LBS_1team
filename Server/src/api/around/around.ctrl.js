@@ -1,29 +1,35 @@
-import dangerDao from "./danger.dao.js";
+import aroundDao from "./around.dao.js";
 
 /**
  * @swagger
  * tags:
- *   - name: Danger
- *     description: 위험시설물 관련 API
+ *   - name: Around
+ *     description: 주변 건물 정보 관련 API
  */
 
-// getdangerALL 함수 바로 위에 추가
+// getAroundALL 함수 바로 위에 추가
 /**
  * @swagger
- * /api/danger:
+ * /api/around:
  *   get:
- *     summary: 위험시설물 정보 조회
- *     tags: [Danger]
+ *     summary: 주변 건물 정보 조회
+ *     tags: [Around]
  *     parameters:
  *       - in: query
- *         name: polygon
+ *         name: longitude
  *         required: true
  *         schema:
- *           type: string
- *         description: 조회할 영역의 WKT 형식 폴리곤 문자열
+ *           type: number
+ *         description: 경도
+ *       - in: query
+ *         name: latitude
+ *         required: true
+ *         schema:
+ *           type: number
+ *         description: 위도
  *     responses:
  *       200:
- *         description: 위험시설물 정보 조회 성공
+ *         description: 주변 건물 정보 조회 성공
  *         content:
  *           application/json:
  *             schema:
@@ -43,18 +49,18 @@ import dangerDao from "./danger.dao.js";
  *                       type: array
  */
 
-const getdangerALL = async (req, res) => {
+const getAroundALL = async (req, res) => {
   try {
-    const { polygon } = req.query;
+    const { longitude, latitude } = req.query;
 
     // 유효성 검사
-    if (!polygon) {
+    if (!longitude || !latitude) {
       return res.status(400).json({
         success: false,
         message: "longitude and latitude are required",
       });
     }
-    const poi = await dangerDao.getdangerALL(polygon);
+    const poi = await aroundDao.getAroundALL(longitude, latitude);
     //3항연산자
     res.json({
       success: true,
@@ -62,12 +68,12 @@ const getdangerALL = async (req, res) => {
       data: poi.length === 0 ? [] : poi,
     });
   } catch (error) {
-    console.error("Error in ctrl getdangerALL", error);
+    console.error("Error in ctrl getIncidentALL", error);
     const errorMessage = error.message;
     res.status(500).json({ success: false, message: errorMessage });
   }
 };
 
 export default {
-  getdangerALL,
+  getAroundALL,
 };
