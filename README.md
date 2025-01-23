@@ -1,5 +1,3 @@
-2024.12.16 ~ 2025.01.22 (5주)
-
 # 소방RG
 # 프로젝트 개요
 ## 1.1 프로젝트 제목
@@ -78,13 +76,13 @@ url(https://lbsteam1.duckdns.org/)
 <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
 <img src="https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=css3&logoColor=white">
 <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black">
+  react native
 </div>
 
 
 ### <div align="center"> Cooperation Tools </div>
 <div align="center">
 <img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white">
-<img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white">
 <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white">
 <img src="https://img.shields.io/badge/Google Chrome-4285F4?style=for-the-badge&logo=Google Chrome&logoColor=white">
 <img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white">
@@ -102,16 +100,16 @@ url(https://lbsteam1.duckdns.org/)
 
 ### <div align="center"> Database </div>
 <div align="center"> 
-<img src="https://img.shields.io/badge/MariaDB-F80000?style=for-the-badge&logo=mariadb&logoColor=white">
-<img src="https://img.shields.io/badge/Redis-FF4438?style=for-the-badge&logo=redis&logoColor=white">
+  postgresql
+  postgis?
+  qgis?
 </div>
 
 ### <div align="center"> Deployment </div>
 <div align="center">
-<img src="https://img.shields.io/badge/AWS EC2-FF9900?style=for-the-badge&logo=amazon ec2&logoColor=white">
-<img src="https://img.shields.io/badge/AWS VPC-232F3E?style=for-the-badge&logo=amazon&logoColor=white">
+  gcp
+  라즈베리
 <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white">
-<img src="https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=Ubuntu&logoColor=white">
 </div>
 </div>
 
