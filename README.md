@@ -6,7 +6,9 @@ url(https://lbsteam1.duckdns.org/)
 
 ## 1.2 프로젝트 로고
 
-이미지
+<div align="center">
+    <img src="/readme/App_Logo_2.png" alt="Logo">
+</div>
 
 ## 1.3 프로젝트 정보
 ### 1.3.1 소개
@@ -53,15 +55,14 @@ url(https://lbsteam1.duckdns.org/)
 
 # 2. 프로젝트 아키텍처
 
-## 2.3 ETE flow chart (End to End)
-이미지
+## 2.1 ETE flow chart (End to End)
+![ERD](/readme_image/ERD.png)
 ## 2.2 시스템 구성도
-이미지
-
-
+![GCP](/readme/servergcp.png)
+![HOME](/readme/serverhome.png)
 
 ## 2.3 ERD (Entity Relationship Diagram)
-이미지
+![ERD](/readme/erd.png)
 
 # 4. 기술 스택
 
