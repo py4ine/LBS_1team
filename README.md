@@ -2,13 +2,19 @@
 
 # 프로젝트 개요
 
-## 1.1 프로젝트 제목
+## 1.1 프로젝트 ONE PAGE PROPOSAL 및 인터뷰
 
 ### 소방RG 소방관분들을 위한 데이터 플랫폼
 
 url(https://lbsteam1.duckdns.org/)
 
-## 1.2 프로젝트 로고
+![ERD](/readme/onepage.png)
+
+### 소방관분들 인터뷰 피드백
+
+![ppt5](https://github.com/py4ine/LBS_1team/blob/main/readme/%EB%B0%9C%ED%91%9CPPT%EC%9D%98%20%EC%82%AC%EB%B3%B8/%EB%B0%9C%ED%91%9CPPT%EC%9D%98%20%EC%82%AC%EB%B3%B8-05.png?raw=true)
+
+## 1.2 프로젝트 앱 로고
 
 <div align="center">
     <img src="/readme/App_Logo_2.png" alt="Logo">
@@ -75,7 +81,10 @@ url(https://lbsteam1.duckdns.org/)
 
 ## 2.2 시스템 구성도
 
+### GCP 서버 배포
 ![GCP](/readme/servergcp.png)
+
+### home서버 배포
 ![HOME](/readme/serverhome.png)
 
 ## 2.3 ERD (Entity Relationship Diagram)
@@ -94,7 +103,7 @@ url(https://lbsteam1.duckdns.org/)
 <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
 <img src="https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=css3&logoColor=white">
 <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black">
-  react native
+<img src="https://img.shields.io/badge/expo-000020?style=for-the-badge&logo=expo&logoColor=white">
 </div>
 
 ### <div align="center"> Cooperation Tools </div>
@@ -118,54 +127,36 @@ url(https://lbsteam1.duckdns.org/)
 ### <div align="center"> Database </div>
 
 <div align="center"> 
-  postgresql
-  postgis?
-  qgis?
+  <img src="https://img.shields.io/badge/postgresql-4169E1?style=for-the-badge&logo=postgresql&logoColor=white">
+  <img src="https://img.shields.io/badge/googlecloudstorage-AECBFA?style=for-the-badge&logo=googlecloudstorage&logoColor=white">
+  <img src="https://img.shields.io/badge/qgis-589632?style=for-the-badge&logo=qgis&logoColor=white">
 </div>
 
 ### <div align="center"> Deployment </div>
 
 <div align="center">
-  gcp
-  라즈베리
-<img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white">
+    <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white">
+    <img src="https://img.shields.io/badge/raspberrypi-A22846?style=for-the-badge&logo=raspberrypi&logoColor=white">
+    <img src="https://img.shields.io/badge/googlecloud-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white">
 </div>
 </div>
 
-# 5. 화면
+# 5. 저니맵에 따른 디자인
 
-|                   **메인화면**                    |                    **회원가입**                     |
-| :-----------------------------------------------: | :-------------------------------------------------: |
-|       ![Main Page](./readme_image/main.png)       |        ![Sign Up](./readme_image/signUp.png)        |
-|                    **로그인**                     |                   **마이페이지**                    |
-|      ![Login Page](./readme_image/login.png)      |        ![MyPage](./readme_image/mypage.png)         |
-|                      **MAP**                      |                     **가계부**                      |
-|          ![MAP](./readme_image/map.png)           |     ![Household](./readme_image/household.png)      |
-|                   **주식 비교**                   |                    **주식 예측**                    |
-| ![Stock Compare](./readme_image/compareStock.png) | ![Stock Prediction](./readme_image/predicStock.png) |
-|                     **뉴스**                      |                   **통합 채팅방**                   |
-|       ![News Page](./readme_image/news.png)       |      ![News Talk](./readme_image/newsTalk.png)      |
-|                      **FAQ**                      |                   **관리자 화면**                   |
-|          ![FAQ](./readme_image/FAQ.png)           |          ![Adim](./readme_image/admin.png)          |
-|                     **챗봇**                      |                    **챗봇 모달**                    |
-|      ![Chatbot](./readme_image/chatbot.png)       | ![Chatbot modal](./readme_image/Chatbot-modal.png)  |
+|                   **메인화면1**                    |
+| :-----------------------------------------------: |
+|       ![Main Page1](https://github.com/py4ine/LBS_1team/blob/main/readme/%EB%B0%9C%ED%91%9CPPT%EC%9D%98%20%EC%82%AC%EB%B3%B8/%EB%B0%9C%ED%91%9CPPT%EC%9D%98%20%EC%82%AC%EB%B3%B8-10.png?raw=true)       |
+|                    **메인화면1**                   |
+|      ![Main Page2](https://github.com/py4ine/LBS_1team/blob/main/readme/%EB%B0%9C%ED%91%9CPPT%EC%9D%98%20%EC%82%AC%EB%B3%B8/%EB%B0%9C%ED%91%9CPPT%EC%9D%98%20%EC%82%AC%EB%B3%B8-11.png?raw=true)      |
+
 
 # 6. 데이터
 
 - 데이터는 소방청 국토부 행안부 등 공공데이터를 최대한 활용 했습니다.
 
-이미지
+![data](https://github.com/py4ine/LBS_1team/blob/main/readme/%EB%B0%9C%ED%91%9CPPT%EC%9D%98%20%EC%82%AC%EB%B3%B8/%EB%B0%9C%ED%91%9CPPT%EC%9D%98%20%EC%82%AC%EB%B3%B8-12.png?raw=true)
 
-## 📑기획 및 설계
+## 📑기타 사항
 
-[프로젝트 기획서 (1)](https://www.notion.so/1-15fe53d1ead580fab8dbfd58365157d6?pvs=21)
 
-[ 피그마](https://www.notion.so/15fe53d1ead58072b8eac135a5885668?pvs=21)
-
-[ERD](https://www.notion.so/ERD-15fe53d1ead58066a508c7b4b22a065e?pvs=21)
-
-[API 명세서](https://www.notion.so/API-15fe53d1ead580fbad80d353d133fc0b?pvs=21)
-
-## 📄기록
-
-[구로 소방서 인터뷰 - 12월 27일](https://www.notion.so/12-27-168e53d1ead5804fade6c4839acf15e4?pvs=21)
+![API 명세서](https://github.com/py4ine/LBS_1team/blob/main/readme/%EB%B0%9C%ED%91%9CPPT%EC%9D%98%20%EC%82%AC%EB%B3%B8/%EB%B0%9C%ED%91%9CPPT%EC%9D%98%20%EC%82%AC%EB%B3%B8-27.png?raw=true)
