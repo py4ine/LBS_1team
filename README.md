@@ -38,7 +38,7 @@ url(https://lbsteam1.duckdns.org/)
 
 #### 1.3.1.3 프로젝트 요약
 
-- 사건 주변의 소방용수, 유해시설, 기상정보, 건물의 상세정보, 실시간 인원 관제 등을 한 플렛폼에 통합하였습니다.
+- 사건 주변의 소방용수, 유해시설, 기상정보, 건물의 상세정보, 실시간 인원 관제 등을 한 플렛폼에 통합 하였습니다.
 - AI기술을 통해 실시간 인원 관제 시스템을 구현 시켰습니다.
 
 ### 1.3.2 개발 기간 (총 13주)
@@ -155,6 +155,10 @@ url(https://lbsteam1.duckdns.org/)
 - 데이터는 소방청 국토부 행안부 등 공공데이터를 최대한 활용 했습니다.
 
 ![data](https://github.com/py4ine/LBS_1team/blob/main/readme/%EB%B0%9C%ED%91%9CPPT%EC%9D%98%20%EC%82%AC%EB%B3%B8/%EB%B0%9C%ED%91%9CPPT%EC%9D%98%20%EC%82%AC%EB%B3%B8-12.png?raw=true)
+
+# 7. 인원 관제 알고리즘
+
+![AI Algorithm](/readme/objects_D&T_algorithm.png)
 
 ## 📑기타 사항
 
