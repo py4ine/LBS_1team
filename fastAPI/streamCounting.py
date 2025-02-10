@@ -7,6 +7,7 @@ import numpy as np
 import asyncio
 import torch
 import cv2
+import os
 
 LOGGER.disabled = True  # Yolo 로그 생략
 
@@ -46,6 +47,7 @@ class StreamCounging:
 
     # 스트림 처리 함수
     async def process_stream(self, stream_id):
+        os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;tcp"
         print(f"{stream_id} 스트림 시작!!!")
 
         if stream_id not in self.streams:
