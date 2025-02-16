@@ -10,7 +10,7 @@ const login = async () => {
         return rowData;
     } catch (error) {
         console.error("Error DAO login:", error);
-        // throw new Error(error.message)
+        throw new Error(error.message)
     }
 }
 
