@@ -6,39 +6,9 @@ import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 
 const app = express();
-
-const options = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "소방 RG API",
-      version: "1.0.0",
-      description: "소방 RG 명세서",
-    },
-    servers: [
-      {
-        url: "https://lbsteam1.duckdns.org",
-        description: "소방RG",
-      },
-    ],
-  },
-  apis: [
-    // "./src/api/**/*.js", // api 파일들의 경로
-    // 또는 현재 구조에 맞는 경로
-    "./src/api/**/*.js", // 모든 API 파일
-    "./src/api/*/*.ctrl.js", // 특정 컨트롤러 파일들
-    "./src/api/*/*.router.js", // 라우터 파일들, // 또는 현재 구조에 맞는 경로
-    // "./api/**/*.js", // 모든 API 파일
-    // "./api/details/details.ctrl.js", // details controller
-    // "./api/*/detailsIndex.js", // index 파일
-  ],
-};
-
-const specs = swaggerJsdoc(options);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
-
 app.use(express.json());
 app.use(compression());
+
 
 // cors 설정
 app.use(
@@ -50,10 +20,42 @@ app.use(
   })
 );
 
+
+// Swagger 설정 정의
+const options = {
+  definition: {
+    openapi: "3.0.0",  // openAPI 버전 정의
+    // API 문서의 기본 정보 정의
+    info: {  
+      title: "소방 RG API",
+      version: "1.0.0",
+      description: "소방 RG 명세서",
+    },
+    // 사용할 서버 목록 정의
+    servers: [
+      {
+        url: "https://lbsteam1.duckdns.org",
+        description: "소방RG",
+      },
+    ],
+  },
+  // Swagger가 API 문서를 작성할 때 참고할 주석이 있는 파일 경로
+  apis: [
+    "./api/**/*.js",  // api 하위 모든 폴더의 .js 파일들
+    "./api/*/*.ctrl.js",  // api 하위 한단계 폴더의 컨트롤러 파일들
+    "./api/*/*.router.js",  // api 하위 한단계 폴더의 라우터 파일들
+
+    // "./api/**/*.js",  // 모든 API 하위 모든 폴더의 .js 파일들
+    // "./api/details/details.ctrl.js",  // details 폴더의 controller 파일
+    // "./api/*/detailsIndex.js", // API 한단계 하위 폴더의 디테일index 파일
+  ],
+};
+
+const specs = swaggerJsdoc(options);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+
+
 mountRouters(app);
 
-// app.get('/', (res, res) => {
-//     res.redirect('/login');
-// });
 
 export default app;
