@@ -7,16 +7,18 @@
 
 // let hostAddress;
 // if (process.env.NODE_ENV === 'production') {
-//     hostAddress = '';
+//     const hostAddress = '1.230.106.16';
+//     const user = 'user1';
 // } else {
-//     hostAddress = 'localhost';
+//     const hostAddress = 'localhost';
+//     const user = 'codelab';
 // }
 
 // const dbConfig = {
 //     host: hostAddress,
 //     port: 5432,
 //     database: 'postgres',
-//     user: 'user1',
+//     user: user,
 //     password: 'codelab1234'
 // };
 
