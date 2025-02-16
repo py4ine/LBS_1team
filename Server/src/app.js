@@ -51,8 +51,8 @@ const options = {
   ],
 };
 
-const specs = swaggerJsdoc(options);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+const specs = swaggerJsdoc(options);  // options를 기반으로 json형식 API명세서 생성
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));  // api-docs 경로에 Swagger 문서를 제공
 
 
 mountRouters(app);
