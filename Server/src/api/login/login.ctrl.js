@@ -1,6 +1,6 @@
 import loginDao from "./login.dao.js";
 
-// 파일 최상단에 추가
+// API 그룹(tag) 정의. 파일 최상단에 작성
 /**
  * @swagger
  * tags:
@@ -8,7 +8,7 @@ import loginDao from "./login.dao.js";
  *     description: 사용자 인증 관련 API
  */
 
-// login 함수 바로 위에 추가
+// login 함수 바로 위에 작성
 /**
  * @swagger
  * /api/login:
