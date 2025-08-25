@@ -77,7 +77,9 @@ url(https://lbsteam1.duckdns.org/)
 
 ## 2.1 ETE flow chart (End to End)
 
-![ERD](/readme/End_to_End.jpg)
+![EtE](/readme/End_to_End1.jpg)
+![EtE](/readme/End_to_End2.jpg)
+![EtE](/readme/End_to_End3.jpg)
 
 ## 2.2 시스템 구성도
 
