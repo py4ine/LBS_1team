@@ -71,7 +71,7 @@ url(https://lbsteam1.duckdns.org/)
 
 ## 1.5 시연 영상 링크
 
-🎞 1차 시연 영상 [보러가기]().
+🎞 1차 시연 영상 [보러가기](https://www.youtube.com/shorts/AFaoqgLzO3o).
 
 # 2. 프로젝트 아키텍처
 
